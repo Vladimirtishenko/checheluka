@@ -6,7 +6,7 @@ module.exports = class Helper {
 	}
 
 	date() {
-		
+		console.log(new Date());
 	}
 
 }

@@ -1,6 +1,51 @@
+
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var poststylus = require('poststylus');
+var rucksack = require('rucksack-css');
+var stylusLoader = ExtractTextPlugin.extract("style-loader", "css-loader?minimize!stylus-loader");
+
 module.exports = {
+    entry: {
+        app: './public/js/controller.js',
+        manage: './public/js/manage/controller_manage.js'
+    },
     output: {
         path: "./public/build/",
-        filename: "build.js",
-    }
+        filename: 'build.[name].js'
+    },
+    watch: true,
+    watchOptions: {
+    	aggregateTimeout: 100
+    },
+    module: {
+        loaders: [
+        {
+            test: /\.styl$/,
+            loader: stylusLoader
+        },
+        {
+            test: /\.js?$/,
+            exclude: /(node_modules)/,
+            loader: "babel",
+            query: {
+                presets: ['es2015']
+            }
+        },
+        ]
+    },
+    resolve: {
+        modulesDirectories: ["node_modules"],
+        extensions: ["", ".js", "css", "styl"]
+	},
+    stylus: {
+	  use: [
+	    poststylus(rucksack({
+		  autoprefixer: true
+		}))
+	  ]
+	},
+    plugins: [
+        new ExtractTextPlugin("build.[name].css")
+    ]
 }

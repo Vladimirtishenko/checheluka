@@ -2,10 +2,8 @@ doctype html
 html
 	head
 		title= title
-		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(rel='stylesheet', href='/build/build.app.css')
 		script(src="https://cdn.socket.io/socket.io-1.4.5.js")
-		script(src="/build/build.js")
-		script
-			| var socket = io(); socket.emit('chat message', 'HELLO FROM CLIENT');
+		script(src="/build/build.app.js")
 	body
 		block content

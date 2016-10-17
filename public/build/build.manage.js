@@ -40,47 +40,22 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	let Helper = __webpack_require__(1);
-	/*let SocketIO = require('./');*/
-
-
-	class Controller extends Helper {
-		constructor() {
-			super();
-			this.init();
-		}
-
-		init(){
-			this.date();
-		}
-		
-	}
-
-
-	new Controller();
+	__webpack_require__(5);
 
 /***/ },
-/* 1 */
+
+/***/ 5:
 /***/ function(module, exports) {
 
-	'use strict';
-
-	module.exports = class Helper {
-		constructor() {
-			
-		}
-
-		date() {
-			
-		}
-
-	}
+	// removed by extract-text-webpack-plugin
 
 /***/ }
-/******/ ]);
+
+/******/ });

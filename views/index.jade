@@ -1,5 +1,187 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+	section.a-main 
+		include header.jade
+		.a-general-goods
+			.a-general-goods__image
+				img(src="/img/test.jpg", alt="")
+			.a-general-goods__description
+				p(class="a-general-goods__description_in-warehouse a-min-size-font")
+					| на складе: 
+					span 10 штук
+				h2.a-general-goods__description_title
+					| Красивая шапочка и девушка в подарок
+				p( class="a-general-goods__description_description")
+					| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore reprehenderit alias, harum illo quidem, odio molestiae commodi ut incidunt cupiditate quia, reiciendis totam repudiandae ipsum provident. Earum incidunt dolore, a.
+				.a-general-goods__description_info
+					.a-general-goods__description_info_part
+						a(href="" class="a-general-goods__description_info_part-link") 
+							| Материал
+							span Красный
+						a(href="" class="a-general-goods__description_info_part-link") 
+							| Размер
+							span Красный
+					.a-general-goods__description_info_part
+						a(href="" class="a-general-goods__description_info_part-link") 
+							| Цвет
+							span Красный
+						a(href="" class="a-general-goods__description_info_part-link") 
+							| Состав
+							span Красный
+				p.a-general-goods__description_price_retail
+					| Розничная цена: 
+					span 1000 рублей
+				p.a-general-goods__description_price_now
+					| 2300 руб.
+				button( class="a-general-goods__description_buy a-button-black")
+					| Покупаю
+				.a-general-goods__description_rates_button
+					button.a-button-white
+						| + 1р
+					button.a-button-white
+						| + 10р
+					button.a-button-white
+						| + 100р
+					button.a-button-white
+						| + 500р
+			.a-general-goods__chat
+				| Показать чат
+		h1.a-head-font Ближайшие аукционы
+		.a-else-goods
+			div( class="a-else-goods__item __with-triangle-left-medium" )
+				img(src="/img/test.jpg", alt="")
+				.a-else-goods__description
+					p Шапка писец
+					.a-else-goods__description_info
+						a(href="" class="a-else-goods__description_info-link") 
+							| Материал
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+					p Розничная цена
+						span 1000 руб.
+					p Начальная ставка 
+			div( class="a-else-goods__item __without-triangle-left-min" )
+				img(src="/img/test.jpg", alt="")
+				.a-else-goods__description
+					p Шапка писец
+					.a-else-goods__description_info
+						a(href="" class="a-else-goods__description_info-link") 
+							| Материал
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+					p Розничная цена
+						span 1000 руб.
+					p Начальная ставка 
+						span 200 руб.
+						span 200 руб.
+			div( class="a-else-goods__item __with-waves-rigth-high" )
+				div(class="a-else-goods__description __to_left-no-margin")
+					p Шапка писец
+					.a-else-goods__description_info
+						a(href="" class="a-else-goods__description_info-link") 
+							| Материал
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+					p Розничная цена
+						span 1000 руб.
+					p Начальная ставка 
+						span 200 руб.
+				img(src="/img/test.jpg", alt="")
+
+		.a-else-goods
+			div( class="a-else-goods__item __with-triangle-left-medium" )
+				img(src="/img/test.jpg", alt="")
+				.a-else-goods__description
+					p Шапка писец
+					.a-else-goods__description_info
+						a(href="" class="a-else-goods__description_info-link") 
+							| Материал
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+					p Розничная цена
+						span 1000 руб.
+					p Начальная ставка 
+			div( class="a-else-goods__item __without-triangle-left-min" )
+				img(src="/img/test.jpg", alt="")
+				.a-else-goods__description
+					p Шапка писец
+					.a-else-goods__description_info
+						a(href="" class="a-else-goods__description_info-link") 
+							| Материал
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+					p Розничная цена
+						span 1000 руб.
+					p Начальная ставка 
+						span 200 руб.
+						span 200 руб.
+			div( class="a-else-goods__item __with-waves-rigth-high" )
+				div(class="a-else-goods__description __to_left-no-margin")
+					p Шапка писец
+					.a-else-goods__description_info
+						a(href="" class="a-else-goods__description_info-link") 
+							| Материал
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+						a(href="" class="a-else-goods__description_info-link") 
+							| Размер
+							span Красный
+					p Розничная цена
+						span 1000 руб.
+					p Начальная ставка 
+						span 200 руб.
+				img(src="/img/test.jpg", alt="")
+
+
+			
+
+
+			
+
+		include footer.jade
