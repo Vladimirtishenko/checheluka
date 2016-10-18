@@ -50,7 +50,7 @@
 
 	__webpack_require__(1);
 
-	var _helper = __webpack_require__(4);
+	var _helper = __webpack_require__(5);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -72,20 +72,31 @@
 
 			var socket = io();
 			socket.emit('chat message', 'HELLO FROM CLIENT');
+			_this.initEvent();
 			return _this;
 		}
 
 		_createClass(Controller, [{
-			key: 'init',
-			value: function init() {
-				this.date();
+			key: 'initEvent',
+			value: function initEvent() {
+				this.flyEvent(['click'], [document.querySelector('.a-chat-container__button')], this.chatHandler);
+			}
+		}, {
+			key: 'chatHandler',
+			value: function chatHandler() {
+				var chat = document.querySelector('.a-chat-container');
+				if (!chat) return;
+
+				chat.classList.toggle('-animate-chat');
 			}
 		}]);
 
 		return Controller;
 	}(_helper2.default);
 
-	new Controller();
+	window.addEventListener('DOMContentLoaded', function () {
+		new Controller();
+	});
 
 /***/ },
 /* 1 */
@@ -96,7 +107,8 @@
 /***/ },
 /* 2 */,
 /* 3 */,
-/* 4 */
+/* 4 */,
+/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -111,9 +123,30 @@
 		}
 
 		_createClass(Helper, [{
-			key: 'date',
-			value: function date() {
-				console.log(new Date());
+			key: "flyEvent",
+			value: function flyEvent(listen, element, callback) {
+
+				var oneCallback = false,
+				    callbackTohandler = void 0,
+				    count = 0;
+
+				if (callback instanceof Array && element.length != callback.length) {
+					throw {
+						message: "The number of elements handler does not match"
+					};
+				} else if (typeof callback == "function") {
+					oneCallback = true;
+				}
+
+				listen.forEach(function (item, i) {
+					element.forEach(function (items, j) {
+						if (items) {
+							callbackTohandler = oneCallback ? callback : callback[count];
+							items.addEventListener(item, callbackTohandler);
+						}
+						count++;
+					});
+				});
 			}
 		}]);
 

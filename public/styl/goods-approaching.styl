@@ -1,6 +1,10 @@
 .a-else-goods
 	width w
-	margin 0 auto
+	margin 0 auto 40px
+	display flex
+	justify-content space-beetwen
+	align-items flex-start
+	flex-wrap wrap
 
 .a-head-font 
 	padding 50px 0
@@ -8,46 +12,72 @@
 	width 100%
 	text-align center
 
-.a-else-goods__item
+
+.a-goods__item__reisizers
 	width 100%
-	margin 0 0 2em
-	padding 1em
-	padding  1em
 	display flex
 	align-items flex-start
+	flex-wrap wrap
 
+.a-else-goods__item
+	width 50%
+	display flex
+
+
+.a-else-goods__item img 
+	box-shadow 0px 0px 6px 2px rgba(0, 0, 0, 0.45)
 	
 .a-else-goods__description
 	margin-left 24px
 
 .__with-triangle-left-medium img
-	width 165px
-	
+	width 200px
+
+.__with-triangle-left-medium	
+	position relative
+
 .__without-triangle-left-min img
-	width 115px
+	width 144px
 
 .__without-triangle-left-min
-	padding 0 30px 0 125px
+	margin-top -120px
+	padding 0 0 50px 200px
 
 .__with-waves-rigth-high img
-	width 265px
-
+	width 300px
+	
 .__with-waves-rigth-high
 	padding-top 20px
+	flex-direction row-reverse
+
+.__with-waves-rigth-high.__to_left-no-margin .a-else-goods__description
+	margin-left 0
+	padding-top 30px
 
 .a-else-goods__description_info-link
 	width 100%
 	display inline-block
+	position relative
+	padding 5px 0
+	&:hover span 
+		display block
+
 	
 .a-else-goods__description_info-link span 
 	display none
-
-.__to_left-no-margin
-	margin-left 0
-	padding-top 30px
+	width 100px
+	position absolute 
+	padding 5px
+	left 0
+	top -25px
+	background #000
+	&:before
+		content ''
+		position absolute
+		left 0px
+		bottom -5px
+		border 5px solid transparent
+		border-left: 5px solid #000
 	
 .a-else-goods
 	width w
-	column-count 2
-	padding-bottom 50px
-	

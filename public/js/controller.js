@@ -8,12 +8,26 @@ class Controller extends Helper {
 		super();
 		const socket = io(); 
 		socket.emit('chat message', 'HELLO FROM CLIENT');
+		this.initEvent();
 	}
 
-	init(){
-		this.date();
+	initEvent(){
+		this.flyEvent(['click'], [document.querySelector('.a-chat-container__button')], this.chatHandler);
 	}
-	
+
+	chatHandler(){
+		let chat = document.querySelector('.a-chat-container');
+		if(!chat) return;
+
+		chat.classList.toggle('-animate-chat');
+
+	}
 }
 
-new Controller();
+window.addEventListener('DOMContentLoaded', () => {
+	new Controller();
+})
+
+
+
+
