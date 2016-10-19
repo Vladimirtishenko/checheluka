@@ -48,15 +48,15 @@
 
 	__webpack_require__(1);
 
-	var _socket = __webpack_require__(10);
+	var _socket = __webpack_require__(14);
 
 	var _socket2 = _interopRequireDefault(_socket);
 
-	var _modal = __webpack_require__(12);
+	var _modal = __webpack_require__(16);
 
 	var _modal2 = _interopRequireDefault(_modal);
 
-	var _chat = __webpack_require__(13);
+	var _chat = __webpack_require__(17);
 
 	var _chat2 = _interopRequireDefault(_chat);
 
@@ -83,7 +83,11 @@
 /* 7 */,
 /* 8 */,
 /* 9 */,
-/* 10 */
+/* 10 */,
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -94,7 +98,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(11);
+	var _helper = __webpack_require__(15);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -130,7 +134,7 @@
 	exports.default = Sockets;
 
 /***/ },
-/* 11 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -182,7 +186,7 @@
 	exports.default = Helper;
 
 /***/ },
-/* 12 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -193,7 +197,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(11);
+	var _helper = __webpack_require__(15);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -322,7 +326,7 @@
 	exports.default = Modal;
 
 /***/ },
-/* 13 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -333,7 +337,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(11);
+	var _helper = __webpack_require__(15);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -353,7 +357,9 @@
 
 			var _this = _possibleConstructorReturn(this, (Chat.__proto__ || Object.getPrototypeOf(Chat)).call(this));
 
-			_this.flyEvent(['click'], [document.querySelector('.a-chat-container__button')], _this.chatHandler);
+			_this.button = document.querySelector('.a-chat-container__button');
+			_this.flyEvent(['click'], [_this.button], _this.chatHandler.bind(_this));
+			_this.arrayPosition = ['-631px 0', '-684px 0'];
 			return _this;
 		}
 
@@ -364,6 +370,8 @@
 				if (!chat) return;
 
 				chat.classList.toggle('-animate-chat');
+				this.button.style.cssText = "background-position: " + this.arrayPosition[0];
+				this.arrayPosition.reverse();
 			}
 		}]);
 

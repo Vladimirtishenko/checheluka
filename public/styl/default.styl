@@ -78,6 +78,12 @@ mark
     font-style italic
     font-weight 700
 
+h1,h2,h3,h4,h5,h6
+  font-weight normal
+
+i 
+  font-style normal
+
 del
   text-decoration line-through
 
@@ -113,12 +119,74 @@ button
   font-size 10px
   
 .a-button-black
-  background #000
-  padding 15px
+  background rgba(0,0,0,1)
   text-transform uppercase
   color #fff
+  font-size 14px
+  font-family HelveticaRoman
+  padding 16px 25px
+  line-height 13px
+  transition all .4s ease-out
+  cursor pointer
+  border 2px solid #000
+  &:hover 
+    color #000
+    background rgba(0,0,0,0)
   
 .a-button-white
-  background transparent
-  border 1px solid #000
-  padding 15px
+  background rgba(0,0,0,0)
+  border 2px solid #000
+  padding 15px 17px
+  font-size 14px
+  font-family HelveticaRoman
+  color #000
+  transition all .4s ease-out
+  cursor pointer
+  line-height 13px
+  &:hover 
+    color #fff 
+    background rgba(0,0,0,1)
+    
+.__uppercase
+  text-transform uppercase
+  
+.a-link-item-green
+  font-size 14px
+  font-family HelveticaRoman
+  color #15a399
+  padding 4px 0 1px
+  border-bottom 1px solid rgba(21, 163, 153, 0.23)
+  transition all .2s ease-out
+  &:hover
+    border-bottom 1px solid rgba(0,0,0,0)
+  
+.a-link-item
+  margin 0 10px
+  padding 1px 0
+  color #000
+  font-family HelveticaRoman
+  font-size 14px
+  border-bottom 1px solid rgba(0,0,0,.2)
+  transition all .2s ease-out
+  &:hover
+    border-bottom 1px solid rgba(0,0,0,0)
+    
+.a-head-font-left-side 
+  padding 0px 0px 30px 0
+  font-size 50px
+  width w
+  margin auto
+  display block
+  position relative
+  text-align left
+  font-family HelveticaThin
+  &:before
+    content ""
+    position absolute
+    width 112px
+    height 50px
+    background-image url('../img/sprite.png')
+    background-position -474px -199px
+    z-index 1
+    right -55px
+    top 30px

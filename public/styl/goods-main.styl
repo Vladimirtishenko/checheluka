@@ -6,7 +6,7 @@
 	width w
 	margin 0 auto
 	display flex
-	padding 40px 75px 30px
+	padding 40px 0px 40px 75px
 	position relative
 	&:before
 		position absolute
@@ -16,64 +16,117 @@
 		height 100%
 		top 0
 		content ""
+	&:after
+		position absolute
+		width 300px
+		height 500px
+		background url('../img/sprite.png')
+		content ""
+		bottom -235px
+		right -80px
+    
 
 .a-general-goods__description
-	padding 30px 65px 0px 65px
+	padding 30px 0 0 65px
 
 .a-general-goods__description_in-warehouse
 	color fontg
+	font-family HelveticaRoman
 	
 .a-general-goods__description_in-warehouse span
 	color #000
 
 .a-general-goods__description_title
 	padding 15px 0 15px 0
-	font-size 30px
+	font-size 35px
 	font-weight 400
+	font-family HelveticaLight
+	line-height 40px
 
 .a-general-goods__description_description
 	padding 4px 0 15px 0
+	color fontg
+	font-family HelveticaRoman
+	font-size 14px
+	line-height 18px
 	
 .a-general-goods__description_info_part
 	width 100%
 
 .a-general-goods__description_info
 	padding 0 0 20px 0
+	font-family HelveticaRoman
 
 .a-general-goods__description_info_part-link 
 	color green
+	font-family HelveticaRoman
 	width 80px
 	padding 5px 0
 	display inline-block
 	position relative
 
+.a-general-goods__description_info_part-link i 
+	transition all .2s ease-out
+	border-bottom 1px dotted rgba(21, 163, 153, 1)
+	display inline-block
+	padding 1px 0
+	font-style normal
+	&:hover
+		border-bottom 1px dotted rgba(21, 163, 153, 0)
+	
 .a-general-goods__description_info_part-link span 
 	display none
 	
 .a-general-goods__description_price_retail
+	font-family HelveticaRoman
 	color fontg
-
+	font-size 14px
+	
 .a-general-goods__description_price_retail span
 	color #000
+	padding-left 10px
+	display inline-block
 	
 .a-general-goods__description_price_now
 	padding 10px 0 10px
-	font-size 30px
+	font-size 65px
 	color reds
 	font-family HelveticaThin
 
+.a-general-goods__description_price_now span
+	font-size 50px
+
 .a-general-goods__description_rates_button
-	margin 10px 0 0 0
+	margin 15px 0 0 0
+	position relative
+	z-index 1
 
 .a-general-goods__description_rates_button .a-button-white
-	margin-right 15px
-	
+	margin-right 20px
+	&:last-child
+		margin-right 0
+
+
+.a-general-goods__image
+	position relative
+	&:before 
+		content ""
+		background url('../img/sprite.png')
+		left -64px
+		top 263px
+		width 97px
+		height 90px
+		z-index 1
+		position absolute
+		background-position -472px 90px
 
 .a-img-scale
-	width 265px
-	height 400px
+	width 330px
+	height 485px
+	box-shadow 0px 0px 66px 5px rgba(0, 0, 0, 0.2)
 	padding 0
 	overflow hidden
+	position relative
 
 .a-img-scale img
 	width 100%

@@ -1,15 +1,10 @@
 extends layout
 
 block content
-	section.a-modal
-			.a-modal__item.enter
-
-			.a-modal__item.rules
-	
 	section.a-main 
 		include header.jade
 		.a-chat-container
-			img(class="a-chat-container__button")
+			div(class="a-chat-container__button")
 		.a-backgroung-general-goods
 			.a-general-goods
 				.a-general-goods__image
@@ -17,7 +12,7 @@ block content
 						img(src="/img/16.jpg", alt="")
 				.a-general-goods__description
 					p(class="a-general-goods__description_in-warehouse a-min-size-font")
-						| на складе: 
+						| На складе: 
 						span 10 штук
 					h2.a-general-goods__description_title
 						| Красивая шапочка и девушка в подарок
@@ -26,61 +21,68 @@ block content
 					.a-general-goods__description_info
 						.a-general-goods__description_info_part
 							a(href="" class="a-general-goods__description_info_part-link") 
-								| Материал
-								span Красный
+								i Материал
+									span Красный
 							a(href="" class="a-general-goods__description_info_part-link") 
-								| Размер
-								span Красный
+								i Размер
+									span Красный
 						.a-general-goods__description_info_part
 							a(href="" class="a-general-goods__description_info_part-link") 
-								| Цвет
-								span Красный
+								i Цвет
+									span Красный
 							a(href="" class="a-general-goods__description_info_part-link") 
-								| Состав
-								span Красный
+								i Состав
+									span Красный
 					p.a-general-goods__description_price_retail
 						| Розничная цена: 
 						span 1000 рублей
 					p.a-general-goods__description_price_now
-						| 2300 руб.
+						| 2300 
+						span руб.
 					button( class="a-general-goods__description_buy a-button-black")
 						| Покупаю
 					.a-general-goods__description_rates_button
 						button.a-button-white
-							| + 1р
+							| + 1 руб.
 						button.a-button-white
-							| + 10р
+							| + 10 руб.
 						button.a-button-white
-							| + 100р
+							| + 100 руб.
 						button.a-button-white
-							| + 500р
+							| + 500 руб.
 		h1.a-head-font Ближайшие аукционы
 		.a-else-goods
 			- var i = 0, j = 0, c = 0, img = 0, classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];
 			while (i < 5)
 				div(class="a-goods__item__reisizers")
 					while (j <= 2)
-						div(class="a-else-goods__item "+classArray[c])
+						-var newClass = (i % 2 != 0) ? 'a-add-new-background' : ' '
+						div(class="a-else-goods__item "+classArray[c]+" "+newClass)
 							.a-resizer-masonry
 								img(src="/img/"+img+".jpg", alt=c)
 							.a-else-goods__description
-								p Шапка писец
+								- var number = img + 2;
+								p.a-number-goods 
+									| №
+									span=number
+								p.a-else-goods-descroption Шапка писец
 								.a-else-goods__description_info
-									a(href="" class="a-else-goods__description_info-link") 
-										| Материал
-										span Красный
-									a(href="" class="a-else-goods__description_info-link") 
-										| Размер
-										span Красный
-									a(href="" class="a-else-goods__description_info-link") 
-										| Размер
-										span Красный
-									a(href="" class="a-else-goods__description_info-link") 
-										| Размер
-										span Красный
-								p Розничная цена
+									span(class="a-else-goods__description_info-link") 
+										i Состав
+											span Красный
+									span(class="a-else-goods__description_info-link") 
+										i Размер
+											span Красный
+									span(class="a-else-goods__description_info-link") 
+										i Цвет
+											span Красный
+									span(class="a-else-goods__description_info-link") 
+										i Ткань
+											span Красный
+								p.a-old-price Розничная цена
+									span 3000 руб.
+								p.a-new-price Начальная ставка
 									span 1000 руб.
-								p Начальная ставка
 						- j++;
 						- img ++;
 						- if(c === 2) { c = 0} else {c++};	

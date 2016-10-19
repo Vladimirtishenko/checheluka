@@ -33,14 +33,14 @@ module.exports = {
             }
         },
         {
-            test: /\.(png|woff|woff2|eot|ttf|svg|otf)$/, 
+            test: /\.(jpg|png|woff|woff2|eot|ttf|svg|otf)$/, 
             loader: 'url-loader?limit=100000'
         }
         ]
     },
     resolve: {
         modulesDirectories: ["node_modules"],
-        extensions: ["", ".js", "css", "styl", "woff", "ttf", "otf"]
+        extensions: ["", ".js", "css", "styl", "woff", "ttf", "otf", "jpg"]
 	},
     stylus: {
 	  use: [

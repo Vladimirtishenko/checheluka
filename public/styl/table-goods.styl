@@ -1,0 +1,48 @@
+.a-all-goods-table
+	display flex
+	justify-content space-between
+	flex-wrap wrap
+	width w
+	margin auto
+
+.a-all-goods-table__item
+	width 18%
+	margin-bottom 45px
+	position relative
+	&:nth-child(10n+1):before
+		content ""
+		position absolute
+		width 270px
+		height 180px
+		background-image url('../img/triangle.jpg')
+		z-index -1
+		left -150px
+		top -20px
+	&:nth-child(10n+10):after
+		content ""
+		position absolute
+		width 112px
+		height 50px
+		background-image url('../img/sprite.png')
+		background-position -474px -6px
+		z-index -1
+		right -135px
+		top 90px
+
+.a-all-goods-table__item > img
+	width 100%
+	box-shadow 0 0 30px -2px rgba(0,0,0,.2)
+	
+.a-all-goods-table__description_number
+	color fontg
+	font-size 14px
+	font-family HelveticaRoman
+	padding 15px 0 10px
+	
+.a-all-goods-table__description_info
+	font-size 16px
+	font-family HelveticaRoman
+	
+.a-hidden-block
+	display none
+	position absolute

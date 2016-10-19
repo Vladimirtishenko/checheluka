@@ -4,6 +4,26 @@ html
 		title= title
 		link(rel='stylesheet', href='/build/build.app.css')
 	body
+		section.a-modal
+			.a-modal__item.enter
+				span.a-modal-close
+				h2.a-modal__item_title Войти
+				form.a-form-modal
+					input(type="text" id="a-name")
+					label(for="#a-name") Логин
+					input(type="text" id="a-pwd")
+					label(for="#a-pwd") Пароль
+				a(href="#" class="a-remember-pwd a-link-item") Забыли пароль?
+				.a-button-area-modal
+					button.a-button-white.__uppercase Войти
+					span.a-between или
+					a(href="#" class="a-link-item-green") Зарегестрироваться
+			.a-modal__item.rules
+				span.a-modal-close
+				h2.a-modal__item_title Правила аукциона
+				p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint excepturi vitae dolores maiores quam delectus in adipisci reiciendis ea sapiente neque, aliquam alias natus corporis esse facere saepe! Voluptatum, iste? block content  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis, eius fugit ipsa tenetur ipsum quis saepe unde a-modal__item
+				p perferendis quaerat error, odio cupiditate doloremque, quasi temporibus rem sapiente magnam officia modi!  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla nisi doloremque incidunt obcaecati, debitis accusantium a at ratione ut. Corporis amet adipisci perspiciatis quam deleniti, sit? 
+				p Animi incidunt vero et!  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quae dolorum aut, quod repellendus eligendi eius inventore illum odio tempora vero voluptas natus, in, maxime id voluptates facilis. Dolore, nesciunt
 		block content
 		script(src="https://cdn.socket.io/socket.io-1.4.5.js")
 		script(src="/build/build.app.js")

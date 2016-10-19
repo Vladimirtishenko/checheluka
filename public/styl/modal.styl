@@ -12,18 +12,83 @@
 .a-modal__item
 	display none
 	opacity 0
-	background #fff
-	padding 20px
-	min-width 200px
+	background-color #fff
+	background-image url('../img/header.png')
+	padding 50px
+	flex-wrap wrap
+	max-width 500px
+	background-repeat no-repeat
+	position relative
+
+.a-modal-close
+	width 40px
+	height 40px
+	background-image url('../img/sprite.png')
+	background-position -361px -132px
+	position absolute
+	right 20px
+	top 20px
+	cursor pointer
+	transform rotate(0)
+	transition all .5s ease-out
+	&:hover
+		transform rotate(90deg)
+
+.a-remember-pwd
+	margin 10px 0 i
+
+
+.a-button-area-modal
+	display flex
+	justify-content flex-start
+	align-items center
+	width 100%
+	margin-top 15px
+
+.a-between
+	display inline-block
+	margin 0 20px
+	font-family HelveticaRoman
+	color fontg
+
+.a-modal__item_title
+	width 100%
+	font-size 50px
+	font-family HelveticaThin
+	padding-bottom 30px
+
+.a-form-modal
+	width 100%
+	display flex
+	justify-content space-between
+	align-items center
+	flex-wrap wrap
+
+.a-form-modal input
+	width 75%
+	padding 10px
+	margin 10px 0
+	background #000
+	border none
 	
-	
+.a-form-modal label
+	width 20%	
+	font-family HelveticaRoman
+
 .-animate-modal-in
 	display flex
 	animation fadeIn 1s both 
 
 .-animate-modal-out
 	animation fadeOut 1s both 
-	
+
+.rules
+	max-width 700px
+
+.rules p 
+	font-family HelveticaRoman
+	color fontg
+	line-height 20px
 
 @keyframes fadeIn {
 	0% {

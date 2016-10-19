@@ -1,0 +1,35 @@
+extends layout
+
+block content
+	section.a-main 
+		include header.jade
+		h1.a-head-font-left-side Все товары
+		.a-all-goods-table
+			- var i = 0;
+			- var img = 0;
+			while (i < 30)
+				.a-all-goods-table__item
+					- (img > 14) ? img = 0 : img++;
+					img(src="/img/"+img+".jpg", alt="")
+					.a-all-goods-table__description
+						p.a-all-goods-table__description_number № #{i}
+						p.a-all-goods-table__description_info Шубка писец
+					.a-hidden-block
+						img(src="/img/"+img+".jpg", alt="")
+						.a-hidden-block__description
+							.a-else-goods__description_info
+								span(class="a-else-goods__description_info-link") 
+									i Состав
+										span Красный
+								span(class="a-else-goods__description_info-link") 
+									i Размер
+										span Красный
+								span(class="a-else-goods__description_info-link") 
+									i Цвет
+										span Красный
+								span(class="a-else-goods__description_info-link") 
+									i Ткань
+										span Красный
+				- i++;				
+		
+		include footer.jade

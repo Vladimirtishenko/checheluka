@@ -3,7 +3,9 @@ import Helper from './helper.js';
 class Chat extends Helper {
 	constructor() {
 		super();
-		this.flyEvent(['click'], [document.querySelector('.a-chat-container__button')], this.chatHandler);
+		this.button = document.querySelector('.a-chat-container__button');
+		this.flyEvent(['click'], [this.button], this.chatHandler.bind(this));
+		this.arrayPosition = ['-631px 0', '-684px 0']
 	}
 
 	chatHandler(){
@@ -11,6 +13,8 @@ class Chat extends Helper {
 		if(!chat) return;
 
 		chat.classList.toggle('-animate-chat');
+		this.button.style.cssText = "background-position: "+ this.arrayPosition[0];
+		this.arrayPosition.reverse();
 	}
 }
 
