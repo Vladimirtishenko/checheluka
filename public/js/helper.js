@@ -1,8 +1,7 @@
 'use strict';
 
-module.exports = class Helper {
+export default class Helper {
 	constructor() {
-		
 	}
 
 	flyEvent(listen, element, callback){

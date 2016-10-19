@@ -1,0 +1,44 @@
+.a-modal
+	display none
+	justify-content center
+	align-items center
+	background rgba(0,0,0,.5)
+	position fixed
+	opacity 0
+	width 100%
+	height 100%
+	z-index 9999
+
+.a-modal__item
+	display none
+	opacity 0
+	background #fff
+	padding 20px
+	min-width 200px
+	
+	
+.-animate-modal-in
+	display flex
+	animation fadeIn 1s both 
+
+.-animate-modal-out
+	animation fadeOut 1s both 
+	
+
+@keyframes fadeIn {
+	0% {
+		opacity 0
+	}
+	100% {
+		opacity 1
+	}
+}
+
+@keyframes fadeOut {
+	0% {
+		opacity 1
+	}
+	100% {
+		opacity 0
+	}
+}
