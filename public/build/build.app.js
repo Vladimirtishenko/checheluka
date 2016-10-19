@@ -46,17 +46,17 @@
 
 	'use strict';
 
-	__webpack_require__(5);
+	__webpack_require__(1);
 
-	var _socket = __webpack_require__(8);
+	var _socket = __webpack_require__(10);
 
 	var _socket2 = _interopRequireDefault(_socket);
 
-	var _modal = __webpack_require__(9);
+	var _modal = __webpack_require__(12);
 
 	var _modal2 = _interopRequireDefault(_modal);
 
-	var _chat = __webpack_require__(10);
+	var _chat = __webpack_require__(13);
 
 	var _chat2 = _interopRequireDefault(_chat);
 
@@ -69,18 +69,68 @@
 	});
 
 /***/ },
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */
+/* 1 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
 /* 6 */,
-/* 7 */
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(11);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Sockets = function (_Helper) {
+		_inherits(Sockets, _Helper);
+
+		function Sockets() {
+			_classCallCheck(this, Sockets);
+
+			var _this = _possibleConstructorReturn(this, (Sockets.__proto__ || Object.getPrototypeOf(Sockets)).call(this));
+
+			var socket = io();
+			socket.emit('chat message', 'HELLO FROM CLIENT');
+			return _this;
+		}
+
+		_createClass(Sockets, [{
+			key: 'init',
+			value: function init() {}
+		}]);
+
+		return Sockets;
+	}(_helper2.default);
+
+	exports.default = Sockets;
+
+/***/ },
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -132,54 +182,7 @@
 	exports.default = Helper;
 
 /***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _helper = __webpack_require__(7);
-
-	var _helper2 = _interopRequireDefault(_helper);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Sockets = function (_Helper) {
-		_inherits(Sockets, _Helper);
-
-		function Sockets() {
-			_classCallCheck(this, Sockets);
-
-			var _this = _possibleConstructorReturn(this, (Sockets.__proto__ || Object.getPrototypeOf(Sockets)).call(this));
-
-			var socket = io();
-			socket.emit('chat message', 'HELLO FROM CLIENT');
-			return _this;
-		}
-
-		_createClass(Sockets, [{
-			key: 'init',
-			value: function init() {}
-		}]);
-
-		return Sockets;
-	}(_helper2.default);
-
-	exports.default = Sockets;
-
-/***/ },
-/* 9 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -190,7 +193,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(7);
+	var _helper = __webpack_require__(11);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -319,7 +322,7 @@
 	exports.default = Modal;
 
 /***/ },
-/* 10 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -330,7 +333,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(7);
+	var _helper = __webpack_require__(11);
 
 	var _helper2 = _interopRequireDefault(_helper);
 

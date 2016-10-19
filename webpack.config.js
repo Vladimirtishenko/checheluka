@@ -32,11 +32,15 @@ module.exports = {
                 presets: ['es2015']
             }
         },
+        {
+            test: /\.(png|woff|woff2|eot|ttf|svg|otf)$/, 
+            loader: 'url-loader?limit=100000'
+        }
         ]
     },
     resolve: {
         modulesDirectories: ["node_modules"],
-        extensions: ["", ".js", "css", "styl"]
+        extensions: ["", ".js", "css", "styl", "woff", "ttf", "otf"]
 	},
     stylus: {
 	  use: [
