@@ -6,13 +6,8 @@ class Modal extends Helper {
         this.parentWraper = document.querySelector('.a-modal');
         const button = document.querySelectorAll('.button-modal');
         const close = document.querySelectorAll('.a-modal-close');
-        /*this.flyEvent(['click'], button, this.modalHandlerIn.bind(this));
-        this.flyEvent(['click'], close, this.modalHandlerOut.bind(this));*/
-
-
-        this.flyEvent(['click'], [button, close], [this.modalHandlerIn.bind(this), this.modalHandlerOut.bind(this)]);
-
-
+        const formChange = document.querySelectorAll('.-a-form-change-listener');
+        this.flyEvent(['click'], [button, close, formChange], [this.modalHandlerIn.bind(this), this.modalHandlerOut.bind(this), this.changeForm.bind(this)]);
     }
 
     modalHandlerIn(event) {
@@ -47,6 +42,24 @@ class Modal extends Helper {
     transitionEnd(event) {
         let target = event.target;
         this.classChange(['in', 'out'], 'remove', [target]);
+    }
+
+    changeForm(event) {
+        let target = event && event.target ? event.target : null,
+            attr = target ? target.getAttribute('data-attr') : null;
+        if(!target || !attr) return;
+
+        let forms = this.parentWraper.querySelectorAll('.a-form-modal');
+
+        for(var form of forms){
+            if(form.classList.contains(attr)){
+                form.style.display = "flex";
+            } else {
+                form.style.display = "none";
+            }
+        }
+
+
     }
 
     classChange(what, events, el) {

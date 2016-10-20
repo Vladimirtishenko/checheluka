@@ -140,7 +140,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -148,52 +148,50 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Helper = function () {
-		function Helper() {
-			_classCallCheck(this, Helper);
-		}
+	    function Helper() {
+	        _classCallCheck(this, Helper);
+	    }
 
-		_createClass(Helper, [{
-			key: "flyEvent",
-			value: function flyEvent(listen, element, callback) {
+	    _createClass(Helper, [{
+	        key: "flyEvent",
+	        value: function flyEvent(listen, element, callback) {
 
-				var oneCallback = false,
-				    callbackTohandler = void 0,
-				    count = 0;
+	            var oneCallback = false,
+	                callbackTohandler = void 0,
+	                count = 0;
 
-				if (callback instanceof Array && element.length != callback.length) {
-					throw {
-						message: "The number of elements handler does not match"
-					};
-				} else if (typeof callback == "function") {
-					oneCallback = true;
-				}
+	            if (callback instanceof Array && element.length != callback.length) {
+	                throw {
+	                    message: "The number of elements handler does not match"
+	                };
+	            } else if (typeof callback == "function") {
+	                oneCallback = true;
+	            }
 
-				console.log(listen);
+	            listen.forEach(listener);
 
-				listen.forEach(listener);
+	            function listener(item, i) {
+	                element.forEach(elements.bind(this, item));
+	            }
 
-				var listener = function listener(item, i) {
+	            function elements(item, items, j) {
 
-					element.forEach(elements.bind(this, item));
-				};
+	                if (!items) return;
 
-				var elements = function elements(item, items, j) {
+	                callbackTohandler = oneCallback ? callback : callback[j];
 
-					callbackTohandler = oneCallback ? callback : callback[j - 1];
+	                try {
+	                    items.addEventListener(item, callbackTohandler);
+	                } catch (e) {
+	                    [].forEach.call(items, function (el, c) {
+	                        el.addEventListener(item, callbackTohandler);
+	                    });
+	                }
+	            }
+	        }
+	    }]);
 
-					if (items instanceof Array) {
-
-						items.forEach(function (el, c) {
-							el.addEventListener(item, callbackTohandler);
-						});
-					} else {
-						items.addEventListener(item, callbackTohandler);
-					}
-				};
-			}
-		}]);
-
-		return Helper;
+	    return Helper;
 	}();
 
 	exports.default = Helper;
@@ -233,11 +231,8 @@
 	        _this.parentWraper = document.querySelector('.a-modal');
 	        var button = document.querySelectorAll('.button-modal');
 	        var close = document.querySelectorAll('.a-modal-close');
-	        /*this.flyEvent(['click'], button, this.modalHandlerIn.bind(this));
-	        this.flyEvent(['click'], close, this.modalHandlerOut.bind(this));*/
-
-	        _this.flyEvent(['click'], [button, close], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this)]);
-
+	        var formChange = document.querySelectorAll('.-a-form-change-listener');
+	        _this.flyEvent(['click'], [button, close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
 	        return _this;
 	    }
 
@@ -276,43 +271,26 @@
 	            this.classChange(['in', 'out'], 'remove', [target]);
 	        }
 	    }, {
-	        key: 'classChange',
-	        value: function classChange(what, events, el) {
+	        key: 'changeForm',
+	        value: function changeForm(event) {
+	            var target = event && event.target ? event.target : null,
+	                attr = target ? target.getAttribute('data-attr') : null;
+	            if (!target || !attr) return;
+
+	            var forms = this.parentWraper.querySelectorAll('.a-form-modal');
+
 	            var _iteratorNormalCompletion = true;
 	            var _didIteratorError = false;
 	            var _iteratorError = undefined;
 
 	            try {
+	                for (var _iterator = forms[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var form = _step.value;
 
-	                for (var _iterator = what[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var classie = _step.value;
-	                    var _iteratorNormalCompletion2 = true;
-	                    var _didIteratorError2 = false;
-	                    var _iteratorError2 = undefined;
-
-	                    try {
-	                        for (var _iterator2 = el[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                            var elem = _step2.value;
-
-	                            try {
-	                                elem.classList[events]('-animate-modal-' + classie);
-	                            } catch (e) {
-	                                console.log(e);
-	                            }
-	                        }
-	                    } catch (err) {
-	                        _didIteratorError2 = true;
-	                        _iteratorError2 = err;
-	                    } finally {
-	                        try {
-	                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                                _iterator2.return();
-	                            }
-	                        } finally {
-	                            if (_didIteratorError2) {
-	                                throw _iteratorError2;
-	                            }
-	                        }
+	                    if (form.classList.contains(attr)) {
+	                        form.style.display = "flex";
+	                    } else {
+	                        form.style.display = "none";
 	                    }
 	                }
 	            } catch (err) {
@@ -326,6 +304,61 @@
 	                } finally {
 	                    if (_didIteratorError) {
 	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'classChange',
+	        value: function classChange(what, events, el) {
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
+
+	            try {
+
+	                for (var _iterator2 = what[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var classie = _step2.value;
+	                    var _iteratorNormalCompletion3 = true;
+	                    var _didIteratorError3 = false;
+	                    var _iteratorError3 = undefined;
+
+	                    try {
+	                        for (var _iterator3 = el[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                            var elem = _step3.value;
+
+	                            try {
+	                                elem.classList[events]('-animate-modal-' + classie);
+	                            } catch (e) {
+	                                console.log(e);
+	                            }
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError3 = true;
+	                        _iteratorError3 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                                _iterator3.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError3) {
+	                                throw _iteratorError3;
+	                            }
+	                        }
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
 	                    }
 	                }
 	            }

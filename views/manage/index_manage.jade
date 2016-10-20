@@ -1,6 +1,12 @@
 extends layout_manage
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+	header.a-head
+		.a-parth-to-center
+			.a-side-logo
+				a(class="a-link-logo" href="/")
+					img(src="/img/logo.png", alt="")
+				p  Здесь вы можете управлять заказами фильтровать их по принципу оплаченные и не оплаченные
+		h1.a-head-font Список заказов 
+	.a-table-admin
+		

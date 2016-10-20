@@ -7,17 +7,37 @@ html
 		section.a-modal
 			.a-modal__item.enter
 				span.a-modal-close
-				h2.a-modal__item_title Войти
-				form.a-form-modal
+				form.a-form-modal.-enter-placeholder
+					h2.a-modal__item_title Войти
 					input(type="text" id="a-name")
-					label(for="#a-name") Логин
+					label(for="#a-name") Email
 					input(type="text" id="a-pwd")
 					label(for="#a-pwd") Пароль
-				a(href="#" class="a-remember-pwd a-link-item") Забыли пароль?
-				.a-button-area-modal
-					button.a-button-white.__uppercase Войти
-					span.a-between или
-					a(href="#" class="a-link-item-green") Зарегестрироваться
+					a(href="#" class="a-remember-pwd a-link-item -a-form-change-listener" data-attr="-remember-placeholder") Забыли пароль?
+					.a-button-area-modal
+						button.a-button-white.__uppercase Войти
+						span.a-between или
+						a(href="#" class="a-link-item-green -a-form-change-listener" data-attr="-reg-placeholder") Зарегестрироваться
+				form.a-form-modal.-reg-placeholder
+					h2.a-modal__item_title Регистрация
+					input(type="text" id="a-name")
+					label(for="#a-name") Email
+					input(type="text" id="a-pwd")
+					label(for="#a-pwd") Пароль
+					input(type="text" id="a-pwd")
+					label(for="#a-pwd") Город
+					.a-button-area-modal
+						button.a-button-white.__uppercase Зарегестрироваться
+						span.a-between или
+						a(href="#" class="a-link-item-green -a-form-change-listener" data-attr="-enter-placeholder") Есть аккаунт?
+				form.a-form-modal.-remember-placeholder
+					h2.a-modal__item_title Напомнить пароль
+					input(type="text" id="a-name")
+					label(for="#a-name") Email
+					.a-button-area-modal
+						button.a-button-white.__uppercase Вспомнить пароль
+						span.a-between или
+						a(href="#" class="a-link-item-green -a-form-change-listener" data-attr="-enter-placeholder") уже вспомнили?
 			.a-modal__item.rules
 				span.a-modal-close
 				h2.a-modal__item_title Правила аукциона

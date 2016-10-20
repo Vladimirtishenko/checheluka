@@ -8,4 +8,6 @@ module.exports = function(app){
 
 	app.get("/privat", require("./privat").get);
 
+	app.get("/manage", require("./manage").get);
+
 }

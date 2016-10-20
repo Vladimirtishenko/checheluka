@@ -72,13 +72,28 @@
 	display inline-block
 	padding 1px 0
 	font-style normal
+	position relative
 	&:hover
 		border-bottom 1px dotted rgba(21, 163, 153, 0)
+	&:hover span 
+		display block
 	
 .a-general-goods__description_info_part-link span 
 	display none
+	position absolute
+	padding 10px 10px 7px
+	color #fff
+	background green
+	top -40px
+	&:before
+		content ''
+		position absolute
+		left 0
+		bottom -5px
+		border 5px solid transparent
+		border-left 5px solid green
 	
-.a-general-goods__description_price_retail
+.a-general-goods__description_price_retail, .a-general-goods__time_to_end p
 	font-family HelveticaRoman
 	color fontg
 	font-size 14px
@@ -135,4 +150,23 @@
 
 .a-img-scale img:hover
 	transform scale(1.2)
+
+.a-general-goods__time_to_end
+	display flex
+	align-items center
+
+.a-general-goods__time_to_end p
+	padding-left 20px
+
+.a-general-goods__time_to_end p span 
+	color reds
+	font-size 22px
+	font-family HelveticaThin
 	
+.a-general-number__this_main
+	position absolute
+	font-size 35px
+	top -10px
+	left 40px
+	font-family HelveticaLight
+	z-index 9

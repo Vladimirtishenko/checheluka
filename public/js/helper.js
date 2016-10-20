@@ -1,64 +1,45 @@
 'use strict';
 
 export default class Helper {
-	constructor() {
-	}
+    constructor() {}
 
-	flyEvent(listen, element, callback){
+    flyEvent(listen, element, callback) {
 
-	    let oneCallback = false,
-	        callbackTohandler,
-	        count = 0;
+        let oneCallback = false,
+            callbackTohandler,
+            count = 0;
 
-	    if(callback instanceof Array && element.length != callback.length){
-	        throw {
-	            message: "The number of elements handler does not match"
-	        }
-	    } else if(typeof callback == "function") {
-	        oneCallback = true;
-	    }
-
-	    console.log(listen);
-
-	    listen.forEach(listener);
+        if (callback instanceof Array && element.length != callback.length) {
+            throw {
+                message: "The number of elements handler does not match"
+            }
+        } else if (typeof callback == "function") {
+            oneCallback = true;
+        }
 
 
-	    let listener = function(item, i){
+        listen.forEach(listener);
 
-	    	element.forEach(elements.bind(this, item))
+        function listener(item, i) {
+            element.forEach(elements.bind(this, item))
+        }
 
-	    }
+        function elements(item, items, j) {
 
+        	if(!items) return;
 
-	    let elements = function(item, items, j){
-	    	
-	    	callbackTohandler = oneCallback ? callback : callback[j-1];
-	    		
-	    		if(items instanceof Array){
+            callbackTohandler = oneCallback ? callback : callback[j];
 
+            try {
+                items.addEventListener(item, callbackTohandler);
+            } catch (e) {
+                [].forEach.call(items, function(el, c) {
+                    el.addEventListener(item, callbackTohandler);
+                })
+            }
 
-	    			items.forEach(function(el, c){
-	    				el.addEventListener(item, callbackTohandler);
-	    			})
+        }
 
-	                
-
-	            }  else {
-	            	items.addEventListener(item, callbackTohandler);
-	            }
-
-	    }
-
-
-
-
-	     
-
-
-
-
-
-
-	}
+    }
 
 }

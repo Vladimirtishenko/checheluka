@@ -1,3 +1,44 @@
+w = 945px
+greys = #f5f5f5
+fontg = #767575
+green = #15a399
+greenTooltip = #20bbb0
+reds = #fc392c
+pink = #e8065a
+dark = #131313
+i = !important
+
+@font-face
+   font-family HelveticaLight
+   font-style normal
+   src url('../../fonts/HelveticaNeueCyr-Light.otf')
+
+@font-face
+   font-family HelveticaThin
+   font-style normal
+   src url('../../fonts/HelveticaNeueCyr-Thin.otf')
+
+@font-face
+   font-family HelveticaUltraLight
+   font-style normal
+   src url('../../fonts/HelveticaNeueCyr-UltraLight.otf')
+
+@font-face
+   font-family HelveticaMedium
+   font-style normal
+   src url('../../fonts/HelveticaNeueCyr-Medium.otf')
+
+
+@font-face
+   font-family HelveticaRoman
+   font-style normal
+   src url('../../fonts/HelveticaNeueCyr-Roman.otf')
+   
+@font-face
+   font-family HelveticaBold
+   font-style normal
+   src url('../../fonts/HelveticaNeueCyr-Bold.otf')
+
 *
   box-sizing border-box
 
@@ -28,6 +69,9 @@ body
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section
   display block
+
+h1,h2,h3,h4,h5,h6
+  font-weight normal
 
 nav ul
   list-style none
@@ -77,3 +121,52 @@ input, select
 
 span 
   font-size 12px
+  
+.a-head
+  width 100%
+  height 125px
+  position relative
+  z-index 1
+  background url('../../img/header.png')
+  
+.a-parth-to-center
+  width w
+  height 125px
+  margin 0 auto
+  display flex
+  position relative
+  justify-content space-between
+
+.a-side-logo
+  display flex
+  position relative
+  align-items center
+  padding 0 20px 0 0
+
+.a-side-logo p 
+  font-size 12px
+  font-family HelveticaRoman
+  margin-top -20px
+  padding-left 36px
+  position relative
+  line-height 18px
+  color fontg
+  &:before
+    content ""
+    position absolute
+    width 0
+    height 0
+    border-style solid
+    top 8px
+    line-height 18px
+    border-width 8.5px 0 8.5px 13px
+    border-color transparent transparent transparent #ffb121
+    left 13px
+    
+.a-head-font 
+  padding 20px 0
+  font-size 50px
+  width w
+  margin 0 auto
+  text-align left
+  font-family HelveticaThin

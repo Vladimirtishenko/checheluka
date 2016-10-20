@@ -5,9 +5,33 @@ block content
 		include header.jade
 		.a-chat-container
 			div(class="a-chat-container__button")
+			h1.a-chat-title Чат
+			.a-block-with-proposal
+				p.a-block-with-proposal__buy_now Готовы купить за
+					span 200 руб.
+				p.a-block-with-proposal__user 
+					i Вася Петров (г.Москва),  
+					i Валера (г.Самара) 
+			.a-block-with-proposal
+				p.a-block-with-proposal__buy_now Готовы купить за
+					span 60 руб.
+				p.a-block-with-proposal__user 900 чел.
+			.a-block-with-proposal
+				p.a-block-with-proposal__buy_now Готовы купить за
+					span 50 руб.
+				p.a-block-with-proposal__user 1200 чел.
+			.a-block-with-proposal
+				p.a-block-with-proposal__buy_now Готовы купить за
+					span 40 руб.
+				p.a-block-with-proposal__user 1500 чел.
+			.a-block-with-proposal
+				p.a-block-with-proposal__buy_now Готовы купить за
+					span 30 руб.
+				p.a-block-with-proposal__user 1800 чел.
 		.a-backgroung-general-goods
 			.a-general-goods
 				.a-general-goods__image
+					span.a-general-number__this_main №1
 					.a-img-scale
 						img(src="/img/16.jpg", alt="")
 				.a-general-goods__description
@@ -39,8 +63,11 @@ block content
 					p.a-general-goods__description_price_now
 						| 2300 
 						span руб.
-					button( class="a-general-goods__description_buy a-button-black")
-						| Покупаю
+					.a-general-goods__time_to_end
+						button( class="a-general-goods__description_buy a-button-black")
+							| Покупаю
+						p До завершения -  
+							span 00:30
 					.a-general-goods__description_rates_button
 						button.a-button-white
 							| + 1 руб.
