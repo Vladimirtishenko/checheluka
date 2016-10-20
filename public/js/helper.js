@@ -18,15 +18,46 @@ export default class Helper {
 	        oneCallback = true;
 	    }
 
-	    listen.forEach((item, i) => {
-	        element.forEach((items, j) => {
-	            if(items){
-	                callbackTohandler = oneCallback ? callback : callback[count];
-	                items.addEventListener(item, callbackTohandler);
-	            }  
-	            count++;
-	        })
-	    })
+	    console.log(listen);
+
+	    listen.forEach(listener);
+
+
+	    let listener = function(item, i){
+
+	    	element.forEach(elements.bind(this, item))
+
+	    }
+
+
+	    let elements = function(item, items, j){
+	    	
+	    	callbackTohandler = oneCallback ? callback : callback[j-1];
+	    		
+	    		if(items instanceof Array){
+
+
+	    			items.forEach(function(el, c){
+	    				el.addEventListener(item, callbackTohandler);
+	    			})
+
+	                
+
+	            }  else {
+	            	items.addEventListener(item, callbackTohandler);
+	            }
+
+	    }
+
+
+
+
+	     
+
+
+
+
+
 
 	}
 

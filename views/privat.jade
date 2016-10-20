@@ -4,6 +4,90 @@ block content
 	section.a-main 
 		include header.jade
 		
-		.a-private-cabinet
-			
+		.a-backgroung-general-goods.a-privat-block-top
+			.a-general-goods.__in_flex_wrap.__background_left
+				h1.a-head-font-left-side.__in_flex Не оплаченные заказы
+				.a-privat-table
+					.a-privat-table__image_block
+						img(src="/img/16.jpg", alt="")
+						p 
+							span №22
+							| Красивая шапочка и девушка в подарок
+					.a-privat-table__count_and_price
+						p Колличество
+							span 2 шт.
+						p Стоимость
+							span 22 000 руб.
+				.a-privat-table
+					.a-privat-table__image_block
+						img(src="/img/2.jpg", alt="")
+						p 
+							span №23
+							| Красивая шапочка и девушка в подарок
+					.a-privat-table__count_and_price
+						p Колличество
+							span 1 шт.
+						p Стоимость
+							span 1000 руб.
+				.a-privat-price-to-change
+					.a-privat-table__all-price
+						p.a-privat-table__all-price_text Общая стоимость:
+						p.a-privat-table__all-price_price 1000 руб.
+					.a-privat-table__all-price
+						button.a-button-black
+							| Оформить заказ
+
+		h1.a-head-font-left-side Оплаченные заказы
+		.a-privat-table_bought
+			.a-privat-table_bought__number
+				p 
+					span Заказ 
+					| №10 
+					span от 
+					| 12.10.2016
+				p На сумму: 
+					span 22 000 руб.
+			.a-privat-table.a-privat-table__bought
+				.a-privat-table__image_block
+					img(src="/img/16.jpg", alt="")
+					p 
+						span №22
+						| Красивая шапочка и девушка в подарок
+				.a-privat-table__count_and_price
+					p Колличество
+						span 2 шт.
+					p Стоимость
+						span 22 000 руб.
+			.a-privat-table
+				.a-privat-table__image_block
+					img(src="/img/2.jpg", alt="")
+					p 
+						span №23
+						| Красивая шапочка и девушка в подарок
+				.a-privat-table__count_and_price
+					p Колличество
+						span 1 шт.
+					p Стоимость
+						span 1000 руб.
+		.a-privat-table_bought
+			.a-privat-table_bought__number
+				p 
+					span Заказ 
+					| №10 
+					span от 
+					| 12.10.2016
+				p На сумму: 
+					span 1 000 руб.
+			.a-privat-table.a-privat-table__bought
+				.a-privat-table__image_block
+					img(src="/img/10.jpg", alt="")
+					p 
+						span №22
+						| Красивая шапочка и девушка в подарок
+				.a-privat-table__count_and_price
+					p Колличество
+						span 2 шт.
+					p Стоимость
+						span 22 000 руб.
+
 		include footer.jade

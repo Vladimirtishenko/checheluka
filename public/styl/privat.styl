@@ -1,0 +1,123 @@
+.a-privat-table
+	width 100%
+	position relative
+	display flex
+	flex-wrap wrap
+	align-items center
+	z-index 11
+	justify-content space-between
+	margin-bottom 30px
+
+.a-privat-block-top
+	position relative
+	margin-bottom 40px
+	&:before
+		content ""
+		position absolute
+		width 111px
+		height 66px
+		background-position -473px 0
+		left 50%
+		top -35px
+		background-image url('../img/sprite.png')
+
+.a-privat-table__image_block
+	display flex
+	align-items center
+	justify-content flex-start
+	width 50%
+
+.a-privat-table__count_and_price
+	display flex
+	align-items center
+	justify-content space-between
+	padding-left 100px
+	width 50%
+	
+.a-privat-table__image_block img 
+	width 105px
+	
+.a-privat-table__image_block p
+	font-size 14px
+	font-family HelveticaRoman
+	padding 0 30px
+	
+.a-privat-table__image_block span
+	font-size 14px
+	padding 0 0 10px 0
+	font-family HelveticaRoman
+	display block
+	color fontg
+
+.a-privat-table__count_and_price p 
+	text-align right 
+	font-family HelveticaRoman
+	color fontg
+	font-size 14px
+
+.a-privat-table__count_and_price p span
+	display block
+	font-family HelveticaThin
+	color green 
+	font-size 35px
+	padding 10px 0 0 0
+
+.a-privat-table__all-price
+	width 100% 
+	display flex 
+	justify-content flex-end
+	align-items flex-end
+	margin-bottom 20px
+
+.a-privat-table__all-price_price
+	font-size 40px
+	color reds 
+	font-family HelveticaThin
+	line-height 28px
+	padding-left 10px
+
+	
+.a-privat-table__all-price_text
+	font-size 16px
+	font-family HelveticaRoman
+
+.a-privat-price-to-change
+	width 100%
+	display flex 
+	justify-content flex-end
+	flex-wrap wrap
+
+.__background_left:after
+	left 100px
+	right inherit
+	
+.a-privat-table_bought
+	width w
+	margin 0 auto
+	position relative
+	&:nth-child(2n + 2):after 
+		content ""
+		position absolute
+		width 100px
+		height 100px
+		background url('../img/sprite.png') -483px -293px
+		left -102px
+	
+.a-privat-table_bought__number
+	display flex 
+	align-items center
+	justify-content space-between
+	padding 14px
+	background greys
+	border-bottom 2px solid #000
+	
+.a-privat-table_bought__number p 
+	font-family HelveticaRoman
+	font-size 14px
+	
+.a-privat-table_bought__number p span 
+	font-family HelveticaRoman
+	color fontg 
+
+.a-privat-table__bought
+	margin 20px 0

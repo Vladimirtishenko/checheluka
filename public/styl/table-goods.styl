@@ -28,6 +28,33 @@
 		z-index -1
 		right -135px
 		top 90px
+	&:nth-child(5n+4) .a-hidden-block
+		right 0
+		left inherit
+	&:nth-child(5n+5) .a-hidden-block
+		right 0
+		left inherit
+	&:hover
+		z-index 10
+	&:hover .a-hidden-block
+		display flex
+		animation-name fades
+		animation-delay .1s
+		animation-duration .2s
+		animation-direction alternate
+		animation-fill-mode both
+		animation-timing-function ease-out
+
+
+@keyframes fades {
+	0% {
+		opacity 0
+	}
+	100% {
+		opacity 1
+	}
+}
+
 
 .a-all-goods-table__item > img
 	width 100%
@@ -45,4 +72,64 @@
 	
 .a-hidden-block
 	display none
+	opacity 0
 	position absolute
+	align-items flex-start
+	justify-content space-between
+	top 0
+	left 0
+	padding 40px 
+	background #fff
+	flex-direction row-reverse
+
+.a-hidden-block img 
+	box-shadow 0 0 30px -2px rgba(0,0,0,.2)
+	width 210px
+
+.a-hidden-block__description
+	padding 0 70px 0 0 
+	white-space nowrap
+
+.a-hidden-block__description__outer
+	padding-bottom 30px
+	position relative 
+	&:after 
+		content ""
+		position absolute
+		width 95px
+		height 2px
+		background #000
+		bottom 20px
+		left -60px
+		
+	
+.a-hidden-block__description-link
+	font-family HelveticaRoman
+	font-size 14px
+	display block
+	padding-bottom 10px
+	
+.a-hidden-block__description-link i 
+	color fontg
+	padding-bottom 3px
+	display inline-block
+
+.a-hidden-block__description-link span 
+	display block
+	
+.a-hidden-block__description .a-old-price
+	padding-bottom 5px
+
+.a-hidden-block__img-outer
+	position relative 
+	&:before 
+		content ""
+		background url('../img/sprite.png')
+		left -64px
+		top 80px
+		width 97px
+		height 90px
+		z-index 1
+		position absolute
+		background-position -472px 90px
+	

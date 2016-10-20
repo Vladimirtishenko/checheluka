@@ -6,4 +6,6 @@ module.exports = function(app){
 	
 	app.get("/comments", require("./comments").get);
 
+	app.get("/privat", require("./privat").get);
+
 }

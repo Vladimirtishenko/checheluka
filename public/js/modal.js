@@ -5,9 +5,13 @@ class Modal extends Helper {
         super();
         this.parentWraper = document.querySelector('.a-modal');
         const button = document.querySelectorAll('.button-modal');
-        const test = document.querySelectorAll('.a-modal__item');
-        this.flyEvent(['click'], button, this.modalHandlerIn.bind(this));
-        this.flyEvent(['click'], test, this.modalHandlerOut.bind(this));
+        const close = document.querySelectorAll('.a-modal-close');
+        /*this.flyEvent(['click'], button, this.modalHandlerIn.bind(this));
+        this.flyEvent(['click'], close, this.modalHandlerOut.bind(this));*/
+
+
+        this.flyEvent(['click'], [button, close], [this.modalHandlerIn.bind(this), this.modalHandlerOut.bind(this)]);
+
 
     }
 
@@ -24,8 +28,6 @@ class Modal extends Helper {
         if (!attr) return;
 
         let container = document.querySelector('.' + attr);
-
-
         this.classChange(['in'], 'add', [this.parentWraper, container])
 
 
@@ -33,23 +35,18 @@ class Modal extends Helper {
 
     modalHandlerOut(event) {
 
+        let target = event && event.target ? event && event.target : null
+         if (!target) return;
+
         this.animationEvent = this.transitionEnd.bind(this);
-
-
         this.flyEvent(['animationend'], [this.parentWraper], this.animationEvent);
-
-
-        this.classChange(['out'], 'add', [this.parentWraper, event.target])
+        this.classChange(['out'], 'add', [this.parentWraper, target.parentNode]);
 
     }
 
     transitionEnd(event) {
         let target = event.target;
-
-        console.log(target);
-
-        this.classChange(['in', 'out'], 'remove', [target])
-
+        this.classChange(['in', 'out'], 'remove', [target]);
     }
 
     classChange(what, events, el) {

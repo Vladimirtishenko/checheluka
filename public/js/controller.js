@@ -9,7 +9,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	new Sockets();
 	new Modal();
 	new Chat();
-	
 })
 
 

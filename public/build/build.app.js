@@ -168,15 +168,28 @@
 					oneCallback = true;
 				}
 
-				listen.forEach(function (item, i) {
-					element.forEach(function (items, j) {
-						if (items) {
-							callbackTohandler = oneCallback ? callback : callback[count];
-							items.addEventListener(item, callbackTohandler);
-						}
-						count++;
-					});
-				});
+				console.log(listen);
+
+				listen.forEach(listener);
+
+				var listener = function listener(item, i) {
+
+					element.forEach(elements.bind(this, item));
+				};
+
+				var elements = function elements(item, items, j) {
+
+					callbackTohandler = oneCallback ? callback : callback[j - 1];
+
+					if (items instanceof Array) {
+
+						items.forEach(function (el, c) {
+							el.addEventListener(item, callbackTohandler);
+						});
+					} else {
+						items.addEventListener(item, callbackTohandler);
+					}
+				};
 			}
 		}]);
 
@@ -219,9 +232,11 @@
 
 	        _this.parentWraper = document.querySelector('.a-modal');
 	        var button = document.querySelectorAll('.button-modal');
-	        var test = document.querySelectorAll('.a-modal__item');
-	        _this.flyEvent(['click'], button, _this.modalHandlerIn.bind(_this));
-	        _this.flyEvent(['click'], test, _this.modalHandlerOut.bind(_this));
+	        var close = document.querySelectorAll('.a-modal-close');
+	        /*this.flyEvent(['click'], button, this.modalHandlerIn.bind(this));
+	        this.flyEvent(['click'], close, this.modalHandlerOut.bind(this));*/
+
+	        _this.flyEvent(['click'], [button, close], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this)]);
 
 	        return _this;
 	    }
@@ -241,26 +256,23 @@
 	            if (!attr) return;
 
 	            var container = document.querySelector('.' + attr);
-
 	            this.classChange(['in'], 'add', [this.parentWraper, container]);
 	        }
 	    }, {
 	        key: 'modalHandlerOut',
 	        value: function modalHandlerOut(event) {
 
+	            var target = event && event.target ? event && event.target : null;
+	            if (!target) return;
+
 	            this.animationEvent = this.transitionEnd.bind(this);
-
 	            this.flyEvent(['animationend'], [this.parentWraper], this.animationEvent);
-
-	            this.classChange(['out'], 'add', [this.parentWraper, event.target]);
+	            this.classChange(['out'], 'add', [this.parentWraper, target.parentNode]);
 	        }
 	    }, {
 	        key: 'transitionEnd',
 	        value: function transitionEnd(event) {
 	            var target = event.target;
-
-	            console.log(target);
-
 	            this.classChange(['in', 'out'], 'remove', [target]);
 	        }
 	    }, {
