@@ -126,20 +126,30 @@ button
   font-size 10px
   
 .a-button-black
-  background rgba(0,0,0,1)
+  background rgba(21,163,153,1)
   text-transform uppercase
   color #fff
-  font-size 14px
-  font-family HelveticaRoman
-  padding 16px 25px
+  font-size 30px
+  font-family HelveticaThin
+  padding 25px 25px 22px 25px
+  letter-spacing 2px
   line-height 13px
   transition all .4s ease-out
   cursor pointer
-  border 2px solid #000
+  border 2px solid rgba(21,163,153,1)
   &:hover 
     color #000
     background rgba(0,0,0,0)
-  
+
+.a-button-black.a-inactive
+  background rgba(0,0,0,0) i
+  color #000 i
+  opacity .5 i
+  cursor default
+  &:active, &:focus, &:hover
+    box-shadow none
+    outline none
+
 .a-button-white
   background rgba(0,0,0,0)
   border 2px solid #000
@@ -153,7 +163,20 @@ button
   &:hover 
     color #fff 
     background rgba(0,0,0,1)
-    
+
+.a-rates-inactive .a-button-white
+  background rgba(0,0,0,0) i
+  color #000 i
+  opacity .5 i
+  cursor default
+  opacity .5
+  &:hover
+    background rgba(0,0,0,0) i
+    color #000 i
+  &:active, &:focus, &:hover
+    box-shadow none
+    outline none
+  
 .__uppercase
   text-transform uppercase
   

@@ -1,7 +1,14 @@
-module.exports.get = function(req, res, next) {
+var http = require("http");
 
-	res.render('index', {
-        title: "Hello Express"
-    });
+module.exports.get = function(req, res, next) {
+    http.get('http://chechelyka.com/auc.php', (response) => {
+        response.on('data', (body) => {
+            res.render('index', {
+                title: "Hello Express",
+                body: String(body)
+            });
+        });
+
+    })
 
 }

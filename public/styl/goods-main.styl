@@ -60,8 +60,8 @@
 .a-general-goods__description_info_part-link 
 	color green
 	font-family HelveticaRoman
-	width 80px
 	padding 5px 0
+	margin 0 20px 0 0
 	display inline-block
 	position relative
 
@@ -70,33 +70,23 @@
 	transition all .2s ease-out
 	border-bottom 1px dotted rgba(21, 163, 153, 1)
 	display inline-block
-	padding 1px 0
+	padding 1px 0px
+	margin-right 10px
 	font-style normal
 	position relative
-	&:hover
-		border-bottom 1px dotted rgba(21, 163, 153, 0)
-	&:hover span 
-		display block
 	
 .a-general-goods__description_info_part-link span 
-	display none
-	position absolute
-	padding 10px 10px 7px
-	color #fff
-	background green
-	top -40px
-	&:before
-		content ''
-		position absolute
-		left 0
-		bottom -5px
-		border 5px solid transparent
-		border-left 5px solid green
+	font-size 16px
+	font-family HelveticaThin
+	color fontg
+	
 	
 .a-general-goods__description_price_retail, .a-general-goods__time_to_end p
 	font-family HelveticaRoman
 	color fontg
 	font-size 14px
+	position relative
+	z-index 9
 	
 .a-general-goods__description_price_retail span
 	color #000
@@ -170,3 +160,9 @@
 	left 40px
 	font-family HelveticaLight
 	z-index 9
+	
+.a-info-about-rates
+	color fontg
+	font-family HelveticaThin
+	padding-top 17px
+	

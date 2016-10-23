@@ -4,7 +4,7 @@ class Chat extends Helper {
 	constructor() {
 		super();
 		this.button = document.querySelector('.a-chat-container__button');
-		this.flyEvent(['click'], [this.button], this.chatHandler.bind(this));
+		this.flyEvent('add', ['click'], [this.button], this.chatHandler.bind(this));
 		this.arrayPosition = ['-631px 0', '-684px 0']
 	}
 

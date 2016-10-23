@@ -60,12 +60,17 @@
 
 	var _chat2 = _interopRequireDefault(_chat);
 
+	var _zoomImg = __webpack_require__(21);
+
+	var _zoomImg2 = _interopRequireDefault(_zoomImg);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	window.addEventListener('DOMContentLoaded', function () {
 		new _socket2.default();
 		new _modal2.default();
 		new _chat2.default();
+		new _zoomImg2.default(document.querySelector('.a-else-goods'));
 	});
 
 /***/ },
@@ -155,7 +160,7 @@
 
 	    _createClass(Helper, [{
 	        key: "flyEvent",
-	        value: function flyEvent(listen, element, callback) {
+	        value: function flyEvent(action, listen, element, callback) {
 
 	            var oneCallback = false,
 	                callbackTohandler = void 0,
@@ -182,10 +187,87 @@
 	                callbackTohandler = oneCallback ? callback : callback[j];
 
 	                try {
-	                    items.addEventListener(item, callbackTohandler);
+	                    items[action + 'EventListener'](item, callbackTohandler);
 	                } catch (e) {
 	                    [].forEach.call(items, function (el, c) {
-	                        el.addEventListener(item, callbackTohandler);
+	                        el[action + 'EventListener'](item, callbackTohandler);
+	                    });
+	                }
+	            }
+	        }
+	    }, {
+	        key: "classChange",
+	        value: function classChange(what, events, el) {
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+
+	            try {
+
+	                for (var _iterator = what[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var classie = _step.value;
+	                    var _iteratorNormalCompletion2 = true;
+	                    var _didIteratorError2 = false;
+	                    var _iteratorError2 = undefined;
+
+	                    try {
+	                        for (var _iterator2 = el[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                            var elem = _step2.value;
+
+	                            try {
+	                                elem.classList[events](classie);
+	                            } catch (e) {
+	                                console.log(e);
+	                            }
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError2 = true;
+	                        _iteratorError2 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                                _iterator2.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError2) {
+	                                throw _iteratorError2;
+	                            }
+	                        }
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: "cssHelper",
+	        value: function cssHelper(el, styles) {
+
+	            if (el.length != styles.length) {
+	                throw {
+	                    message: "The number of elements does not match"
+	                };
+	            }
+
+	            el.forEach(cicleElements);
+
+	            function cicleElements(item, i) {
+	                try {
+	                    item.style.cssText += styles[i];
+	                } catch (e) {
+	                    [].forEach.call(item, function (elem, j) {
+	                        elem.style.cssText += styles[i];
 	                    });
 	                }
 	            }
@@ -233,7 +315,7 @@
 	        var button = document.querySelectorAll('.button-modal');
 	        var close = document.querySelectorAll('.a-modal-close');
 	        var formChange = document.querySelectorAll('.-a-form-change-listener');
-	        _this.flyEvent(['click'], [button, close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
+	        _this.flyEvent('add', ['click'], [button, close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
 	        return _this;
 	    }
 
@@ -241,18 +323,13 @@
 	        key: 'modalHandlerIn',
 	        value: function modalHandlerIn(event) {
 
-	            try {
-	                this.parentWraper.removeEventListener('animationend', this.animationEvent);
-	            } catch (e) {
-	                console.log(e);
-	            }
-
 	            var attr = event && event.target ? event.target.getAttribute('data-attr') : null;
 
 	            if (!attr) return;
 
 	            var container = document.querySelector('.' + attr);
-	            this.classChange(['in'], 'add', [this.parentWraper, container]);
+	            this.cssHelper([container], ["display: flex"]);
+	            this.classChange(['-animate-modal-in'], 'add', [this.parentWraper]);
 	        }
 	    }, {
 	        key: 'modalHandlerOut',
@@ -261,15 +338,27 @@
 	            var target = event && event.target ? event && event.target : null;
 	            if (!target) return;
 
-	            this.animationEvent = this.transitionEnd.bind(this);
-	            this.flyEvent(['animationend'], [this.parentWraper], this.animationEvent);
-	            this.classChange(['out'], 'add', [this.parentWraper, target.parentNode]);
+	            this.animationEvent = this.transitionEnd.bind(this, target);
+	            this.flyEvent('add', ['animationend'], [this.parentWraper], this.animationEvent);
+	            this.classChange(['-animate-modal-out'], 'add', [this.parentWraper]);
+	        }
+	    }, {
+	        key: 'addStyleOrRemove',
+	        value: function addStyleOrRemove(el, what) {
+	            el.style.display = what;
 	        }
 	    }, {
 	        key: 'transitionEnd',
-	        value: function transitionEnd(event) {
-	            var target = event.target;
-	            this.classChange(['in', 'out'], 'remove', [target]);
+	        value: function transitionEnd(targets, event) {
+	            var target = event && event.target;
+	            this.classChange(['-animate-modal-in', '-animate-modal-out'], 'remove', [target]);
+
+	            this.cssHelper([targets.parentNode], ["display: none"]);
+	            try {
+	                this.parentWraper.removeEventListener('animationend', this.animationEvent);
+	            } catch (e) {
+	                console.log(e);
+	            }
 	        }
 	    }, {
 	        key: 'changeForm',
@@ -305,61 +394,6 @@
 	                } finally {
 	                    if (_didIteratorError) {
 	                        throw _iteratorError;
-	                    }
-	                }
-	            }
-	        }
-	    }, {
-	        key: 'classChange',
-	        value: function classChange(what, events, el) {
-	            var _iteratorNormalCompletion2 = true;
-	            var _didIteratorError2 = false;
-	            var _iteratorError2 = undefined;
-
-	            try {
-
-	                for (var _iterator2 = what[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                    var classie = _step2.value;
-	                    var _iteratorNormalCompletion3 = true;
-	                    var _didIteratorError3 = false;
-	                    var _iteratorError3 = undefined;
-
-	                    try {
-	                        for (var _iterator3 = el[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                            var elem = _step3.value;
-
-	                            try {
-	                                elem.classList[events]('-animate-modal-' + classie);
-	                            } catch (e) {
-	                                console.log(e);
-	                            }
-	                        }
-	                    } catch (err) {
-	                        _didIteratorError3 = true;
-	                        _iteratorError3 = err;
-	                    } finally {
-	                        try {
-	                            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-	                                _iterator3.return();
-	                            }
-	                        } finally {
-	                            if (_didIteratorError3) {
-	                                throw _iteratorError3;
-	                            }
-	                        }
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError2 = true;
-	                _iteratorError2 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                        _iterator2.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError2) {
-	                        throw _iteratorError2;
 	                    }
 	                }
 	            }
@@ -404,7 +438,7 @@
 			var _this = _possibleConstructorReturn(this, (Chat.__proto__ || Object.getPrototypeOf(Chat)).call(this));
 
 			_this.button = document.querySelector('.a-chat-container__button');
-			_this.flyEvent(['click'], [_this.button], _this.chatHandler.bind(_this));
+			_this.flyEvent('add', ['click'], [_this.button], _this.chatHandler.bind(_this));
 			_this.arrayPosition = ['-631px 0', '-684px 0'];
 			return _this;
 		}
@@ -425,6 +459,144 @@
 	}(_helper2.default);
 
 	exports.default = Chat;
+
+/***/ },
+/* 19 */,
+/* 20 */,
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Zoom = function (_Helper) {
+		_inherits(Zoom, _Helper);
+
+		function Zoom(el) {
+			_classCallCheck(this, Zoom);
+
+			var _this = _possibleConstructorReturn(this, (Zoom.__proto__ || Object.getPrototypeOf(Zoom)).call(this));
+
+			if (!el) return _possibleConstructorReturn(_this);
+
+			_this.modalOuter = document.querySelector('.a-modal');
+			_this.modalContainerForImg = _this.modalOuter.querySelector('.a-outer-for-image');
+			_this.modalInnerContainer = _this.modalOuter.querySelector('.a-inner-background');
+			_this.allGoodsDelegate = el;
+			_this.cloneContainer = null;
+			_this.staticZoomWidth = 1000;
+			_this.flyEvent('add', ['click'], [_this.allGoodsDelegate], [_this.handlerToShowModalZoom.bind(_this)]);
+
+			return _this;
+		}
+
+		_createClass(Zoom, [{
+			key: 'handlerToShowModalZoom',
+			value: function handlerToShowModalZoom(event) {
+
+				try {
+					this.flyEvent('remove', ['mouseenter', 'mouseleave', 'mousemove'], [this.modalContainerForImg], this.allListeners);
+				} catch (e) {
+					console.log(e);
+				}
+
+				var target = event && event.target || null;
+
+				if (!target || !target.classList.contains('a-image-to-zoom')) return;
+
+				this.cssHelper([this.modalInnerContainer], ["display: flex"]);
+
+				this.modalContainerForImg.innerHTML = "<img src='" + target.src + "' />";
+
+				this.allListeners = this.handlerToZoomImg.bind(this);
+
+				this.flyEvent('add', ['mouseenter', 'mouseleave', 'mousemove'], [this.modalContainerForImg], [this.allListeners]);
+
+				this.classChange(['-animate-modal-in'], 'add', [this.modalOuter]);
+			}
+		}, {
+			key: 'handlerToZoomImg',
+			value: function handlerToZoomImg(event) {
+
+				var type = event && event.type,
+				    target = event && event.target;
+
+				if (!target) return;
+
+				var events = {
+					mousemove: this.handlerMousemove.bind(this),
+					mouseenter: this.handlerMouseenter.bind(this),
+					mouseleave: this.handlerMouseleave.bind(this)
+				};
+
+				events[type](event);
+			}
+		}, {
+			key: 'handlerMousemove',
+			value: function handlerMousemove(event) {
+
+				this.cssHelper([this.cloneContainer.firstElementChild], ["left: " + -(event.offsetX * this.offsetPosition.left) + "px; top: " + -(event.offsetY * this.offsetPosition.top) + "px"]);
+			}
+		}, {
+			key: 'handlerMouseenter',
+			value: function handlerMouseenter(event) {
+
+				var target = event.target;
+
+				if (target != this.modalContainerForImg) return;
+
+				this.cloneContainer = target.cloneNode(true);
+				this.cloneContainer.id = "viewport";
+
+				this.modalInnerContainer.appendChild(this.cloneContainer);
+
+				this.cssHelper([this.cloneContainer, target, this.cloneContainer.firstElementChild], ["position: absolute", "opacity: 0; z-index: 1", "width:" + this.staticZoomWidth + "px"]);
+
+				this.offsetPosition = this.calculateWidthAndHeight();
+			}
+		}, {
+			key: 'handlerMouseleave',
+			value: function handlerMouseleave(event) {
+				this.cloneContainer.parentNode.removeChild(this.cloneContainer);
+				this.modalContainerForImg.removeAttribute('style');
+			}
+		}, {
+			key: 'calculateWidthAndHeight',
+			value: function calculateWidthAndHeight() {
+				var params = {},
+				    w = this.modalContainerForImg.clientWidth,
+				    h = this.modalContainerForImg.clientHeight,
+				    sw = this.staticZoomWidth,
+				    dh = this.cloneContainer.firstElementChild.clientHeight;
+
+				params.left = sw / (sw - w);
+				params.top = dh / (dh - h);
+
+				return params;
+			}
+		}]);
+
+		return Zoom;
+	}(_helper2.default);
+
+	exports.default = Zoom;
 
 /***/ }
 /******/ ]);

@@ -45,18 +45,18 @@ block content
 					.a-general-goods__description_info
 						.a-general-goods__description_info_part
 							a(href="" class="a-general-goods__description_info_part-link") 
-								i Материал
-									span Красный
+								i Размер:
+								span 36
 							a(href="" class="a-general-goods__description_info_part-link") 
-								i Размер
-									span Красный
+								i Цвет:
+								span Черный
 						.a-general-goods__description_info_part
 							a(href="" class="a-general-goods__description_info_part-link") 
-								i Цвет
-									span Красный
+								i Состав:
+								span Хлопок 100%
 							a(href="" class="a-general-goods__description_info_part-link") 
-								i Состав
-									span Красный
+								i Материал: 
+								span Плащевка
 					p.a-general-goods__description_price_retail
 						| Розничная цена: 
 						span 1000 рублей
@@ -64,11 +64,12 @@ block content
 						| 2300 
 						span руб.
 					.a-general-goods__time_to_end
-						button( class="a-general-goods__description_buy a-button-black")
+						button( class="a-general-goods__description_buy a-button-black a-inactive")
 							| Покупаю
 						p До завершения -  
 							span 00:30
-					.a-general-goods__description_rates_button
+					p.a-info-about-rates Кнопки станут активны когда в торгах останеться 10 человек
+					.a-general-goods__description_rates_button.a-rates-inactive
 						button.a-button-white
 							| + 1 руб.
 						button.a-button-white
@@ -86,7 +87,7 @@ block content
 						-var newClass = (i % 2 != 0) ? 'a-add-new-background' : ' '
 						div(class="a-else-goods__item "+classArray[c]+" "+newClass)
 							.a-resizer-masonry
-								img(src="/img/"+img+".jpg", alt=c)
+								img(src="/img/"+img+".jpg", alt=c, class="a-image-to-zoom")
 							.a-else-goods__description
 								- var number = img + 2;
 								p.a-number-goods 

@@ -3,7 +3,7 @@
 export default class Helper {
     constructor() {}
 
-    flyEvent(listen, element, callback) {
+    flyEvent(action, listen, element, callback) {
 
         let oneCallback = false,
             callbackTohandler,
@@ -31,15 +31,51 @@ export default class Helper {
             callbackTohandler = oneCallback ? callback : callback[j];
 
             try {
-                items.addEventListener(item, callbackTohandler);
+                items[action+'EventListener'](item, callbackTohandler);
             } catch (e) {
                 [].forEach.call(items, function(el, c) {
-                    el.addEventListener(item, callbackTohandler);
+                    el[action+'EventListener'](item, callbackTohandler);
                 })
             }
 
         }
 
     }
+
+    classChange(what, events, el) {
+
+        for (var classie of what) {
+            for(var elem of el){
+                try {
+                    elem.classList[events](classie);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
+
+    }
+
+    cssHelper(el, styles){
+
+        if(el.length != styles.length){
+             throw {
+                message: "The number of elements does not match"
+            }
+        }
+
+        el.forEach(cicleElements);
+
+        function cicleElements (item, i){
+            try {
+                item.style.cssText += styles[i]
+            } catch (e) {
+                [].forEach.call(item, function(elem, j) {
+                    elem.style.cssText += styles[i]
+                })
+            }
+        }
+    }
+
 
 }
