@@ -8,6 +8,7 @@ pink = #e8065a
 dark = #131313
 i = !important
 
+
 @font-face
    font-family HelveticaLight
    font-style normal
@@ -121,10 +122,34 @@ input, select
 
 span 
   font-size 12px
-  
+
+i 
+  font-style normal 
+
+input[type="text"]
+  border 2px solid #000
+  width 200px
+  background #fff 
+  padding 10px
+
+
+.a-button-white
+  background rgba(0,0,0,0)
+  border 2px solid #000
+  padding 15px 17px
+  font-size 14px
+  font-family HelveticaRoman
+  color #000
+  transition all .4s ease-out
+  cursor pointer
+  line-height 13px
+  &:hover 
+    color #fff 
+    background rgba(0,0,0,1)
+
+ 
 .a-head
   width 100%
-  height 125px
   position relative
   z-index 1
   background url('../../img/header.png')
@@ -170,3 +195,218 @@ span
   margin 0 auto
   text-align left
   font-family HelveticaThin
+  
+.a-menu-admin
+  display block
+  margin 1px 0px
+  background #000
+  padding 17px 10px
+  border-bottom 1px solid rgba(0,0,0,.2)
+  cursor pointer
+  
+.a-menu-admin__links
+  width w 
+  margin auto
+  
+.a-menu-admin__links a 
+  color #fff
+  font-family HelveticaThin 
+  font-size 20px
+  padding-right 20px
+  
+.a-container-search
+  width w
+  margin 20px auto
+  display flex 
+  justify-content flex-start
+  align-items center
+
+.a-container-search p
+  font-family HelveticaThin 
+  font-size 20px
+  color fontg 
+  padding-left 20px
+  
+.a-all-goods-table
+  display flex
+  justify-content space-between
+  flex-wrap wrap
+  width w
+  margin auto
+
+.a-all-goods-table__item
+  width 23%
+  position relative
+  color #000
+  cursor pointer
+
+
+.a-all-goods-table__item > img
+  width 100%
+  box-shadow 0 0 30px -2px rgba(0,0,0,.2)
+
+.a-all-goods-table__description
+  padding 10px 0
+
+.a-all-goods-table__description_number
+  color fontg
+  font-size 14px
+  font-family HelveticaRoman
+  padding 15px 0 10px
+  
+.a-all-goods-table__description_info
+  font-size 16px
+  font-family HelveticaRoman
+  
+.a-hidden-block
+  display flex
+  align-items flex-start
+  justify-content space-between
+  background #fff
+
+.a-hidden-block__description
+  padding 0 70px 0 0 
+  white-space nowrap
+
+.a-hidden-block__description__outer
+  padding 0 0 30px
+  position relative 
+  &:after 
+    content ""
+    position absolute
+    width 95px
+    height 2px
+    background #000
+    bottom 20px
+    left 0
+    
+  
+.a-hidden-block__description-link
+  font-family HelveticaRoman
+  font-size 14px
+  display block
+  padding-bottom 10px
+  
+.a-hidden-block__description-link i 
+  color fontg
+  padding-bottom 3px
+  display inline-block
+  font-family HelveticaThin
+  font-size 16px
+
+.a-hidden-block__description-link span 
+  display block
+  font-family HelveticaThin
+  font-size 14px
+  color #000
+
+.a-hidden-block__description .a-old-price
+  padding-bottom 5px
+  
+.a-head-font-left-side 
+  padding 0px 0px 30px 0
+  font-size 50px
+  width w
+  margin auto
+  display block
+  position relative
+  text-align left
+  font-family HelveticaThin
+  &:before
+    content ""
+    position absolute
+    width 112px
+    height 50px
+    background-image url('../../img/sprite.png')
+    background-position -474px -199px
+    z-index 1
+    right -55px
+    top 30px
+    
+.a-button-download-more
+  display flex 
+  justify-content center
+  margin 20px 0 40px
+  
+.a-footer
+  width 100%
+  background url('../../img/footer.png')
+
+.a-footer-container
+  width w 
+  padding 20px
+  margin 0 auto
+  font-family HelveticaRoman
+  display flex
+  color #fff
+  font-size 12px
+  color fontg
+  justify-content space-between
+  align-items center
+  
+.a-hidden-form
+  display none
+  
+.a-conteiner-flexible-fixed
+  display flex 
+  justify-content center
+  align-items center 
+  right 100%
+  transition .5s
+  position fixed 
+  width 100%
+  height 100%
+  background-color rgba(256,256,256, .9)
+  z-index 9999
+  
+.a-modal-close
+  width 40px
+  height 40px
+  background-image url('../../img/sprite.png')
+  background-position -361px -132px
+  position absolute
+  right 20px
+  top 20px
+  cursor pointer
+  transform rotate(0)
+  transition all .5s ease-out
+  &:hover
+    transform rotate(90deg)
+    
+.a-conteiner-flexible-fixed .a-hidden-form
+  display flex
+  
+.container-description-form
+  display flex 
+  justify-content flex-start
+  align-items center
+  padding 10px 0
+  flex-wrap wrap
+
+.a-hidden-form_description
+  padding-left 20px
+  display flex 
+  flex-direction column
+  
+.container-description-form__title 
+  font-family HelveticaThin
+  font-size 25px
+
+.container-description-form__else_params
+  font-family HelveticaThin
+  font-size 20px
+  padding-bottom 5px
+  width 100%
+
+.container-description-form span 
+  width 100% 
+  display block
+  color fontg
+  font-family HelveticaThin
+  font-size 18px
+  
+.container-description-form label 
+  padding-right 10px 
+  
+.a-containet-flex-to-end-button
+  margin-top 20px

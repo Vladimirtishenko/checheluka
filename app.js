@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var socketHandler = require('./middleware/socket');
+
 var config = require('./config');
 
 var app = express();
@@ -12,7 +13,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views/manage')] );
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public

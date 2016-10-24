@@ -10,4 +10,6 @@ module.exports = function(app){
 
 	app.get("/manage", require("./manage").get);
 
+	app.post("/manage", require("./manage").post);
+
 }

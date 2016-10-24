@@ -26,15 +26,15 @@ export default class Helper {
 
         function elements(item, items, j) {
 
-        	if(!items) return;
+            if (!items) return;
 
             callbackTohandler = oneCallback ? callback : callback[j];
 
             try {
-                items[action+'EventListener'](item, callbackTohandler);
+                items[action + 'EventListener'](item, callbackTohandler);
             } catch (e) {
                 [].forEach.call(items, function(el, c) {
-                    el[action+'EventListener'](item, callbackTohandler);
+                    el[action + 'EventListener'](item, callbackTohandler);
                 })
             }
 
@@ -45,7 +45,7 @@ export default class Helper {
     classChange(what, events, el) {
 
         for (var classie of what) {
-            for(var elem of el){
+            for (var elem of el) {
                 try {
                     elem.classList[events](classie);
                 } catch (e) {
@@ -56,17 +56,17 @@ export default class Helper {
 
     }
 
-    cssHelper(el, styles){
+    cssHelper(el, styles) {
 
-        if(el.length != styles.length){
-             throw {
+        if (el.length != styles.length) {
+            throw {
                 message: "The number of elements does not match"
             }
         }
 
         el.forEach(cicleElements);
 
-        function cicleElements (item, i){
+        function cicleElements(item, i) {
             try {
                 item.style.cssText += styles[i]
             } catch (e) {
@@ -75,6 +75,34 @@ export default class Helper {
                 })
             }
         }
+    }
+
+
+    closestHelper(element) {
+        element.matches = element.matches || element.mozMatchesSelector || element.msMatchesSelector || element.oMatchesSelector || element.webkitMatchesSelector;
+        element.closest = element.closest || function closest(selector) {
+            if (!this) return null;
+            if (this.matches(selector)) return this;
+            if (!this.parentElement) {return null}
+            else return this.parentElement.closest(selector)
+          };
+    }
+
+    xhrRequest(method, url, header, data, callback, self){
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open(method, url, true);
+
+        xhr.setRequestHeader('Content-type', header);
+
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4 && xhr.status == 200){
+                callback(xhr.responseText);
+            }
+        }
+
+        xhr.send(data || null);
     }
 
 
