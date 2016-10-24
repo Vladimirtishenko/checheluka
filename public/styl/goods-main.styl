@@ -168,4 +168,33 @@
 
 @media screen and (max-width: 1024px)
 	.a-general-goods
-		width w
+		width 100%
+		align-items center
+		justify-content center
+		padding 70px 0
+		flex-wrap wrap
+		
+	.a-general-goods__description
+		width 80%
+		text-align center
+		padding 30px 0
+		
+	.a-general-goods__time_to_end
+		justify-content center
+		
+@media screen and (max-width: 600px)
+	.a-general-goods__time_to_end p
+		margin-top 20px
+		display block
+		
+	.a-general-goods__time_to_end
+		flex-wrap wrap
+		
+	.a-general-goods__description_rates_button .a-button-white
+		margin 5px 0px
+		width 45%
+		
+	.a-general-goods__description_rates_button
+		display flex
+		flex-wrap wrap
+		justify-content space-between

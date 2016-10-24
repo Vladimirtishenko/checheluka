@@ -4,7 +4,7 @@
 
 .a-footer-container
 	width w 
-	padding 20px 0
+	padding 20px
 	margin 0 auto
 	font-family HelveticaRoman
 	display flex
@@ -12,3 +12,13 @@
 	font-size 12px
 	color fontg
 	justify-content space-between
+	align-items center
+	
+@media screen and (max-width: 1024px)
+	.a-footer-container
+		width 100%
+
+@media screen and (max-width: 600px)		
+	.a-footer-container
+		flex-wrap wrap 
+		justify-content center

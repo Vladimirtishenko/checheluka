@@ -3,31 +3,7 @@ extends layout
 block content
 	section.a-main 
 		include header.jade
-		.a-chat-container
-			div(class="a-chat-container__button")
-			h1.a-chat-title Чат
-			.a-block-with-proposal
-				p.a-block-with-proposal__buy_now Готовы купить за
-					span 200 руб.
-				p.a-block-with-proposal__user 
-					i Вася Петров (г.Москва),  
-					i Валера (г.Самара) 
-			.a-block-with-proposal
-				p.a-block-with-proposal__buy_now Готовы купить за
-					span 60 руб.
-				p.a-block-with-proposal__user 900 чел.
-			.a-block-with-proposal
-				p.a-block-with-proposal__buy_now Готовы купить за
-					span 50 руб.
-				p.a-block-with-proposal__user 1200 чел.
-			.a-block-with-proposal
-				p.a-block-with-proposal__buy_now Готовы купить за
-					span 40 руб.
-				p.a-block-with-proposal__user 1500 чел.
-			.a-block-with-proposal
-				p.a-block-with-proposal__buy_now Готовы купить за
-					span 30 руб.
-				p.a-block-with-proposal__user 1800 чел.
+		include chat.jade
 		.a-backgroung-general-goods
 			.a-general-goods
 				.a-general-goods__image
