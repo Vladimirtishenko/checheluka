@@ -517,6 +517,7 @@
 
 			var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this));
 
+			_this.mainView = document.querySelector('.a-all-goods-table');
 			_this.defineRouts();
 			return _this;
 		}
@@ -548,6 +549,8 @@
 				var url = attr.indexOf('#') != -1 ? attr.substr(attr.indexOf('#') + 1) : null;
 
 				if (this.activeRouts == url || !url) return;
+
+				this.mainView.innerHTML = "";
 
 				this.routs[url]();
 
@@ -589,6 +592,10 @@
 	var _all_goods_load = __webpack_require__(23);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
+
+	var _all_goods_load_own = __webpack_require__(26);
+
+	var _all_goods_load_own2 = _interopRequireDefault(_all_goods_load_own);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -635,13 +642,123 @@
 			}
 		}, {
 			key: 'allGoodsAuction',
-			value: function allGoodsAuction() {}
+			value: function allGoodsAuction() {
+
+				function templates(id, img, title, description, size, color) {
+
+					var tmp = '<div class="a-all-goods-table__item" name="' + id + '">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '</div>';
+
+					return tmp;
+				}
+
+				var classForTemplate = 'a-form-checheluka-admin-table___own_base';
+
+				new _all_goods_load_own2.default(templates, classForTemplate);
+			}
 		}]);
 
 		return Templates;
 	}(_helper2.default);
 
 	exports.default = Templates;
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AsyncLoadFromOwnResourse = function (_Helper) {
+		_inherits(AsyncLoadFromOwnResourse, _Helper);
+
+		function AsyncLoadFromOwnResourse(templates, classie) {
+			_classCallCheck(this, AsyncLoadFromOwnResourse);
+
+			var _this = _possibleConstructorReturn(this, (AsyncLoadFromOwnResourse.__proto__ || Object.getPrototypeOf(AsyncLoadFromOwnResourse)).call(this));
+
+			if (!templates || typeof templates != "function") return _possibleConstructorReturn(_this);
+			_this.offsetStart = 0;
+			_this.templates = templates;
+			_this.classie = classie;
+			_this.viewElement = document.querySelector('.a-all-goods-table');
+			_this.downloadMore = document.querySelector('.a-button-download-more');
+			_this.tryXHR();
+			_this.handlerToLoadButton();
+			return _this;
+		}
+
+		_createClass(AsyncLoadFromOwnResourse, [{
+			key: 'handlerToLoadButton',
+			value: function handlerToLoadButton() {
+				this.flyEvent('add', ['click'], [this.downloadMore], [this.tryXHR.bind(this)]);
+			}
+		}, {
+			key: 'tryXHR',
+			value: function tryXHR() {
+				var url = '/allGoodsAuction?start=' + this.offsetStart;
+
+				this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this), this);
+			}
+		}, {
+			key: 'responseFromServerGoodsItems',
+			value: function responseFromServerGoodsItems(el) {
+
+				var tmp = "";
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+
+				try {
+					for (var _iterator = JSON.parse(el).goods[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var i = _step.value;
+
+						tmp += this.templates(i._id, i.src, i.title, i.description, i.size, i.color);
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+
+				this.viewElement.classList.add(this.classie);
+
+				this.viewElement.insertAdjacentHTML('beforeend', tmp);
+
+				this.offsetStart = parseInt(JSON.parse(el).offset);
+			}
+		}]);
+
+		return AsyncLoadFromOwnResourse;
+	}(_helper2.default);
+
+	exports.default = AsyncLoadFromOwnResourse;
 
 /***/ }
 /******/ ]);

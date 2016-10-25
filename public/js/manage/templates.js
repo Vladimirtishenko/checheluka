@@ -1,6 +1,7 @@
 import Helper from '../helper.js';
 
 import AsyncLoadFromAnouterResourse from './all_goods_load.js';
+import AsyncLoadFromOwnResourse from './all_goods_load_own.js';
 
 class Templates extends Helper{
 	
@@ -79,7 +80,37 @@ class Templates extends Helper{
 
 
 	allGoodsAuction(){
-		
+
+		function templates(id, img, title, description, size, color){
+
+		     let tmp = '<div class="a-all-goods-table__item" name="'+id+'">' +
+					   		'<img src="'+img+'" alt=""/>' +
+						    '<div class="a-all-goods-table__description">' +
+						      '<p class="a-all-goods-table__description_info">'+title+'</p>' +
+						    '</div>' +
+						    '<div class="a-hidden-block">' +
+						      '<div class="a-hidden-block__description">' +
+						        '<div class="a-hidden-block__description__outer">' +
+						        	'<span class="a-hidden-block__description-link">'  +
+						        		'<i>Размер </i>' +
+						        		'<span>'+size+'</span>' +
+						        	'</span>' +
+						        	'<span class="a-hidden-block__description-link"> ' +
+						        		'<i>Цвет</i>' +
+						        		'<span>'+color+'</span>' +
+						        	'</span>' +
+						        '</div>' +
+						      '</div>' +
+						   '</div>' +
+						 '</div>';
+
+			return tmp;
+		}
+
+		let classForTemplate = 'a-form-checheluka-admin-table___own_base';
+
+		new AsyncLoadFromOwnResourse(templates, classForTemplate);
+
 	}
 
 

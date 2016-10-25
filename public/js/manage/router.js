@@ -6,6 +6,7 @@ import Templates from './templates.js';
 class Router extends Helper {
 	constructor(routs){
 		super();	
+		this.mainView = document.querySelector('.a-all-goods-table');
 		this.defineRouts();
 	}
 
@@ -34,6 +35,8 @@ class Router extends Helper {
 		let url = (attr.indexOf('#') != -1) ? attr.substr(attr.indexOf('#') + 1) : null;
 
 		if(this.activeRouts == url || !url) return;
+
+		this.mainView.innerHTML = "";
 
 		this.routs[url]();
 

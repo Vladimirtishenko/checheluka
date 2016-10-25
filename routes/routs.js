@@ -11,7 +11,8 @@ module.exports = function(app){
 	app.get("/manage", require("./manage").get);
 
 	app.post("/allGoods", require("./allGoods").post);
-	//app.post("/allGoodsAuction", require("./allGoodsAuction").post);
+
+	app.get("/allGoodsAuction", require("./allGoodsAuction").get);
 	//app.post("/orders", require("./orders").post);
 
 }
