@@ -10,6 +10,8 @@ module.exports = function(app){
 
 	app.get("/manage", require("./manage").get);
 
-	app.post("/manage", require("./manage").post);
+	app.post("/allGoods", require("./allGoods").post);
+	//app.post("/allGoodsAuction", require("./allGoodsAuction").post);
+	//app.post("/orders", require("./orders").post);
 
 }

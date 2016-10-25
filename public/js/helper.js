@@ -94,11 +94,13 @@ export default class Helper {
 
         xhr.open(method, url, true);
 
-        xhr.setRequestHeader('Content-type', header);
-
+        if(header){
+            xhr.setRequestHeader('Content-type', header);
+        }
+        
         xhr.onreadystatechange = function(){
             if(xhr.readyState == 4 && xhr.status == 200){
-                callback(xhr.responseText);
+                callback(xhr.responseText, self);
             }
         }
 

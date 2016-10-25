@@ -61,20 +61,25 @@ class ModalGoodsToAdd extends Helper {
 				templateData[elementsAllWithoutCheckbox[i].name] = elementsAllWithoutCheckbox[i].value
 			}
 
-			templateData[checkbox.name] = checkbox.value;
+			templateData[checkbox.name] = encodeURIComponent(checkbox.value);
 
 			return templateData;
 
 		}
 
 			
-		this.xhrRequest("POST", '/manage', 'application/json; charset=utf-8', JSON.stringify(data), this.handlerToResponse.bind(this))
+		this.xhrRequest("POST", '/allGoods', 'application/json; charset=utf-8', JSON.stringify(data), this.handlerToResponse.bind(this))
 		
 	}
 
 
 	handlerToResponse(obj){
-		console.log(this);
+		if(!JSON.parse(obj)) return;
+		let status = (JSON.parse(obj)).status;
+		if(status == 200){
+			this.handlerToCloseGoods();
+		}
+
 	}
 
 }

@@ -11,57 +11,17 @@ block content
 				p  Здесь вы можете управлять заказами фильтровать их по принципу оплаченные и не оплаченные
 		.a-menu-admin
 			.a-menu-admin__links
-				a(href="#") Все товары
-				a(href="#") Все товары аукциона
-				a(href="#") Заказы 
+				a(href="#allGoods") Все товары
+				a(href="#allGoodsAuction") Все товары аукциона
+				a(href="#orders") Заказы 
 	.a-table-admin
 		.a-container-search
 			input(type="text" placeholder="Поиск товара")
 			p Искать товар по названию
-		
-	h1.a-head-font-left-side Все товары
-	.a-all-goods-table.a-form-checheluka-admin-table
-		- var i = 0;
-		while (i < 12)
-			.a-all-goods-table__item
-				img(src="/img/"+i+".jpg", alt="")
-				.a-all-goods-table__description
-					p.a-all-goods-table__description_info Шубка писец
-				.a-hidden-block
-					.a-hidden-block__description
-						.a-hidden-block__description__outer
-							span(class="a-hidden-block__description-link") 
-								i Размер 
-								span 38, 39
-							span(class="a-hidden-block__description-link") 
-								i Цвет
-								span Красный
-				form.a-hidden-form
-					input(type="hidden" name="title" value="Шубка писец")
-					input(type="hidden" name="description")
-					input(type="hidden" name="color" value="Красный")
-					input(type="hidden" name="image" value="/img/"+i+".jpg")
-					.a-container-for-img
-						img(src="/img/"+i+".jpg", alt="")
-					.a-hidden-form_description
-						.a-containet-flex-to-start-description
-							.container-description-form
-								p.container-description-form__title Шубка писец
-							.container-description-form
-								p.container-description-form__else_params Цвет
-								span Красный
-							.container-description-form
-								p.container-description-form__else_params Размеры	
-								label(for="")
-									span 36
-									input(type="checkbox" name="size" value="36")
-								label(for="")
-									span 38
-									input(type="checkbox" name="size" value="38")
-						.a-containet-flex-to-end-button
-							input(class="a-button-white" value="Добавить товар" type="submit") 
-			- i++;				
-	.a-button-download-more
-		button.a-button-white Загрузить еще
+		h1.a-head-font-left-side Все товары
+		.a-all-goods-table
+			
+		.a-button-download-more
+			button.a-button-white Загрузить еще
 
 	include ../footer.jade

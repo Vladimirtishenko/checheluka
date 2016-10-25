@@ -60,7 +60,7 @@
 
 	var _chat2 = _interopRequireDefault(_chat);
 
-	var _zoomImg = __webpack_require__(21);
+	var _zoomImg = __webpack_require__(19);
 
 	var _zoomImg2 = _interopRequireDefault(_zoomImg);
 
@@ -292,11 +292,13 @@
 
 	            xhr.open(method, url, true);
 
-	            xhr.setRequestHeader('Content-type', header);
+	            if (header) {
+	                xhr.setRequestHeader('Content-type', header);
+	            }
 
 	            xhr.onreadystatechange = function () {
 	                if (xhr.readyState == 4 && xhr.status == 200) {
-	                    callback(xhr.responseText);
+	                    callback(xhr.responseText, self);
 	                }
 	            };
 
@@ -491,9 +493,7 @@
 	exports.default = Chat;
 
 /***/ },
-/* 19 */,
-/* 20 */,
-/* 21 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
