@@ -22,6 +22,12 @@ var schema = new Schema({
 	},
 	material: {
 		type: String
+	},
+	countInWarehouse: {
+		type: String
+	},
+	priority: {
+		type: Boolean
 	}
 });
 

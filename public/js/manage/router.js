@@ -4,9 +4,10 @@ import Templates from './templates.js';
 
 
 class Router extends Helper {
-	constructor(routs){
+	constructor(){
 		super();	
-		this.mainView = document.querySelector('.a-all-goods-table');
+		this.mainView = document.querySelector('view');
+		this.mainHeadText = document.querySelector('.a-head-font-left-side');
 		this.defineRouts();
 	}
 
@@ -28,7 +29,9 @@ class Router extends Helper {
 
 	handlerToClick(event){
 
-		let attr = event && event.target && event.target.href;
+		let target = event && event.target,
+			attr = target && target.href,
+			innerText = target && target.innerText;
 
 		if(!attr) return;
 
@@ -36,6 +39,7 @@ class Router extends Helper {
 
 		if(this.activeRouts == url || !url) return;
 
+		this.mainHeadText.innerText = innerText;
 		this.mainView.innerHTML = "";
 
 		this.routs[url]();

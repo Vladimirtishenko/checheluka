@@ -1,5 +1,5 @@
 {
-	"port": 3000,
+	"port": 3090,
 	"mongoose": {
 		"uri": "mongodb://localhost/checheluka"
 	}

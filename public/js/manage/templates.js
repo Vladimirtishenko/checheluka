@@ -8,7 +8,7 @@ class Templates extends Helper{
 	allGoods(obj){
 
 
-		function templates(img, title, description, size, color){
+		function templates(img, title, description, size, color, consistOf, material){
 
 			 let sizeEach = (sizes) => {
 			 	let sizesToArray = sizes.split(',');
@@ -47,6 +47,8 @@ class Templates extends Helper{
 						      '<input type="hidden" name="description" value="'+description+'"/>' +
 						      '<input type="hidden" name="color" value="'+color+'"/>' +
 						      '<input type="hidden" name="src" value="'+img+'"/>' +
+						      '<input type="hidden" name="consistOf" value="'+consistOf+'"/>' +
+						      '<input type="hidden" name="material" value="'+material+'"/>' +
 						      '<div class="a-container-for-img"><img src="'+img+'" alt=""/></div>' +
 						      '<div class="a-hidden-form_description">' +
 						        '<div class="a-containet-flex-to-start-description">' +
@@ -73,43 +75,87 @@ class Templates extends Helper{
 		}
 
 
-		let classForTemplate = 'a-form-checheluka-admin-table';
+		let mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table"> </div>';
 
-		new AsyncLoadFromAnouterResourse(templates, classForTemplate);
+		let buttonToLoadMore = '<div class="a-button-download-more">' + 
+  									'<button class="a-button-white">Загрузить еще</button>' +
+								'</div>';
+
+		new AsyncLoadFromAnouterResourse(templates, mainblock, buttonToLoadMore);
 	}
 
 
 	allGoodsAuction(){
 
-		function templates(id, img, title, description, size, color){
+		function templates(id, img, title, description, size, color, consistOf, material, count, priority){
 
-		     let tmp = '<div class="a-all-goods-table__item" name="'+id+'">' +
-					   		'<img src="'+img+'" alt=""/>' +
+		     let tmp = '<div class="a-all-goods-table__item">' +
+		     				'<span class="a-delete-this-item-with-id" data-id="'+id+'"></span>' +
+					   		'<img src="'+decodeURIComponent(img)+'" alt=""/>' +
 						    '<div class="a-all-goods-table__description">' +
-						      '<p class="a-all-goods-table__description_info">'+title+'</p>' +
+						      '<p class="a-all-goods-table__description_info">'+decodeURIComponent(title)+'</p>' +
 						    '</div>' +
 						    '<div class="a-hidden-block">' +
 						      '<div class="a-hidden-block__description">' +
 						        '<div class="a-hidden-block__description__outer">' +
 						        	'<span class="a-hidden-block__description-link">'  +
 						        		'<i>Размер </i>' +
-						        		'<span>'+size+'</span>' +
+						        		'<span>'+decodeURIComponent(size)+'</span>' +
 						        	'</span>' +
 						        	'<span class="a-hidden-block__description-link"> ' +
 						        		'<i>Цвет</i>' +
-						        		'<span>'+color+'</span>' +
+						        		'<span>'+decodeURIComponent(color)+'</span>' +
 						        	'</span>' +
 						        '</div>' +
 						      '</div>' +
 						   '</div>' +
+						   '<form class="a-hidden-form">' +
+						      '<input type="hidden" name="_id" value="'+id+'"/>' +
+						      '<input type="hidden" name="title" value="'+decodeURIComponent(title)+'"/>' +
+						      '<input type="hidden" name="description" value="'+decodeURIComponent(description)+'"/>' +
+						      '<input type="hidden" name="color" value="'+decodeURIComponent(color)+'"/>' +
+						      '<input type="hidden" name="src" value="'+decodeURIComponent(img)+'"/>' +
+						      '<input type="hidden" name="consistOf" value="'+decodeURIComponent(consistOf)+'"/>' +
+						      '<input type="hidden" name="material" value="'+decodeURIComponent(material)+'"/>' +
+						      '<div class="a-container-for-img"><img src="'+decodeURIComponent(img)+'" alt=""/></div>' +
+						      '<div class="a-hidden-form_description">' +
+						        '<div class="a-containet-flex-to-start-description">' +
+						          '<div class="container-description-form">' +
+						            '<p class="container-description-form__title">'+decodeURIComponent(title)+'</p>' +
+						          '</div>' +
+						          '<div class="container-description-form">' +
+						            '<p class="container-description-form__else_params">Цвет</p><span>'+decodeURIComponent(color)+'</span>' +
+						          '</div>' +
+						          '<div class="container-description-form">' +
+						            '<p class="container-description-form__else_params">Размеры</p>' +
+						            '<span>'+decodeURIComponent(size)+'</span>' +
+						          '</div>' +
+						          '<div class="container-description-form">' +
+						            '<p class="container-description-form__else_params">Колличество на складе</p>' +
+						            '<input type="text" name="countInWarehouse" value="'+(count || 1)+'"/>' +
+						          '</div>' +
+						          '<div class="container-description-form">' +
+						            '<p class="container-description-form__else_params">Приоритет</p>' +
+						            '<input type="checkbox" name="priority" '+ (priority ? "checked" : "") +' />' +
+						          '</div>' +
+						        '</div>' +
+						        '<div class="a-containet-flex-to-end-button">' +
+						          '<input value="Добавить товар" type="submit" class="a-button-white"/>' +
+						        '</div>' +
+						      '</div>' +
+						    '</form>' +
 						 '</div>';
 
 			return tmp;
 		}
 
-		let classForTemplate = 'a-form-checheluka-admin-table___own_base';
+		let mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table___own_base"> </div>';
 
-		new AsyncLoadFromOwnResourse(templates, classForTemplate);
+		let buttonToLoadMore = '<div class="a-button-download-more">' + 
+  									'<button class="a-button-white">Загрузить еще</button>' +
+								'</div>';
+
+		new AsyncLoadFromOwnResourse(templates, mainblock, buttonToLoadMore);
 
 	}
 

@@ -17,7 +17,7 @@ block content
 					h2.a-general-goods__description_title
 						| Красивая шапочка и девушка в подарок
 					p( class="a-general-goods__description_description")
-						| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore reprehenderit alias, harum illo quidem, odio molestiae commodi ut incidunt cupiditate quia, reiciendis totam repudiandae ipsum provident. Earum incidunt dolore, a.
+						| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore reprehenderit alias, harum illo quidem, odio molestiae commodi ut incidunt cupiditate quia, reiciendis totam repudiandae ipsum provident. Earum incidunt dolore
 					.a-general-goods__description_info
 						.a-general-goods__description_info_part
 							a(href="" class="a-general-goods__description_info_part-link") 
@@ -39,21 +39,22 @@ block content
 					p.a-general-goods__description_price_now
 						| 2300 
 						span руб.
-					.a-general-goods__time_to_end
-						button( class="a-general-goods__description_buy a-button-black a-inactive")
-							| Покупаю
-						p До завершения -  
-							span 00:30
-					p.a-info-about-rates Кнопки станут активны когда в торгах останеться 10 человек
-					.a-general-goods__description_rates_button.a-rates-inactive
-						button.a-button-white
-							| + 1 руб.
-						button.a-button-white
-							| + 10 руб.
-						button.a-button-white
-							| + 100 руб.
-						button.a-button-white
-							| + 500 руб.
+					.a-for-mobile-absolute
+						.a-general-goods__time_to_end
+							button( class="a-general-goods__description_buy a-button-black a-inactive")
+								| Покупаю
+							p До завершения -  
+								span 00:30
+						p.a-info-about-rates Кнопки станут активны когда в торгах останеться 10 человек
+						.a-general-goods__description_rates_button.a-rates-inactive
+							button.a-button-white
+								| + 1 руб.
+							button.a-button-white
+								| + 10 руб.
+							button.a-button-white
+								| + 100 руб.
+							button.a-button-white
+								| + 500 руб.
 		h1.a-head-font Ближайшие аукционы
 		.a-else-goods
 			- var i = 0, j = 0, c = 0, img = 0, classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];

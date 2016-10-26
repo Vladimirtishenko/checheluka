@@ -6,14 +6,28 @@ class ModalGoodsToAdd extends Helper {
 		if(!elem) return;
 		this.modalAddGoods = document.querySelector('.a-conteiner-flexible-fixed');
 		this.closeModal = document.querySelector('.a-modal-close');
-		this.flyEvent('add', ['click'], [elem, this.closeModal], [this.handlerToAddGoods.bind(this), this.handlerToCloseGoods.bind(this)]);
+
+		this.flyEvent('add', ['click'], [elem, this.closeModal], [this.handlerToGoods.bind(this), this.handlerToCloseGoods.bind(this)]);
 	}
 
-	handlerToAddGoods(event){
-		let target = event && event.target,
-			elementToCheck = (target.classList.contains('a-all-goods-table__item')) ? target : (target.closest('.a-all-goods-table__item')) ? target.closest('.a-all-goods-table__item') : null;
+	handlerToGoods(event){
+		let target = event && event.target;
+			
 
-		if(!elementToCheck) return;
+
+			if(target.classList.contains('a-delete-this-item-with-id')){
+				this.handlerToDeleteGoods(target)
+			} else if((target.classList.contains('a-all-goods-table__item')))	{
+				this.handlerToAddGoods(target)
+			}	else if(target.closest('.a-all-goods-table__item')){
+				this.handlerToAddGoods(target.closest('.a-all-goods-table__item'))
+			}	else {
+				return;
+			}	 
+
+	}
+
+	handlerToAddGoods(elementToCheck){
 
 		let form = elementToCheck.querySelector('.a-hidden-form').cloneNode(true);
 
@@ -25,7 +39,19 @@ class ModalGoodsToAdd extends Helper {
 
 
 		this.animationEndEvent = this.animationEnd.bind(this);
+	}
 
+
+	handlerToDeleteGoods(target){
+
+		let _id = {
+			_id: target.getAttribute('data-id')
+		} 
+
+		if(!_id._id) return;
+
+		this.xhrRequest("DELETE", '/allGoods', 'application/json; charset=utf-8', JSON.stringify(_id), this.handlerToResponseBeforeDelete.bind(this, target))
+		
 	}
 
 	handlerToCloseGoods(){
@@ -43,12 +69,16 @@ class ModalGoodsToAdd extends Helper {
 		event.preventDefault();
 		let form = event && event.target,
 			elementsCheckbox = form.querySelectorAll('input[type="checkbox"]'),
-			elementsAllWithoutCheckbox = form.querySelectorAll('input[type="hidden"]'),
+			elementsAllWithoutCheckbox = form.querySelectorAll('input[type="hidden"], input[type="text"]'),
 			data = [];
 
 			for (var i = 0; i < elementsCheckbox.length; i++) {
 
-				if(elementsCheckbox[i].checked){
+				if(elementsCheckbox[i].checked && elementsCheckbox[i].name == "size"){
+					data.push(helpToValidate(elementsCheckbox[i]));
+				}
+
+				if(elementsCheckbox[i].name == "priority"){
 					data.push(helpToValidate(elementsCheckbox[i]));
 				}
 				
@@ -58,20 +88,31 @@ class ModalGoodsToAdd extends Helper {
 		function  helpToValidate(checkbox) {
 			let templateData = {};
 			for (var i = 0; i < elementsAllWithoutCheckbox.length; i++) {
-				templateData[elementsAllWithoutCheckbox[i].name] = elementsAllWithoutCheckbox[i].value
+				templateData[elementsAllWithoutCheckbox[i].name] = encodeURIComponent(elementsAllWithoutCheckbox[i].value)
 			}
 
-			templateData[checkbox.name] = encodeURIComponent(checkbox.value);
+			templateData[checkbox.name] = checkbox.name == "size" ? encodeURIComponent(checkbox.value) : checkbox.checked ? true : false;
 
 			return templateData;
 
 		}
-
 			
 		this.xhrRequest("POST", '/allGoods', 'application/json; charset=utf-8', JSON.stringify(data), this.handlerToResponse.bind(this))
 		
 	}
 
+	handlerToRemoveFromLayout(target){
+		let parent = target.parentNode;
+		parent.parentNode.removeChild(parent);
+	}
+
+	handlerToResponseBeforeDelete(target, obj){
+		if(!JSON.parse(obj)) return;
+		let status = (JSON.parse(obj)).status;
+		if(status == 200){
+			this.handlerToRemoveFromLayout(target);
+		}
+	}
 
 	handlerToResponse(obj){
 		if(!JSON.parse(obj)) return;

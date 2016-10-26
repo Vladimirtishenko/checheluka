@@ -48,16 +48,16 @@
 
 	__webpack_require__(20);
 
-	var _router = __webpack_require__(24);
+	var _router = __webpack_require__(22);
 
 	var _router2 = _interopRequireDefault(_router);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	window.globalRegistredModules = {};
+
 	window.addEventListener('DOMContentLoaded', function () {
-		new _router2.default("/");
-		/*new ModalGoodsToAdd(document.querySelector('.a-form-checheluka-admin-table'));
-	 new AsyncLoadFromAnouterResourse(document.querySelector('.a-form-checheluka-admin-table'));*/
+		new _router2.default();
 	});
 
 /***/ },
@@ -273,231 +273,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ModalGoodsToAdd = function (_Helper) {
-		_inherits(ModalGoodsToAdd, _Helper);
-
-		function ModalGoodsToAdd(elem) {
-			_classCallCheck(this, ModalGoodsToAdd);
-
-			var _this = _possibleConstructorReturn(this, (ModalGoodsToAdd.__proto__ || Object.getPrototypeOf(ModalGoodsToAdd)).call(this));
-
-			if (!elem) return _possibleConstructorReturn(_this);
-			_this.modalAddGoods = document.querySelector('.a-conteiner-flexible-fixed');
-			_this.closeModal = document.querySelector('.a-modal-close');
-			_this.flyEvent('add', ['click'], [elem, _this.closeModal], [_this.handlerToAddGoods.bind(_this), _this.handlerToCloseGoods.bind(_this)]);
-			return _this;
-		}
-
-		_createClass(ModalGoodsToAdd, [{
-			key: 'handlerToAddGoods',
-			value: function handlerToAddGoods(event) {
-				var target = event && event.target,
-				    elementToCheck = target.classList.contains('a-all-goods-table__item') ? target : target.closest('.a-all-goods-table__item') ? target.closest('.a-all-goods-table__item') : null;
-
-				if (!elementToCheck) return;
-
-				var form = elementToCheck.querySelector('.a-hidden-form').cloneNode(true);
-
-				this.flyEvent('add', ['submit'], [form], [this.handlerToAddGoodsValidation.bind(this)]);
-
-				this.modalAddGoods.appendChild(form);
-
-				this.cssHelper([this.modalAddGoods], ["right: 0%"]);
-
-				this.animationEndEvent = this.animationEnd.bind(this);
-			}
-		}, {
-			key: 'handlerToCloseGoods',
-			value: function handlerToCloseGoods() {
-				this.flyEvent('add', ['transitionend'], [this.modalAddGoods], [this.animationEndEvent]);
-				this.cssHelper([this.modalAddGoods], ["right: 100%"]);
-			}
-		}, {
-			key: 'animationEnd',
-			value: function animationEnd() {
-				this.modalAddGoods.removeChild(this.modalAddGoods.lastElementChild);
-				this.flyEvent('remove', ['transitionend'], [this.modalAddGoods], [this.animationEndEvent]);
-			}
-		}, {
-			key: 'handlerToAddGoodsValidation',
-			value: function handlerToAddGoodsValidation(event) {
-				event.preventDefault();
-				var form = event && event.target,
-				    elementsCheckbox = form.querySelectorAll('input[type="checkbox"]'),
-				    elementsAllWithoutCheckbox = form.querySelectorAll('input[type="hidden"]'),
-				    data = [];
-
-				for (var i = 0; i < elementsCheckbox.length; i++) {
-
-					if (elementsCheckbox[i].checked) {
-						data.push(helpToValidate(elementsCheckbox[i]));
-					}
-				}
-
-				function helpToValidate(checkbox) {
-					var templateData = {};
-					for (var i = 0; i < elementsAllWithoutCheckbox.length; i++) {
-						templateData[elementsAllWithoutCheckbox[i].name] = elementsAllWithoutCheckbox[i].value;
-					}
-
-					templateData[checkbox.name] = encodeURIComponent(checkbox.value);
-
-					return templateData;
-				}
-
-				this.xhrRequest("POST", '/allGoods', 'application/json; charset=utf-8', JSON.stringify(data), this.handlerToResponse.bind(this));
-			}
-		}, {
-			key: 'handlerToResponse',
-			value: function handlerToResponse(obj) {
-				if (!JSON.parse(obj)) return;
-				var status = JSON.parse(obj).status;
-				if (status == 200) {
-					this.handlerToCloseGoods();
-				}
-			}
-		}]);
-
-		return ModalGoodsToAdd;
-	}(_helper2.default);
-
-	exports.default = ModalGoodsToAdd;
-
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _helper = __webpack_require__(16);
-
-	var _helper2 = _interopRequireDefault(_helper);
-
-	var _add_goods = __webpack_require__(22);
-
-	var _add_goods2 = _interopRequireDefault(_add_goods);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var AsyncLoadFromAnouterResourse = function (_Helper) {
-		_inherits(AsyncLoadFromAnouterResourse, _Helper);
-
-		function AsyncLoadFromAnouterResourse(templates, classie) {
-			_classCallCheck(this, AsyncLoadFromAnouterResourse);
-
-			var _this = _possibleConstructorReturn(this, (AsyncLoadFromAnouterResourse.__proto__ || Object.getPrototypeOf(AsyncLoadFromAnouterResourse)).call(this));
-
-			if (!templates || typeof templates != "function") return _possibleConstructorReturn(_this);
-			_this.offsetStart = 0;
-			_this.offsetEnd = 20;
-			_this.templates = templates;
-			_this.classie = classie;
-			_this.viewElement = document.querySelector('.a-all-goods-table');
-			_this.downloadMore = document.querySelector('.a-button-download-more');
-			_this.listenerClass = null;
-			_this.tryXHR();
-			_this.handlerToLoadButton();
-			return _this;
-		}
-
-		_createClass(AsyncLoadFromAnouterResourse, [{
-			key: 'handlerToLoadButton',
-			value: function handlerToLoadButton() {
-				this.flyEvent('add', ['click'], [this.downloadMore], [this.tryXHR.bind(this)]);
-			}
-		}, {
-			key: 'tryXHR',
-			value: function tryXHR() {
-				var url = 'http://chechelyka.com/auc.php?start=' + this.offsetStart + "&end=" + this.offsetEnd;
-
-				this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this), this);
-			}
-		}, {
-			key: 'responseFromServerGoodsItems',
-			value: function responseFromServerGoodsItems(el) {
-
-				var tmp = "";
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-
-				try {
-					for (var _iterator = JSON.parse(el).goods[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var i = _step.value;
-
-						tmp += this.templates(i.img, i.title, i.description, i.size, i.color);
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator.return) {
-							_iterator.return();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-
-				this.viewElement.classList.add(this.classie);
-
-				this.viewElement.insertAdjacentHTML('beforeend', tmp);
-
-				if (!this.listenerClass) {
-					new _add_goods2.default(this.viewElement);
-					this.listenerClass = true;
-				}
-
-				this.offsetStart = parseInt(JSON.parse(el).offset);
-				this.offsetEnd = this.offsetStart + 20;
-			}
-		}]);
-
-		return AsyncLoadFromAnouterResourse;
-	}(_helper2.default);
-
-	exports.default = AsyncLoadFromAnouterResourse;
-
-/***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _helper = __webpack_require__(16);
-
-	var _helper2 = _interopRequireDefault(_helper);
-
-	var _templates = __webpack_require__(25);
+	var _templates = __webpack_require__(23);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -512,12 +288,13 @@
 	var Router = function (_Helper) {
 		_inherits(Router, _Helper);
 
-		function Router(routs) {
+		function Router() {
 			_classCallCheck(this, Router);
 
 			var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this));
 
-			_this.mainView = document.querySelector('.a-all-goods-table');
+			_this.mainView = document.querySelector('view');
+			_this.mainHeadText = document.querySelector('.a-head-font-left-side');
 			_this.defineRouts();
 			return _this;
 		}
@@ -542,7 +319,9 @@
 			key: 'handlerToClick',
 			value: function handlerToClick(event) {
 
-				var attr = event && event.target && event.target.href;
+				var target = event && event.target,
+				    attr = target && target.href,
+				    innerText = target && target.innerText;
 
 				if (!attr) return;
 
@@ -550,6 +329,7 @@
 
 				if (this.activeRouts == url || !url) return;
 
+				this.mainHeadText.innerText = innerText;
 				this.mainView.innerHTML = "";
 
 				this.routs[url]();
@@ -574,7 +354,7 @@
 	exports.default = Router;
 
 /***/ },
-/* 25 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -589,7 +369,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _all_goods_load = __webpack_require__(23);
+	var _all_goods_load = __webpack_require__(24);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
 
@@ -618,7 +398,7 @@
 			key: 'allGoods',
 			value: function allGoods(obj) {
 
-				function templates(img, title, description, size, color) {
+				function templates(img, title, description, size, color, consistOf, material) {
 
 					var sizeEach = function sizeEach(sizes) {
 						var sizesToArray = sizes.split(',');
@@ -631,29 +411,33 @@
 						return sizesTmp;
 					};
 
-					var tmp = '<div class="a-all-goods-table__item">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="title" value="' + title + '"/>' + '<input type="hidden" name="description" value="' + description + '"/>' + '<input type="hidden" name="color" value="' + color + '"/>' + '<input type="hidden" name="src" value="' + img + '"/>' + '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + title + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + sizeEach(size) + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
+					var tmp = '<div class="a-all-goods-table__item">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="title" value="' + title + '"/>' + '<input type="hidden" name="description" value="' + description + '"/>' + '<input type="hidden" name="color" value="' + color + '"/>' + '<input type="hidden" name="src" value="' + img + '"/>' + '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' + '<input type="hidden" name="material" value="' + material + '"/>' + '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + title + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + sizeEach(size) + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
 
 					return tmp;
 				}
 
-				var classForTemplate = 'a-form-checheluka-admin-table';
+				var mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table"> </div>';
 
-				new _all_goods_load2.default(templates, classForTemplate);
+				var buttonToLoadMore = '<div class="a-button-download-more">' + '<button class="a-button-white">Загрузить еще</button>' + '</div>';
+
+				new _all_goods_load2.default(templates, mainblock, buttonToLoadMore);
 			}
 		}, {
 			key: 'allGoodsAuction',
 			value: function allGoodsAuction() {
 
-				function templates(id, img, title, description, size, color) {
+				function templates(id, img, title, description, size, color, consistOf, material, count, priority) {
 
-					var tmp = '<div class="a-all-goods-table__item" name="' + id + '">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '</div>';
+					var tmp = '<div class="a-all-goods-table__item">' + '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' + '<img src="' + decodeURIComponent(img) + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + decodeURIComponent(size) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + decodeURIComponent(color) + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="_id" value="' + id + '"/>' + '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' + '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' + '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' + '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' + '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' + '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' + '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + '<span>' + decodeURIComponent(size) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Колличество на складе</p>' + '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Приоритет</p>' + '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
 
 					return tmp;
 				}
 
-				var classForTemplate = 'a-form-checheluka-admin-table___own_base';
+				var mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table___own_base"> </div>';
 
-				new _all_goods_load_own2.default(templates, classForTemplate);
+				var buttonToLoadMore = '<div class="a-button-download-more">' + '<button class="a-button-white">Загрузить еще</button>' + '</div>';
+
+				new _all_goods_load_own2.default(templates, mainblock, buttonToLoadMore);
 			}
 		}]);
 
@@ -663,6 +447,119 @@
 	exports.default = Templates;
 
 /***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	var _add_or_delete_action = __webpack_require__(27);
+
+	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AsyncLoadFromAnouterResourse = function (_Helper) {
+		_inherits(AsyncLoadFromAnouterResourse, _Helper);
+
+		function AsyncLoadFromAnouterResourse(templates, mainblock, button) {
+			_classCallCheck(this, AsyncLoadFromAnouterResourse);
+
+			var _this = _possibleConstructorReturn(this, (AsyncLoadFromAnouterResourse.__proto__ || Object.getPrototypeOf(AsyncLoadFromAnouterResourse)).call(this));
+
+			if (!templates || typeof templates != "function") return _possibleConstructorReturn(_this);
+			_this.offsetStart = 0;
+			_this.offsetEnd = 20;
+			_this.templates = templates;
+			_this.mainblockTmp = mainblock;
+			_this.downloadMoreTemplate = button;
+			_this.viewElement = document.querySelector('view');
+			_this.tryXHR();
+
+			_this.viewElement.insertAdjacentHTML('beforeend', _this.mainblockTmp + _this.downloadMoreTemplate);
+
+			_this.downloadMoreButton = document.querySelector('.a-button-download-more');
+			_this.handlerToLoadButton();
+
+			return _this;
+		}
+
+		_createClass(AsyncLoadFromAnouterResourse, [{
+			key: 'handlerToLoadButton',
+			value: function handlerToLoadButton() {
+				this.flyEvent('add', ['click'], [this.downloadMoreButton], [this.tryXHR.bind(this)]);
+			}
+		}, {
+			key: 'tryXHR',
+			value: function tryXHR() {
+				var url = 'http://chechelyka.com/auc.php?start=' + this.offsetStart + "&end=" + this.offsetEnd;
+
+				this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this), this);
+			}
+		}, {
+			key: 'responseFromServerGoodsItems',
+			value: function responseFromServerGoodsItems(el) {
+
+				var tmp = "";
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+
+				try {
+					for (var _iterator = JSON.parse(el).goods[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var i = _step.value;
+
+						tmp += this.templates(i.img, i.title, i.description, i.size, i.color, i.Material, i.Sostav);
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+
+				this.viewElement.firstElementChild.insertAdjacentHTML('beforeend', tmp);
+
+				if (!globalRegistredModules['ModalGoodsToAdd']) {
+					new _add_or_delete_action2.default(this.viewElement);
+					globalRegistredModules['ModalGoodsToAdd'] = true;
+				}
+
+				this.offsetStart = parseInt(JSON.parse(el).offset);
+				this.offsetEnd = this.offsetStart + 20;
+			}
+		}]);
+
+		return AsyncLoadFromAnouterResourse;
+	}(_helper2.default);
+
+	exports.default = AsyncLoadFromAnouterResourse;
+
+/***/ },
+/* 25 */,
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -689,7 +586,7 @@
 	var AsyncLoadFromOwnResourse = function (_Helper) {
 		_inherits(AsyncLoadFromOwnResourse, _Helper);
 
-		function AsyncLoadFromOwnResourse(templates, classie) {
+		function AsyncLoadFromOwnResourse(templates, mainblock, button) {
 			_classCallCheck(this, AsyncLoadFromOwnResourse);
 
 			var _this = _possibleConstructorReturn(this, (AsyncLoadFromOwnResourse.__proto__ || Object.getPrototypeOf(AsyncLoadFromOwnResourse)).call(this));
@@ -697,10 +594,15 @@
 			if (!templates || typeof templates != "function") return _possibleConstructorReturn(_this);
 			_this.offsetStart = 0;
 			_this.templates = templates;
-			_this.classie = classie;
-			_this.viewElement = document.querySelector('.a-all-goods-table');
-			_this.downloadMore = document.querySelector('.a-button-download-more');
+
+			_this.mainblockTmp = mainblock;
+			_this.downloadMoreTemplate = button;
+			_this.viewElement = document.querySelector('view');
 			_this.tryXHR();
+
+			_this.viewElement.insertAdjacentHTML('beforeend', _this.mainblockTmp + _this.downloadMoreTemplate);
+
+			_this.downloadMoreButton = document.querySelector('.a-button-download-more');
 			_this.handlerToLoadButton();
 			return _this;
 		}
@@ -730,7 +632,7 @@
 					for (var _iterator = JSON.parse(el).goods[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 						var i = _step.value;
 
-						tmp += this.templates(i._id, i.src, i.title, i.description, i.size, i.color);
+						tmp += this.templates(i._id, i.src, i.title, i.description, i.size, i.color, i.consistOf, i.material, i.countInWarehouse, i.priority);
 					}
 				} catch (err) {
 					_didIteratorError = true;
@@ -747,9 +649,7 @@
 					}
 				}
 
-				this.viewElement.classList.add(this.classie);
-
-				this.viewElement.insertAdjacentHTML('beforeend', tmp);
+				this.viewElement.firstElementChild.insertAdjacentHTML('beforeend', tmp);
 
 				this.offsetStart = parseInt(JSON.parse(el).offset);
 			}
@@ -759,6 +659,163 @@
 	}(_helper2.default);
 
 	exports.default = AsyncLoadFromOwnResourse;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ModalGoodsToAdd = function (_Helper) {
+		_inherits(ModalGoodsToAdd, _Helper);
+
+		function ModalGoodsToAdd(elem) {
+			_classCallCheck(this, ModalGoodsToAdd);
+
+			var _this = _possibleConstructorReturn(this, (ModalGoodsToAdd.__proto__ || Object.getPrototypeOf(ModalGoodsToAdd)).call(this));
+
+			if (!elem) return _possibleConstructorReturn(_this);
+			_this.modalAddGoods = document.querySelector('.a-conteiner-flexible-fixed');
+			_this.closeModal = document.querySelector('.a-modal-close');
+
+			_this.flyEvent('add', ['click'], [elem, _this.closeModal], [_this.handlerToGoods.bind(_this), _this.handlerToCloseGoods.bind(_this)]);
+			return _this;
+		}
+
+		_createClass(ModalGoodsToAdd, [{
+			key: 'handlerToGoods',
+			value: function handlerToGoods(event) {
+				var target = event && event.target;
+
+				if (target.classList.contains('a-delete-this-item-with-id')) {
+					this.handlerToDeleteGoods(target);
+				} else if (target.classList.contains('a-all-goods-table__item')) {
+					this.handlerToAddGoods(target);
+				} else if (target.closest('.a-all-goods-table__item')) {
+					this.handlerToAddGoods(target.closest('.a-all-goods-table__item'));
+				} else {
+					return;
+				}
+			}
+		}, {
+			key: 'handlerToAddGoods',
+			value: function handlerToAddGoods(elementToCheck) {
+
+				var form = elementToCheck.querySelector('.a-hidden-form').cloneNode(true);
+
+				this.flyEvent('add', ['submit'], [form], [this.handlerToAddGoodsValidation.bind(this)]);
+
+				this.modalAddGoods.appendChild(form);
+
+				this.cssHelper([this.modalAddGoods], ["right: 0%"]);
+
+				this.animationEndEvent = this.animationEnd.bind(this);
+			}
+		}, {
+			key: 'handlerToDeleteGoods',
+			value: function handlerToDeleteGoods(target) {
+
+				var _id = {
+					_id: target.getAttribute('data-id')
+				};
+
+				if (!_id._id) return;
+
+				this.xhrRequest("DELETE", '/allGoods', 'application/json; charset=utf-8', JSON.stringify(_id), this.handlerToResponseBeforeDelete.bind(this, target));
+			}
+		}, {
+			key: 'handlerToCloseGoods',
+			value: function handlerToCloseGoods() {
+				this.flyEvent('add', ['transitionend'], [this.modalAddGoods], [this.animationEndEvent]);
+				this.cssHelper([this.modalAddGoods], ["right: 100%"]);
+			}
+		}, {
+			key: 'animationEnd',
+			value: function animationEnd() {
+				this.modalAddGoods.removeChild(this.modalAddGoods.lastElementChild);
+				this.flyEvent('remove', ['transitionend'], [this.modalAddGoods], [this.animationEndEvent]);
+			}
+		}, {
+			key: 'handlerToAddGoodsValidation',
+			value: function handlerToAddGoodsValidation(event) {
+				event.preventDefault();
+				var form = event && event.target,
+				    elementsCheckbox = form.querySelectorAll('input[type="checkbox"]'),
+				    elementsAllWithoutCheckbox = form.querySelectorAll('input[type="hidden"], input[type="text"]'),
+				    data = [];
+
+				for (var i = 0; i < elementsCheckbox.length; i++) {
+
+					if (elementsCheckbox[i].checked && elementsCheckbox[i].name == "size") {
+						data.push(helpToValidate(elementsCheckbox[i]));
+					}
+
+					if (elementsCheckbox[i].name == "priority") {
+						data.push(helpToValidate(elementsCheckbox[i]));
+					}
+				}
+
+				function helpToValidate(checkbox) {
+					var templateData = {};
+					for (var i = 0; i < elementsAllWithoutCheckbox.length; i++) {
+						templateData[elementsAllWithoutCheckbox[i].name] = encodeURIComponent(elementsAllWithoutCheckbox[i].value);
+					}
+
+					templateData[checkbox.name] = checkbox.name == "size" ? encodeURIComponent(checkbox.value) : checkbox.checked ? true : false;
+
+					return templateData;
+				}
+
+				this.xhrRequest("POST", '/allGoods', 'application/json; charset=utf-8', JSON.stringify(data), this.handlerToResponse.bind(this));
+			}
+		}, {
+			key: 'handlerToRemoveFromLayout',
+			value: function handlerToRemoveFromLayout(target) {
+				var parent = target.parentNode;
+				parent.parentNode.removeChild(parent);
+			}
+		}, {
+			key: 'handlerToResponseBeforeDelete',
+			value: function handlerToResponseBeforeDelete(target, obj) {
+				if (!JSON.parse(obj)) return;
+				var status = JSON.parse(obj).status;
+				if (status == 200) {
+					this.handlerToRemoveFromLayout(target);
+				}
+			}
+		}, {
+			key: 'handlerToResponse',
+			value: function handlerToResponse(obj) {
+				if (!JSON.parse(obj)) return;
+				var status = JSON.parse(obj).status;
+				if (status == 200) {
+					this.handlerToCloseGoods();
+				}
+			}
+		}]);
+
+		return ModalGoodsToAdd;
+	}(_helper2.default);
+
+	exports.default = ModalGoodsToAdd;
 
 /***/ }
 /******/ ]);

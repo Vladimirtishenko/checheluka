@@ -1,25 +1,29 @@
 
 import Helper from '../helper.js';
 
-import ModalGoodsToAdd from './add_goods.js';
+import ModalGoodsToAdd from './add_or_delete_action.js';
 
 class AsyncLoadFromAnouterResourse extends Helper {
-	constructor(templates, classie){
+	constructor(templates, mainblock, button){
 		super();
 		if(!templates || typeof templates != "function") return;
 		this.offsetStart = 0;
 		this.offsetEnd = 20;
 		this.templates = templates;
-		this.classie = classie;
-		this.viewElement = document.querySelector('.a-all-goods-table');
-		this.downloadMore = document.querySelector('.a-button-download-more');
-		this.listenerClass = null;
+		this.mainblockTmp = mainblock;
+		this.downloadMoreTemplate = button;
+		this.viewElement = document.querySelector('view');
 		this.tryXHR();
+		
+		this.viewElement.insertAdjacentHTML('beforeend',this.mainblockTmp + this.downloadMoreTemplate);
+
+		this.downloadMoreButton = document.querySelector('.a-button-download-more');
 		this.handlerToLoadButton();
+
 	}
 
 	handlerToLoadButton(){
-		this.flyEvent('add', ['click'], [this.downloadMore], [this.tryXHR.bind(this)]);
+		this.flyEvent('add', ['click'], [this.downloadMoreButton], [this.tryXHR.bind(this)]);
 	}
 
 	tryXHR(){
@@ -30,21 +34,21 @@ class AsyncLoadFromAnouterResourse extends Helper {
 	}
 
 	responseFromServerGoodsItems(el){
-		
+
 		let tmp = "";
 		for (var i of (JSON.parse(el)).goods) {
-			tmp += this.templates(i.img, i.title, i.description, i.size, i.color);
+			tmp += this.templates(i.img, i.title, i.description, i.size, i.color, i.Material, i.Sostav);
 		}
 
-		this.viewElement.classList.add(this.classie);
 
-		this.viewElement.insertAdjacentHTML('beforeend', tmp);
+		this.viewElement.firstElementChild.insertAdjacentHTML('beforeend', tmp);
 
-		if(!this.listenerClass){
+		if(!globalRegistredModules['ModalGoodsToAdd']){
 			new ModalGoodsToAdd(this.viewElement);
-			this.listenerClass = true;
-		}
+			globalRegistredModules['ModalGoodsToAdd'] = true;
 
+		}
+		
 
 		this.offsetStart = parseInt((JSON.parse(el)).offset);
 		this.offsetEnd = this.offsetStart + 20;

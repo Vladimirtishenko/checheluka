@@ -169,20 +169,41 @@
 @media screen and (max-width: 1024px)
 	.a-general-goods
 		width 100%
-		align-items center
+		align-items flex-start
 		justify-content center
+		padding 70px 40px 220px 40px
+		
+	.a-for-mobile-absolute
+		position absolute
+		bottom 30px
+		left 0
+		right 0
+		text-align center
+		
+	.a-general-goods__description
+		width 80%
+		text-align left
+		padding 30px 20px
+		
+	.a-general-goods__time_to_end
+		justify-content center
+		
+@media screen and (max-width: 780px)
+	.a-general-goods
+		width 100%
+		align-items flex-start
+		justify-content center
+		flex-wrap wrap 
 		padding 70px 0
-		flex-wrap wrap
 		
 	.a-general-goods__description
 		width 80%
 		text-align center
 		padding 30px 0
 		
-	.a-general-goods__time_to_end
-		justify-content center
-		
-@media screen and (max-width: 600px)
+	.a-for-mobile-absolute
+		position static
+
 	.a-general-goods__time_to_end p
 		margin-top 20px
 		display block

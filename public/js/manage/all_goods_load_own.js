@@ -2,15 +2,20 @@
 import Helper from '../helper.js';
 
 class AsyncLoadFromOwnResourse extends Helper {
-	constructor(templates, classie){
+	constructor(templates, mainblock, button){
 		super();
 		if(!templates || typeof templates != "function") return;
 		this.offsetStart = 0;
 		this.templates = templates;
-		this.classie = classie;
-		this.viewElement = document.querySelector('.a-all-goods-table');
-		this.downloadMore = document.querySelector('.a-button-download-more');
+
+		this.mainblockTmp = mainblock;
+		this.downloadMoreTemplate = button;
+		this.viewElement = document.querySelector('view');
 		this.tryXHR();
+
+		this.viewElement.insertAdjacentHTML('beforeend',this.mainblockTmp + this.downloadMoreTemplate);
+		
+		this.downloadMoreButton = document.querySelector('.a-button-download-more');
 		this.handlerToLoadButton();
 	}
 
@@ -30,12 +35,10 @@ class AsyncLoadFromOwnResourse extends Helper {
 
 		let tmp = "";
 		for (var i of (JSON.parse(el)).goods) {
-			tmp += this.templates(i._id, i.src, i.title, i.description, i.size, i.color);
+			tmp += this.templates(i._id, i.src, i.title, i.description, i.size, i.color, i.consistOf, i.material, i.countInWarehouse, i.priority );
 		}
 
-		this.viewElement.classList.add(this.classie);
-
-		this.viewElement.insertAdjacentHTML('beforeend', tmp);
+		this.viewElement.firstElementChild.insertAdjacentHTML('beforeend', tmp);
 
 
 		this.offsetStart = parseInt((JSON.parse(el)).offset);
