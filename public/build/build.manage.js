@@ -46,9 +46,9 @@
 
 	'use strict';
 
-	__webpack_require__(20);
+	__webpack_require__(21);
 
-	var _router = __webpack_require__(22);
+	var _router = __webpack_require__(23);
 
 	var _router2 = _interopRequireDefault(_router);
 
@@ -251,14 +251,15 @@
 /* 17 */,
 /* 18 */,
 /* 19 */,
-/* 20 */
+/* 20 */,
+/* 21 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 21 */,
-/* 22 */
+/* 22 */,
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -273,7 +274,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _templates = __webpack_require__(23);
+	var _templates = __webpack_require__(24);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -354,7 +355,7 @@
 	exports.default = Router;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -369,11 +370,11 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _all_goods_load = __webpack_require__(24);
+	var _all_goods_load = __webpack_require__(25);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
 
-	var _all_goods_load_own = __webpack_require__(26);
+	var _all_goods_load_own = __webpack_require__(27);
 
 	var _all_goods_load_own2 = _interopRequireDefault(_all_goods_load_own);
 
@@ -447,7 +448,7 @@
 	exports.default = Templates;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -462,7 +463,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _add_or_delete_action = __webpack_require__(27);
+	var _add_or_delete_action = __webpack_require__(26);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
@@ -559,109 +560,7 @@
 	exports.default = AsyncLoadFromAnouterResourse;
 
 /***/ },
-/* 25 */,
 /* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _helper = __webpack_require__(16);
-
-	var _helper2 = _interopRequireDefault(_helper);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var AsyncLoadFromOwnResourse = function (_Helper) {
-		_inherits(AsyncLoadFromOwnResourse, _Helper);
-
-		function AsyncLoadFromOwnResourse(templates, mainblock, button) {
-			_classCallCheck(this, AsyncLoadFromOwnResourse);
-
-			var _this = _possibleConstructorReturn(this, (AsyncLoadFromOwnResourse.__proto__ || Object.getPrototypeOf(AsyncLoadFromOwnResourse)).call(this));
-
-			if (!templates || typeof templates != "function") return _possibleConstructorReturn(_this);
-			_this.offsetStart = 0;
-			_this.templates = templates;
-
-			_this.mainblockTmp = mainblock;
-			_this.downloadMoreTemplate = button;
-			_this.viewElement = document.querySelector('view');
-			_this.tryXHR();
-
-			_this.viewElement.insertAdjacentHTML('beforeend', _this.mainblockTmp + _this.downloadMoreTemplate);
-
-			_this.downloadMoreButton = document.querySelector('.a-button-download-more');
-			_this.handlerToLoadButton();
-			return _this;
-		}
-
-		_createClass(AsyncLoadFromOwnResourse, [{
-			key: 'handlerToLoadButton',
-			value: function handlerToLoadButton() {
-				this.flyEvent('add', ['click'], [this.downloadMore], [this.tryXHR.bind(this)]);
-			}
-		}, {
-			key: 'tryXHR',
-			value: function tryXHR() {
-				var url = '/allGoodsAuction?start=' + this.offsetStart;
-
-				this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this), this);
-			}
-		}, {
-			key: 'responseFromServerGoodsItems',
-			value: function responseFromServerGoodsItems(el) {
-
-				var tmp = "";
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-
-				try {
-					for (var _iterator = JSON.parse(el).goods[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var i = _step.value;
-
-						tmp += this.templates(i._id, i.src, i.title, i.description, i.size, i.color, i.consistOf, i.material, i.countInWarehouse, i.priority);
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator.return) {
-							_iterator.return();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-
-				this.viewElement.firstElementChild.insertAdjacentHTML('beforeend', tmp);
-
-				this.offsetStart = parseInt(JSON.parse(el).offset);
-			}
-		}]);
-
-		return AsyncLoadFromOwnResourse;
-	}(_helper2.default);
-
-	exports.default = AsyncLoadFromOwnResourse;
-
-/***/ },
-/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -816,6 +715,107 @@
 	}(_helper2.default);
 
 	exports.default = ModalGoodsToAdd;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AsyncLoadFromOwnResourse = function (_Helper) {
+		_inherits(AsyncLoadFromOwnResourse, _Helper);
+
+		function AsyncLoadFromOwnResourse(templates, mainblock, button) {
+			_classCallCheck(this, AsyncLoadFromOwnResourse);
+
+			var _this = _possibleConstructorReturn(this, (AsyncLoadFromOwnResourse.__proto__ || Object.getPrototypeOf(AsyncLoadFromOwnResourse)).call(this));
+
+			if (!templates || typeof templates != "function") return _possibleConstructorReturn(_this);
+			_this.offsetStart = 0;
+			_this.templates = templates;
+
+			_this.mainblockTmp = mainblock;
+			_this.downloadMoreTemplate = button;
+			_this.viewElement = document.querySelector('view');
+			_this.tryXHR();
+
+			_this.viewElement.insertAdjacentHTML('beforeend', _this.mainblockTmp + _this.downloadMoreTemplate);
+
+			_this.downloadMoreButton = document.querySelector('.a-button-download-more');
+			_this.handlerToLoadButton();
+			return _this;
+		}
+
+		_createClass(AsyncLoadFromOwnResourse, [{
+			key: 'handlerToLoadButton',
+			value: function handlerToLoadButton() {
+				this.flyEvent('add', ['click'], [this.downloadMore], [this.tryXHR.bind(this)]);
+			}
+		}, {
+			key: 'tryXHR',
+			value: function tryXHR() {
+				var url = '/allGoodsAuction?start=' + this.offsetStart;
+
+				this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this), this);
+			}
+		}, {
+			key: 'responseFromServerGoodsItems',
+			value: function responseFromServerGoodsItems(el) {
+
+				var tmp = "";
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+
+				try {
+					for (var _iterator = JSON.parse(el).goods[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var i = _step.value;
+
+						tmp += this.templates(i._id, i.src, i.title, i.description, i.size, i.color, i.consistOf, i.material, i.countInWarehouse, i.priority);
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+
+				this.viewElement.firstElementChild.insertAdjacentHTML('beforeend', tmp);
+
+				this.offsetStart = parseInt(JSON.parse(el).offset);
+			}
+		}]);
+
+		return AsyncLoadFromOwnResourse;
+	}(_helper2.default);
+
+	exports.default = AsyncLoadFromOwnResourse;
 
 /***/ }
 /******/ ]);

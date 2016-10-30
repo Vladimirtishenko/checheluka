@@ -5,38 +5,6 @@ block content
 		include header.jade
 		include chat.jade
 		h1.a-head-font-left-side Все товары
-		.a-all-goods-table
-			- var i = 0;
-			- var img = 0;
-			while (i < 30)
-				.a-all-goods-table__item
-					- (img > 14) ? img = 0 : img++;
-					img(src="/img/"+img+".jpg", alt="")
-					.a-all-goods-table__description
-						p.a-all-goods-table__description_number № #{i}
-						p.a-all-goods-table__description_info Шубка писец
-					.a-hidden-block
-						.a-hidden-block__img-outer
-							img(src="/img/"+img+".jpg", alt="")
-						.a-hidden-block__description
-							.a-hidden-block__description__outer
-								span(class="a-hidden-block__description-link") 
-									i Размер 
-									span 38, 39
-								span(class="a-hidden-block__description-link") 
-									i Состав
-									span Красный
-								span(class="a-hidden-block__description-link") 
-									i Цвет
-									span Красный
-								span(class="a-hidden-block__description-link") 
-									i Ткань
-									span Красный
-							p.a-old-price Розничная цена
-								span 3000 руб.
-							p.a-new-price Начальная ставка
-								span 1000 руб.
-								
-				- i++;				
+		.a-all-goods-table.a-zoom-container		
 		
 		include footer.jade

@@ -56,43 +56,6 @@ block content
 							button.a-button-white
 								| + 500 руб.
 		h1.a-head-font Ближайшие аукционы
-		.a-else-goods
-			- var i = 0, j = 0, c = 0, img = 0, classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];
-			while (i < 5)
-				div(class="a-goods__item__reisizers")
-					while (j <= 2)
-						-var newClass = (i % 2 != 0) ? 'a-add-new-background' : ' '
-						div(class="a-else-goods__item "+classArray[c]+" "+newClass)
-							.a-resizer-masonry
-								img(src="/img/"+img+".jpg", alt=c, class="a-image-to-zoom")
-							.a-else-goods__description
-								- var number = img + 2;
-								p.a-number-goods 
-									| №
-									span=number
-								p.a-else-goods-descroption Шапка писец
-								.a-else-goods__description_info
-									span(class="a-else-goods__description_info-link") 
-										i Состав
-											span Красный
-									span(class="a-else-goods__description_info-link") 
-										i Размер
-											span Красный
-									span(class="a-else-goods__description_info-link") 
-										i Цвет
-											span Красный
-									span(class="a-else-goods__description_info-link") 
-										i Ткань
-											span Красный
-								p.a-old-price Розничная цена
-									span 3000 руб.
-								p.a-new-price Начальная ставка
-									span 1000 руб.
-						- j++;
-						- img ++;
-						- if(c === 2) { c = 0} else {c++};	
-				- j = 0;
-				- i++; 	
-				
+		.a-else-goods.a-zoom-container
 		
 		include footer.jade

@@ -14,6 +14,7 @@ module.exports = function(app){
 	app.delete("/allGoods", require("./allGoods").delete);
 
 	app.get("/allGoodsAuction", require("./allGoodsAuction").get);
+	
 	//app.post("/orders", require("./orders").post);
 
 }
