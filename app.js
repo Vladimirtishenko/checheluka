@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var socketHandler = require('./middleware/socket');
+var socketHandler = require('./middleware/socketFrontController');
 
 var config = require('./config');
 
@@ -27,9 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 require('./routes/routs')(app);
 
 
-io.on('connection', function(socket){
-    new socketHandler(socket);
-});
+new socketHandler(io);
 
 
 // catch 404 and forward to error handler
