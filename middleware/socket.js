@@ -1,29 +1,14 @@
-function Socket(socket){
+//var config = require('./config/http');
+//var io = require('socket.io').listen(config.port);
+var ctrl = require('./socketFrontController');
+//new ctrl(io);
+var aucMod = require('./modules/Auction/AuctionModule');
+var prodModule = require('./modules/Product/ProductModule');
+var auctionModule = new aucMod();
+var productsModule = new prodModule();
 
-	console.log('USER online');
-
-socket.on('chat message', this.getTheMessage)
-socket.on('disconnect', this.disconnect);
-
-
+function socketFrontController(io){
+    productsModule.setListenere("productsLoaded",ctrl.setAuctionList);
+    auctionModule.setListenere("finishAuction",ctrl.sendNotifyThatAuctionFinished);
+    io.on('connection', ctrl);
 }
-
-
-Socket.prototype.getTheMessage = function(msg){
-
-	console.log(msg);
-
-	//io.emit('chat message', msg); // send all users
-
-}
-
-Socket.prototype.disconnect = function(){
-
-
-	console.log('disconnect');
-
-}
-
-
-
-module.exports = Socket;

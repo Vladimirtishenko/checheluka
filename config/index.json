@@ -2,5 +2,12 @@
 	"port": 3090,
 	"mongoose": {
 		"uri": "mongodb://localhost/checheluka"
-	}
+	},
+	"db": {
+		"db": "checheluka",
+		"host": "localhost",
+		"port": "27017",
+		"url": "mongodb://localhost/checheluka"
+	},
+	"secret": "secret_key1123sdasjfasu"
 }

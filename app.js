@@ -1,17 +1,52 @@
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var socketHandler = require('./middleware/socket');
-
+var socketHandler = require('./middleware/socketFrontController');
+var cookie = require('cookie');
 var config = require('./config');
+var MongoStore = require('connect-mongo')(session);
 
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
+app.use(cookieParser());
+console.log(config.get("db"));
+var sessionMiddleware = session({
+  secret: config.get("secret"),
+  store: new MongoStore(config.get("db")),
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: false,
+    expires: new Date(Date.now() + 60 * 1000), //setting cookie to not expire on session end
+    maxAge: 60 * 1000,
+    key: 'connect.sid'
+  }
+});
+//
+app.use(sessionMiddleware);
+io.use(function(socket, next) {
+  sessionMiddleware(socket.request, socket.request.res, next);
+  // var parseCookie = cookieParser(config.get("secret"));
+  // var handshake = socket.request;
+  //
+  // parseCookie(handshake, null, function (err, data) {
+  //   sessionService.get(handshake, function (err, session) {
+  //     if (err)
+  //       next(new Error(err.message));
+  //     if (!session)
+  //       next(new Error("Not authorized"));
+  //
+  //     handshake.session = session;
+  //     next();
+  //   });
+  // });
+});
+//
 // view engine setup
 app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views/manage')] );
 app.set('view engine', 'jade');
@@ -26,10 +61,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 require('./routes/routs')(app);
 
-
-io.on('connection', function(socket){
-    new socketHandler(socket);
-});
+new socketHandler(io);
 
 
 // catch 404 and forward to error handler

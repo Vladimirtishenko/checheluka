@@ -75,12 +75,13 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	window.addEventListener('DOMContentLoaded', function () {
-		new _socket2.default();
+		var socket = new _socket2.default();
 		new _modal2.default();
 		new _chat2.default();
 		new _asyncLoad2.default(document.querySelector('.a-else-goods'));
 		new _asyncLoadAllGoods2.default(document.querySelector('.a-all-goods-table'));
 		new _zoomImg2.default(document.querySelector('.a-zoom-container'));
+		socket.init();
 	});
 
 /***/ },
@@ -134,14 +135,22 @@
 
 			var _this = _possibleConstructorReturn(this, (Sockets.__proto__ || Object.getPrototypeOf(Sockets)).call(this));
 
-			var socket = io();
-			socket.emit('chat message', 'HELLO FROM CLIENT');
+			_this.socket = io();
+			_this.socket.emit('chat message', 'HEa');
+			_this.socket.on('serverMessage', function (data) {});
+
+			_this.socket.emit('getAuctions', 'HEa');
 			return _this;
 		}
 
 		_createClass(Sockets, [{
 			key: 'init',
-			value: function init() {}
+			value: function init() {
+
+				//this.socket.emit('register_user', {uname: 'test_uname', email: 'test@emailtest', pass: "123"});
+
+				this.socket.emit('login', { email: 'test@emailtest', pass: "123" });
+			}
 		}]);
 
 		return Sockets;
