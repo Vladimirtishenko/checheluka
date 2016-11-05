@@ -1,14 +1,12 @@
 import Helper from '../helper.js';
 
 import AsyncLoadFromAnouterResourse from './all_goods_load.js';
-import AsyncLoadFromOwnResourse from './all_goods_load_own.js';
 
 class Templates extends Helper{
-	
+
 	allGoods(obj){
 
-
-		function templates(img, title, description, size, color, consistOf, material){
+		function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice){
 
 			 let sizeEach = (sizes) => {
 			 	let sizesToArray = sizes.split(',');
@@ -49,6 +47,7 @@ class Templates extends Helper{
 						      '<input type="hidden" name="src" value="'+img+'"/>' +
 						      '<input type="hidden" name="consistOf" value="'+consistOf+'"/>' +
 						      '<input type="hidden" name="material" value="'+material+'"/>' +
+						      '<input type="hidden" name="price" value="'+price+'"/>' +
 						      '<div class="a-container-for-img"><img src="'+img+'" alt=""/></div>' +
 						      '<div class="a-hidden-form_description">' +
 						        '<div class="a-containet-flex-to-start-description">' +
@@ -61,6 +60,13 @@ class Templates extends Helper{
 						          '<div class="container-description-form">' +
 						            '<p class="container-description-form__else_params">Размеры</p>' +
 						            sizeEach(size) +
+						          '</div>' +
+						           '<div class="container-description-form">' +
+						            '<p class="container-description-form__else_params">Цена розничная</p><span>'+price+' руб.</span>' +
+						          '</div>' +
+						          '<div class="container-description-form">' +
+						            '<p class="container-description-form__else_params">Начальная ставка</p>' +
+						            '<span><input type="text" name="auctionPrice" value="30"><i> руб.</i></span>' +
 						          '</div>' +
 						        '</div>' +
 						        '<div class="a-containet-flex-to-end-button">' +
@@ -77,17 +83,13 @@ class Templates extends Helper{
 
 		let mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table"> </div>';
 
-		let buttonToLoadMore = '<div class="a-button-download-more">' + 
-  									'<button class="a-button-white">Загрузить еще</button>' +
-								'</div>';
-
-		new AsyncLoadFromAnouterResourse(templates, mainblock, buttonToLoadMore);
+		new AsyncLoadFromAnouterResourse(templates, mainblock, 'http://chechelyka.com/auc.php');
 	}
 
 
 	allGoodsAuction(){
 
-		function templates(id, img, title, description, size, color, consistOf, material, count, priority){
+		function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice){
 
 		     let tmp = '<div class="a-all-goods-table__item">' +
 		     				'<span class="a-delete-this-item-with-id" data-id="'+id+'"></span>' +
@@ -117,6 +119,8 @@ class Templates extends Helper{
 						      '<input type="hidden" name="src" value="'+decodeURIComponent(img)+'"/>' +
 						      '<input type="hidden" name="consistOf" value="'+decodeURIComponent(consistOf)+'"/>' +
 						      '<input type="hidden" name="material" value="'+decodeURIComponent(material)+'"/>' +
+						      '<input type="hidden" name="price" value="'+decodeURIComponent(price)+'"/>' +
+						      '<input type="hidden" name="auctionPrice" value="'+decodeURIComponent(auctionPrice)+'"/>' +
 						      '<div class="a-container-for-img"><img src="'+decodeURIComponent(img)+'" alt=""/></div>' +
 						      '<div class="a-hidden-form_description">' +
 						        '<div class="a-containet-flex-to-start-description">' +
@@ -135,6 +139,14 @@ class Templates extends Helper{
 						            '<input type="text" name="countInWarehouse" value="'+(count || 1)+'"/>' +
 						          '</div>' +
 						          '<div class="container-description-form">' +
+						            '<p class="container-description-form__else_params">Розничная цена</p>' +
+						            '<span>'+decodeURIComponent(price)+'</span>' +
+						          '</div>' +
+						          '<div class="container-description-form">' +
+						            '<p class="container-description-form__else_params">Начальная ставка</p>' +
+						            '<input type="text" name="auctionPrice" value="'+auctionPrice+'"/>' +
+						          '</div>' +
+						          '<div class="container-description-form">' +
 						            '<p class="container-description-form__else_params">Приоритет</p>' +
 						            '<input type="checkbox" name="priority" '+ (priority ? "checked" : "") +' />' +
 						          '</div>' +
@@ -151,11 +163,7 @@ class Templates extends Helper{
 
 		let mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table___own_base"> </div>';
 
-		let buttonToLoadMore = '<div class="a-button-download-more">' + 
-  									'<button class="a-button-white">Загрузить еще</button>' +
-								'</div>';
-
-		new AsyncLoadFromOwnResourse(templates, mainblock, buttonToLoadMore);
+		new AsyncLoadFromAnouterResourse(templates, mainblock, '/allGoodsAuction');
 
 	}
 

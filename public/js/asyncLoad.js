@@ -89,8 +89,8 @@ class AsyncLoad extends Helper {
 						  		'<i>Ткань<span>'+(decodeURIComponent(goods.material)).replace(/,|;/g , '<br />')+'</span></i>' +
 						  	'</span>' +
 						 '</div>' +
-						  '<p class="a-old-price">Розничная цена<span>3000 руб.</span></p>' +
-						 ' <p class="a-new-price">Начальная ставка<span>1000 руб.</span></p>' +
+						  '<p class="a-old-price">Розничная цена<span>'+(decodeURIComponent(goods.price))+' руб.</span></p>' +
+						 ' <p class="a-new-price">Начальная ставка<span>'+(decodeURIComponent(goods.auctionPrice))+' руб.</span></p>' +
 						'</div>' +
 					 '</div>';
 

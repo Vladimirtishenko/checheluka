@@ -26,6 +26,12 @@ var schema = new Schema({
 	countInWarehouse: {
 		type: String
 	},
+	auctionPrice: {
+		type: String
+	},
+	price: {
+		type: String
+	},
 	priority: {
 		type: Boolean
 	}

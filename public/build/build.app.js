@@ -68,7 +68,7 @@
 
 	var _asyncLoad2 = _interopRequireDefault(_asyncLoad);
 
-	var _asyncLoadAllGoods = __webpack_require__(28);
+	var _asyncLoadAllGoods = __webpack_require__(21);
 
 	var _asyncLoadAllGoods2 = _interopRequireDefault(_asyncLoadAllGoods);
 
@@ -730,7 +730,7 @@
 				var classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'],
 				    newClass = i % 2 != 0 ? ' a-add-new-background' : ' ';
 
-				var template = '<div class="a-else-goods__item ' + classArray[i] + newClass + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(goods.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + '<span>' + this.Number + '</span>' + '</p>' + '<p class="a-else-goods-descroption">Шапка писец</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(goods.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(goods.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(goods.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(goods.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>3000 руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>1000 руб.</span></p>' + '</div>' + '</div>';
+				var template = '<div class="a-else-goods__item ' + classArray[i] + newClass + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(goods.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + '<span>' + this.Number + '</span>' + '</p>' + '<p class="a-else-goods-descroption">Шапка писец</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(goods.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(goods.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(goods.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(goods.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(goods.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(goods.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
 
 				return template;
 			}
@@ -742,14 +742,7 @@
 	exports.default = AsyncLoad;
 
 /***/ },
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

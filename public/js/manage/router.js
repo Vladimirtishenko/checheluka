@@ -8,6 +8,7 @@ class Router extends Helper {
 		super();	
 		this.mainView = document.querySelector('view');
 		this.mainHeadText = document.querySelector('.a-head-font-left-side');
+		this.searchContainer = document.querySelector('.a-search-box');
 		this.defineRouts();
 	}
 
@@ -40,7 +41,10 @@ class Router extends Helper {
 		if(this.activeRouts == url || !url) return;
 
 		this.mainHeadText.innerText = innerText;
+
 		this.mainView.innerHTML = "";
+
+		this.searchContainer.innerHTML = '<input type="text" id="a-search-admin" name="search" placeholder="Поиск товара" />';
 
 		this.routs[url]();
 
