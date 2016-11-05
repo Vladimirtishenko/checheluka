@@ -46,9 +46,9 @@
 
 	'use strict';
 
-	__webpack_require__(21);
+	__webpack_require__(22);
 
-	var _router = __webpack_require__(23);
+	var _router = __webpack_require__(24);
 
 	var _router2 = _interopRequireDefault(_router);
 
@@ -252,20 +252,21 @@
 /* 18 */,
 /* 19 */,
 /* 20 */,
-/* 21 */
+/* 21 */,
+/* 22 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 22 */,
-/* 23 */
+/* 23 */,
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+			value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -274,7 +275,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _templates = __webpack_require__(24);
+	var _templates = __webpack_require__(25);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -287,81 +288,81 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Router = function (_Helper) {
-		_inherits(Router, _Helper);
+			_inherits(Router, _Helper);
 
-		function Router() {
-			_classCallCheck(this, Router);
+			function Router() {
+					_classCallCheck(this, Router);
 
-			var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this));
+					var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this));
 
-			_this.mainView = document.querySelector('view');
-			_this.mainHeadText = document.querySelector('.a-head-font-left-side');
-			_this.defineRouts();
-			return _this;
-		}
-
-		_createClass(Router, [{
-			key: 'defineRouts',
-			value: function defineRouts() {
-				var self = this,
-				    menu = document.querySelector('.a-menu-admin__links');
-
-				this.routs = {
-					allGoods: self.changeRouts.bind(self, 'allGoods'),
-					allGoodsAuction: self.changeRouts.bind(self, 'allGoodsAuction'),
-					orders: self.changeRouts.bind(self, 'orders')
-				};
-
-				this.routs['allGoods']();
-
-				menu.addEventListener('click', this.handlerToClick.bind(this));
+					_this.mainView = document.querySelector('view');
+					_this.mainHeadText = document.querySelector('.a-head-font-left-side');
+					_this.defineRouts();
+					return _this;
 			}
-		}, {
-			key: 'handlerToClick',
-			value: function handlerToClick(event) {
 
-				var target = event && event.target,
-				    attr = target && target.href,
-				    innerText = target && target.innerText;
+			_createClass(Router, [{
+					key: 'defineRouts',
+					value: function defineRouts() {
+							var self = this,
+							    menu = document.querySelector('.a-menu-admin__links');
 
-				if (!attr) return;
+							this.routs = {
+									allGoods: self.changeRouts.bind(self, 'allGoods'),
+									allGoodsAuction: self.changeRouts.bind(self, 'allGoodsAuction'),
+									orders: self.changeRouts.bind(self, 'orders')
+							};
 
-				var url = attr.indexOf('#') != -1 ? attr.substr(attr.indexOf('#') + 1) : null;
+							this.routs['allGoods']();
 
-				if (this.activeRouts == url || !url) return;
+							menu.addEventListener('click', this.handlerToClick.bind(this));
+					}
+			}, {
+					key: 'handlerToClick',
+					value: function handlerToClick(event) {
 
-				this.mainHeadText.innerText = innerText;
-				this.mainView.innerHTML = "";
+							var target = event && event.target,
+							    attr = target && target.href,
+							    innerText = target && target.innerText;
 
-				this.routs[url]();
+							if (!attr) return;
 
-				this.activeRouts = url;
-			}
-		}, {
-			key: 'changeRouts',
-			value: function changeRouts(url) {
+							var url = attr.indexOf('#') != -1 ? attr.substr(attr.indexOf('#') + 1) : null;
 
-				this.activeRouts = url;
+							if (this.activeRouts == url || !url) return;
 
-				var template = new _templates2.default();
+							this.mainHeadText.innerText = innerText;
+							this.mainView.innerHTML = "";
 
-				template[url]();
-			}
-		}]);
+							this.routs[url]();
 
-		return Router;
+							this.activeRouts = url;
+					}
+			}, {
+					key: 'changeRouts',
+					value: function changeRouts(url) {
+
+							this.activeRouts = url;
+
+							var template = new _templates2.default();
+
+							template[url]();
+					}
+			}]);
+
+			return Router;
 	}(_helper2.default);
 
 	exports.default = Router;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+			value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -370,11 +371,11 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _all_goods_load = __webpack_require__(25);
+	var _all_goods_load = __webpack_require__(26);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
 
-	var _all_goods_load_own = __webpack_require__(27);
+	var _all_goods_load_own = __webpack_require__(28);
 
 	var _all_goods_load_own2 = _interopRequireDefault(_all_goods_load_own);
 
@@ -387,68 +388,68 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Templates = function (_Helper) {
-		_inherits(Templates, _Helper);
+			_inherits(Templates, _Helper);
 
-		function Templates() {
-			_classCallCheck(this, Templates);
+			function Templates() {
+					_classCallCheck(this, Templates);
 
-			return _possibleConstructorReturn(this, (Templates.__proto__ || Object.getPrototypeOf(Templates)).apply(this, arguments));
-		}
-
-		_createClass(Templates, [{
-			key: 'allGoods',
-			value: function allGoods(obj) {
-
-				function templates(img, title, description, size, color, consistOf, material) {
-
-					var sizeEach = function sizeEach(sizes) {
-						var sizesToArray = sizes.split(',');
-
-						var sizesTmp = "";
-						sizesToArray.forEach(function (item, i) {
-							sizesTmp += '<label for=""><span>' + item + '</span>' + '<input type="checkbox" name="size" value="' + item + '"/>' + '</label>';
-						});
-
-						return sizesTmp;
-					};
-
-					var tmp = '<div class="a-all-goods-table__item">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="title" value="' + title + '"/>' + '<input type="hidden" name="description" value="' + description + '"/>' + '<input type="hidden" name="color" value="' + color + '"/>' + '<input type="hidden" name="src" value="' + img + '"/>' + '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' + '<input type="hidden" name="material" value="' + material + '"/>' + '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + title + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + sizeEach(size) + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
-
-					return tmp;
-				}
-
-				var mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table"> </div>';
-
-				var buttonToLoadMore = '<div class="a-button-download-more">' + '<button class="a-button-white">Загрузить еще</button>' + '</div>';
-
-				new _all_goods_load2.default(templates, mainblock, buttonToLoadMore);
+					return _possibleConstructorReturn(this, (Templates.__proto__ || Object.getPrototypeOf(Templates)).apply(this, arguments));
 			}
-		}, {
-			key: 'allGoodsAuction',
-			value: function allGoodsAuction() {
 
-				function templates(id, img, title, description, size, color, consistOf, material, count, priority) {
+			_createClass(Templates, [{
+					key: 'allGoods',
+					value: function allGoods(obj) {
 
-					var tmp = '<div class="a-all-goods-table__item">' + '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' + '<img src="' + decodeURIComponent(img) + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + decodeURIComponent(size) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + decodeURIComponent(color) + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="_id" value="' + id + '"/>' + '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' + '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' + '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' + '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' + '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' + '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' + '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + '<span>' + decodeURIComponent(size) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Колличество на складе</p>' + '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Приоритет</p>' + '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
+							function templates(img, title, description, size, color, consistOf, material) {
 
-					return tmp;
-				}
+									var sizeEach = function sizeEach(sizes) {
+											var sizesToArray = sizes.split(',');
 
-				var mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table___own_base"> </div>';
+											var sizesTmp = "";
+											sizesToArray.forEach(function (item, i) {
+													sizesTmp += '<label for=""><span>' + item + '</span>' + '<input type="checkbox" name="size" value="' + item + '"/>' + '</label>';
+											});
 
-				var buttonToLoadMore = '<div class="a-button-download-more">' + '<button class="a-button-white">Загрузить еще</button>' + '</div>';
+											return sizesTmp;
+									};
 
-				new _all_goods_load_own2.default(templates, mainblock, buttonToLoadMore);
-			}
-		}]);
+									var tmp = '<div class="a-all-goods-table__item">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="title" value="' + title + '"/>' + '<input type="hidden" name="description" value="' + description + '"/>' + '<input type="hidden" name="color" value="' + color + '"/>' + '<input type="hidden" name="src" value="' + img + '"/>' + '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' + '<input type="hidden" name="material" value="' + material + '"/>' + '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + title + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + sizeEach(size) + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
 
-		return Templates;
+									return tmp;
+							}
+
+							var mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table"> </div>';
+
+							var buttonToLoadMore = '<div class="a-button-download-more">' + '<button class="a-button-white">Загрузить еще</button>' + '</div>';
+
+							new _all_goods_load2.default(templates, mainblock, buttonToLoadMore);
+					}
+			}, {
+					key: 'allGoodsAuction',
+					value: function allGoodsAuction() {
+
+							function templates(id, img, title, description, size, color, consistOf, material, count, priority) {
+
+									var tmp = '<div class="a-all-goods-table__item">' + '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' + '<img src="' + decodeURIComponent(img) + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + decodeURIComponent(size) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + decodeURIComponent(color) + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="_id" value="' + id + '"/>' + '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' + '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' + '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' + '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' + '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' + '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' + '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + '<span>' + decodeURIComponent(size) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Колличество на складе</p>' + '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Приоритет</p>' + '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
+
+									return tmp;
+							}
+
+							var mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table___own_base"> </div>';
+
+							var buttonToLoadMore = '<div class="a-button-download-more">' + '<button class="a-button-white">Загрузить еще</button>' + '</div>';
+
+							new _all_goods_load_own2.default(templates, mainblock, buttonToLoadMore);
+					}
+			}]);
+
+			return Templates;
 	}(_helper2.default);
 
 	exports.default = Templates;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -463,7 +464,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _add_or_delete_action = __webpack_require__(26);
+	var _add_or_delete_action = __webpack_require__(27);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
@@ -560,7 +561,7 @@
 	exports.default = AsyncLoadFromAnouterResourse;
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -717,7 +718,7 @@
 	exports.default = ModalGoodsToAdd;
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

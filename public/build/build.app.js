@@ -68,19 +68,20 @@
 
 	var _asyncLoad2 = _interopRequireDefault(_asyncLoad);
 
-	var _asyncLoadAllGoods = __webpack_require__(28);
+	var _asyncLoadAllGoods = __webpack_require__(21);
 
 	var _asyncLoadAllGoods2 = _interopRequireDefault(_asyncLoadAllGoods);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	window.addEventListener('DOMContentLoaded', function () {
-		new _socket2.default();
+		var socket = new _socket2.default();
 		new _modal2.default();
 		new _chat2.default();
 		new _asyncLoad2.default(document.querySelector('.a-else-goods'));
 		new _asyncLoadAllGoods2.default(document.querySelector('.a-all-goods-table'));
 		new _zoomImg2.default(document.querySelector('.a-zoom-container'));
+		socket.init();
 	});
 
 /***/ },
@@ -134,14 +135,22 @@
 
 			var _this = _possibleConstructorReturn(this, (Sockets.__proto__ || Object.getPrototypeOf(Sockets)).call(this));
 
-			var socket = io();
-			socket.emit('chat message', 'HELLO FROM CLIENT');
+			_this.socket = io();
+			_this.socket.emit('chat message', 'HEa');
+			_this.socket.on('serverMessage', function (data) {});
+
+			_this.socket.emit('getAuctions', 'HEa');
 			return _this;
 		}
 
 		_createClass(Sockets, [{
 			key: 'init',
-			value: function init() {}
+			value: function init() {
+
+				//this.socket.emit('register_user', {uname: 'test_uname', email: 'test@emailtest', pass: "123"});
+
+				this.socket.emit('login', { email: 'test@emailtest', pass: "123" });
+			}
 		}]);
 
 		return Sockets;
@@ -509,7 +518,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+			value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -527,113 +536,113 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Zoom = function (_Helper) {
-		_inherits(Zoom, _Helper);
+			_inherits(Zoom, _Helper);
 
-		function Zoom(el) {
-			_classCallCheck(this, Zoom);
+			function Zoom(el) {
+					_classCallCheck(this, Zoom);
 
-			var _this = _possibleConstructorReturn(this, (Zoom.__proto__ || Object.getPrototypeOf(Zoom)).call(this));
+					var _this = _possibleConstructorReturn(this, (Zoom.__proto__ || Object.getPrototypeOf(Zoom)).call(this));
 
-			if (!el) return _possibleConstructorReturn(_this);
+					if (!el) return _possibleConstructorReturn(_this);
 
-			_this.modalOuter = document.querySelector('.a-modal');
-			_this.modalContainerForImg = _this.modalOuter.querySelector('.a-outer-for-image');
-			_this.modalInnerContainer = _this.modalOuter.querySelector('.a-inner-background');
-			_this.allGoodsDelegate = el;
-			_this.cloneContainer = null;
-			_this.staticZoomWidth = 1000;
-			_this.flyEvent('add', ['click'], [_this.allGoodsDelegate], [_this.handlerToShowModalZoom.bind(_this)]);
+					_this.modalOuter = document.querySelector('.a-modal');
+					_this.modalContainerForImg = _this.modalOuter.querySelector('.a-outer-for-image');
+					_this.modalInnerContainer = _this.modalOuter.querySelector('.a-inner-background');
+					_this.allGoodsDelegate = el;
+					_this.cloneContainer = null;
+					_this.staticZoomWidth = 1000;
+					_this.flyEvent('add', ['click'], [_this.allGoodsDelegate], [_this.handlerToShowModalZoom.bind(_this)]);
 
-			return _this;
-		}
-
-		_createClass(Zoom, [{
-			key: 'handlerToShowModalZoom',
-			value: function handlerToShowModalZoom(event) {
-
-				try {
-					this.flyEvent('remove', ['mouseenter', 'mouseleave', 'mousemove'], [this.modalContainerForImg], this.allListeners);
-				} catch (e) {
-					console.log(e);
-				}
-
-				var target = event && event.target || null;
-
-				if (!target || !target.classList.contains('a-image-to-zoom')) return;
-
-				this.cssHelper([this.modalInnerContainer], ["display: flex"]);
-
-				this.modalContainerForImg.innerHTML = "<img src='" + target.src + "' />";
-
-				this.allListeners = this.handlerToZoomImg.bind(this);
-
-				this.flyEvent('add', ['mouseenter', 'mouseleave', 'mousemove'], [this.modalContainerForImg], [this.allListeners]);
-
-				this.classChange(['-animate-modal-in'], 'add', [this.modalOuter]);
+					return _this;
 			}
-		}, {
-			key: 'handlerToZoomImg',
-			value: function handlerToZoomImg(event) {
 
-				var type = event && event.type,
-				    target = event && event.target;
+			_createClass(Zoom, [{
+					key: 'handlerToShowModalZoom',
+					value: function handlerToShowModalZoom(event) {
 
-				if (!target) return;
+							try {
+									this.flyEvent('remove', ['mouseenter', 'mouseleave', 'mousemove'], [this.modalContainerForImg], this.allListeners);
+							} catch (e) {
+									console.log(e);
+							}
 
-				var events = {
-					mousemove: this.handlerMousemove.bind(this),
-					mouseenter: this.handlerMouseenter.bind(this),
-					mouseleave: this.handlerMouseleave.bind(this)
-				};
+							var target = event && event.target || null;
 
-				events[type](event);
-			}
-		}, {
-			key: 'handlerMousemove',
-			value: function handlerMousemove(event) {
+							if (!target || !target.classList.contains('a-image-to-zoom')) return;
 
-				this.cssHelper([this.cloneContainer.firstElementChild], ["left: " + -(event.offsetX * this.offsetPosition.left) + "px; top: " + -(event.offsetY * this.offsetPosition.top) + "px"]);
-			}
-		}, {
-			key: 'handlerMouseenter',
-			value: function handlerMouseenter(event) {
+							this.cssHelper([this.modalInnerContainer], ["display: flex"]);
 
-				var target = event.target;
+							this.modalContainerForImg.innerHTML = "<img src='" + target.src + "' />";
 
-				if (target != this.modalContainerForImg) return;
+							this.allListeners = this.handlerToZoomImg.bind(this);
 
-				this.cloneContainer = target.cloneNode(true);
-				this.cloneContainer.id = "viewport";
+							this.flyEvent('add', ['mouseenter', 'mouseleave', 'mousemove'], [this.modalContainerForImg], [this.allListeners]);
 
-				this.modalInnerContainer.appendChild(this.cloneContainer);
+							this.classChange(['-animate-modal-in'], 'add', [this.modalOuter]);
+					}
+			}, {
+					key: 'handlerToZoomImg',
+					value: function handlerToZoomImg(event) {
 
-				this.cssHelper([this.cloneContainer, target, this.cloneContainer.firstElementChild], ["position: absolute", "opacity: 0; z-index: 1", "width:" + this.staticZoomWidth + "px"]);
+							var type = event && event.type,
+							    target = event && event.target;
 
-				this.offsetPosition = this.calculateWidthAndHeight();
-			}
-		}, {
-			key: 'handlerMouseleave',
-			value: function handlerMouseleave(event) {
-				this.cloneContainer.parentNode.removeChild(this.cloneContainer);
-				this.modalContainerForImg.removeAttribute('style');
-			}
-		}, {
-			key: 'calculateWidthAndHeight',
-			value: function calculateWidthAndHeight() {
-				var params = {},
-				    w = this.modalContainerForImg.clientWidth,
-				    h = this.modalContainerForImg.clientHeight,
-				    sw = this.staticZoomWidth,
-				    dh = this.cloneContainer.firstElementChild.clientHeight;
+							if (!target) return;
 
-				params.left = sw / (sw - w);
-				params.top = dh / (dh - h);
+							var events = {
+									mousemove: this.handlerMousemove.bind(this),
+									mouseenter: this.handlerMouseenter.bind(this),
+									mouseleave: this.handlerMouseleave.bind(this)
+							};
 
-				return params;
-			}
-		}]);
+							events[type](event);
+					}
+			}, {
+					key: 'handlerMousemove',
+					value: function handlerMousemove(event) {
 
-		return Zoom;
+							this.cssHelper([this.cloneContainer.firstElementChild], ["left: " + -(event.offsetX * this.offsetPosition.left) + "px; top: " + -(event.offsetY * this.offsetPosition.top) + "px"]);
+					}
+			}, {
+					key: 'handlerMouseenter',
+					value: function handlerMouseenter(event) {
+
+							var target = event.target;
+
+							if (target != this.modalContainerForImg) return;
+
+							this.cloneContainer = target.cloneNode(true);
+							this.cloneContainer.id = "viewport";
+
+							this.modalInnerContainer.appendChild(this.cloneContainer);
+
+							this.cssHelper([this.cloneContainer, target, this.cloneContainer.firstElementChild], ["position: absolute", "opacity: 0; z-index: 1", "width:" + this.staticZoomWidth + "px"]);
+
+							this.offsetPosition = this.calculateWidthAndHeight();
+					}
+			}, {
+					key: 'handlerMouseleave',
+					value: function handlerMouseleave(event) {
+							this.cloneContainer.parentNode.removeChild(this.cloneContainer);
+							this.modalContainerForImg.removeAttribute('style');
+					}
+			}, {
+					key: 'calculateWidthAndHeight',
+					value: function calculateWidthAndHeight() {
+							var params = {},
+							    w = this.modalContainerForImg.clientWidth,
+							    h = this.modalContainerForImg.clientHeight,
+							    sw = this.staticZoomWidth,
+							    dh = this.cloneContainer.firstElementChild.clientHeight;
+
+							params.left = sw / (sw - w);
+							params.top = dh / (dh - h);
+
+							return params;
+					}
+			}]);
+
+			return Zoom;
 	}(_helper2.default);
 
 	exports.default = Zoom;
@@ -742,14 +751,7 @@
 	exports.default = AsyncLoad;
 
 /***/ },
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

@@ -15,13 +15,21 @@ function Module()
         }
     };
 
+    this.unsetListener = function(eventData)
+    {
+        if (typeof this.eventListeners[eventData.event] === 'undefined')
+        {
+            delete this.eventListeners[eventData][eventData.index];
+        }
+    };
+
     this.dispatchEvent = function(event,data)
     {
         if (typeof this.eventListeners[event] !== 'undefined')
         {
             for (var i = 0; i < this.eventListeners[event].length; i++)
             {
-                this.eventListeners[event][i]({}, data);
+                this.eventListeners[event][i]({index:i, event:event}, data);
             }
         }
     };

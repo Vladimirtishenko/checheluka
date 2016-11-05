@@ -74,4 +74,9 @@ Model.prototype.removeFromStorage = function()
     throw new error("Method not declare","Method  'removeFromStorage' not declare ",1);
 };
 
+Model.prototype.__throwError = function(name,message,level)
+{
+    throw new error(name,message,level);
+};
+
 module.exports = Model;
