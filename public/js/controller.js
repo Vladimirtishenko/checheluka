@@ -8,7 +8,7 @@ import Zoom from './zoomImg.js';
 import Async from './asyncLoad.js';
 import AsyncAllGoods from './asyncLoadAllGoods.js';
 
-$app = {};
+window.$app = {};
 
 window.addEventListener('DOMContentLoaded', () => {
 	$app.socket = new Sockets();

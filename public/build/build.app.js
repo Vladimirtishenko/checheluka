@@ -74,7 +74,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	$app = {};
+	window.$app = {};
 
 	window.addEventListener('DOMContentLoaded', function () {
 		$app.socket = new _socket2.default();
