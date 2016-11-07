@@ -1,23 +1,10 @@
 var parent = require('../../../core/model');
 var mongoose = require('../../../../lib/mongoose');
+var dProv = require('./SchemaModel');
 function Product() {
     parent.apply(this, arguments);
-    //mongoose schema description
-    var schema = mongoose.Schema({
-        title:String,
-        description: String,
-        src: String,
-        size: String,
-        color: String,
-        consistOf: String,
-        material: String,
-        countInWarehouse: {type: Number, default: 0},
-        auctionPrice: {type: Number, default: 0},
-        price: {type: Number, default: 0},
-        priority: Boolean
-    }, { collection: 'goods' });
     // Model
-    this.dataProvider = mongoose.model('goods', schema);
+    this.dataProvider = dProv;
     this.entityData = {
         _id: 0,
         title: '',
@@ -57,14 +44,14 @@ Product.prototype.getEntityCollection = function(ofsset, lim, callback)
     });
 };
 
-Product.prototype.saveToStorage = function(entity, action, calback)
+Product.prototype.saveToStorage = function(entity, action, callback)
 {
     if (action == 'create')
     {
         delete  entity._id;
         this.dataProvider.create(entity, function(err, newProd) {
-            if(err) return calback(err);
-            return calback(newProd);
+            if(err) return callback(err);
+            return callback(newProd);
         });
         return;
     }

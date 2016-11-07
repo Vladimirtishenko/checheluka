@@ -24,18 +24,17 @@ function socketFrontController(io){
     this.diffToLoad = 5;
     this.productsPull = {};
     this.auctionsPull = {};
+    this.curAuction = null;
     productsModule.setListenere("productsLoaded",this.setProductList.bind(this));
     auctionModule.setListenere("finishAuction",this.sendNotifyThatAuctionFinished.bind(this));
     auctionModule.setListenere("auctionUpdated",this.notifyAuctionUpdated.bind(this));
     auctionModule.setListenere("startAuction",this.notifyAuctionStarted.bind(this));
-    this.clients = [];
     //initialyze client connection
     io.on('connection', function(socket){
         var newClient = new socketClient(socket);
-        this.clients[newClient.getId()] = newClient;
+        //this.clients[newClient.getId()] = newClient;
         newClient.setEvent('login', this.login.bind(this));
         newClient.setEvent('register_user', this.register_user.bind(this));
-        newClient.setEvent('getUserData', this.getUserData.bind(this));
         newClient.setEvent('baseBuy', this.baseBuy.bind(this));
         newClient.setEvent('getCurrentAuction', this.getCurrentAuction.bind(this));
         newClient.setEvent('getAuctions', this.getAuctions.bind(this));
@@ -59,13 +58,6 @@ socketFrontController.prototype.login = function(client, data){
     usersModule.autoryze(data.email, data.pass);
 }
 
-socketFrontController.prototype.getUserData = function(msg){
-    client.socket.emit('serverMessage', this.createMessage('getUserData', client.getUserData()));
-    //io.emit('chat message', msg); // send all users
-
-}
-
-
 socketFrontController.prototype.register_user = function(client, data){
     //set listner for completed creating user
     usersModule.setListenere("userCreated",function(event, data){
@@ -84,8 +76,7 @@ socketFrontController.prototype.getAuctionStatus = function(client, data){
 
 }
 socketFrontController.prototype.getCurrentAuction = function(client, data){
-
-    var curr = auctionModule.getCurrent();
+    var curr = this.auctionsPull[this.curAuction] || auctionModule.getCurrent();
     return client.socket.emit('serverMessage', this.createMessage('getCurrentAuction', curr));
 }
 socketFrontController.prototype.getAuctionHistory = function(){
@@ -100,7 +91,7 @@ socketFrontController.prototype.baseBuy = function(client, data){
     }
     var response = {result:'success'};
     var auc = auctionModule.getCurrent();
-    if (auc.uid != data.auction_id)
+    if (auc._uid != data.auction_id)
     {
         response = {error: 'Auction with auction_id = '+data.auction_id+' not found'};
         return client.socket.emit('serverMessage', this.createMessage(action, response));
@@ -127,6 +118,9 @@ socketFrontController.prototype.productLoad = function(){
 
 socketFrontController.prototype.setProductList = function(event, products){
     console.log(products)
+    this.pro.auctionPrice +=1;
+    this.pro.title +='qw_';
+    this.pro.countInWarehouse +=1;
     //productsModule.createProduct(this.pro);
     if (products && products.length > 0)
     {
@@ -139,6 +133,7 @@ socketFrontController.prototype.setProductList = function(event, products){
     }
     else
     {
+        this.offset = 0;
         setInterval(this.productLoad.bind(this),1000*loadProductSleepTime);
     }
 }
@@ -155,7 +150,8 @@ socketFrontController.prototype.setAuctionList = function(){
     var keys = Object.keys(this.auctionsPull);
     if (typeof keys[0] !== 'undefined')
     {
-        auctionModule.startAuction(this.auctionsPull[keys[0]]._uid);
+        this.curAuction = this.auctionsPull[keys[0]]._uid;
+        auctionModule.startAuction(this.curAuction);
     }
 }
 
@@ -171,6 +167,17 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     if (keys.length < this.limit - this.diffToLoad)
     {
         this.productLoad();
+    }
+    if (data.winner && data.winner._id)
+    {
+        var updata = {
+            _id: data.lot._id,
+            countInWarehouse: data.lot.countInWarehouse - data.count
+        };
+        productsModule.updateProduct(updata,function(res)
+        {
+            console.log('Product updated');
+        });
     }
     this.sendToAll(this.createMessage('auctionFinished', data));
 }

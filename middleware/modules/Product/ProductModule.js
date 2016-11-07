@@ -26,6 +26,14 @@ ProductModule.prototype.createProduct = function(productData){
     }.bind(this));
 };
 
+ProductModule.prototype.updateProduct = function(productData){
+    productModel.saveToStorage(productData, 'update', function(updatedProd)
+    {
+        this.dispatchEvent('productUpdated', updatedProd);
+    }.bind(this));
+};
+
+
 ProductModule.prototype.getProducts = function(uid, offset, limit){
     return productModel.table;
 };

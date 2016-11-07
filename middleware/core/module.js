@@ -1,9 +1,8 @@
-function Module()
-{
+function Module() {
     this.events = [];
     this.eventListeners = {};
-
-    this.setListenere = function(event, callback)
+}
+Module.prototype.setListenere = function(event, callback)
     {
         if (this.events.indexOf(event)>=0 && typeof callback === 'function')
         {
@@ -15,7 +14,7 @@ function Module()
         }
     };
 
-    this.unsetListener = function(eventData)
+Module.prototype.unsetListener = function(eventData)
     {
         if (typeof this.eventListeners[eventData.event] === 'undefined')
         {
@@ -23,7 +22,7 @@ function Module()
         }
     };
 
-    this.dispatchEvent = function(event,data)
+Module.prototype.dispatchEvent = function(event,data)
     {
         if (typeof this.eventListeners[event] !== 'undefined')
         {
@@ -33,7 +32,7 @@ function Module()
             }
         }
     };
-}
+
 
 
 module.exports = Module;
