@@ -137,7 +137,12 @@
 
 			_this.socket = io();
 			_this.socket.emit('chat message', 'HEa');
-			_this.socket.on('serverMessage', function (data) {});
+			_this.socket.on('serverMessage', function (mess) {
+				console.log(mess);
+				if (mess.action == 'autoryze' && mess.data) {
+					this.socket.emit('baseBuy', {});
+				}
+			}.bind(_this));
 
 			_this.socket.emit('getAuctions', 'HEa');
 			return _this;
@@ -150,6 +155,7 @@
 				//this.socket.emit('register_user', {uname: 'test_uname', email: 'test@emailtest', pass: "123"});
 
 				this.socket.emit('login', { email: 'test@emailtest', pass: "123" });
+				//this.socket.emit('baseBuy', {email: 'test@emailtest', pass: "123"});
 			}
 		}]);
 
