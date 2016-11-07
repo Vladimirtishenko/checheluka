@@ -9,6 +9,9 @@ module.exports.post = function(req, res, next) {
 
         var _id = file._id || new mongoose.mongo.ObjectID();
 
+        console.log(file.countInWarehouse);
+
+
         Goods.findOneAndUpdate({
             _id: _id
         }, file, { upsert: true, new: true }, function(err, doc) {

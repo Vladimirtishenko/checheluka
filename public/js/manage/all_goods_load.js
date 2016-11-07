@@ -66,11 +66,9 @@ class AsyncLoadFromAnouterResourse extends Helper {
 			return;
 		}
 
-		console.log(obj);
-
 		for (var i of obj) {
 			tmp += this.templates(
-					i.id,
+					i._id,
 					i.img || i.src, 
 					i.title, 
 					i.description,
@@ -78,7 +76,7 @@ class AsyncLoadFromAnouterResourse extends Helper {
 					i.color, 
 					i.Material || i.material, 
 					i.Sostav || i.consistOf,
-					i.count,
+					i.countInWarehouse,
 					i.priority,
 					i.PriceRoz || i.price,
 					i.auctionPrice

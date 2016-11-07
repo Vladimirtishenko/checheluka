@@ -9,8 +9,8 @@ var schema = new Schema({
 	color: String,
 	consistOf: String,
 	material: String,
-	countInWarehouse: {type: Number, default: 0},
-	auctionPrice: {type: Number, default: 0},
+	countInWarehouse: {type: Number, default: 1},
+	auctionPrice: {type: Number, default: 30},
 	price: {type: Number, default: 0},
 	priority: Boolean
 });

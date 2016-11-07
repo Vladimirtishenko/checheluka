@@ -52,7 +52,7 @@
 
 	var _socket2 = _interopRequireDefault(_socket);
 
-	var _modal = __webpack_require__(17);
+	var _modal = __webpack_require__(16);
 
 	var _modal2 = _interopRequireDefault(_modal);
 
@@ -80,7 +80,6 @@
 		$app.socket = new _socket2.default();
 		new _modal2.default();
 		new _chat2.default();
-		new _asyncLoad2.default(document.querySelector('.a-else-goods'));
 		new _asyncLoadAllGoods2.default(document.querySelector('.a-all-goods-table'));
 		new _zoomImg2.default(document.querySelector('.a-zoom-container'));
 	});
@@ -116,7 +115,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(16);
+	var _helper = __webpack_require__(17);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -138,49 +137,51 @@
 
 			_this.socket = io();
 
-			_this.socket.emit('chat message', 'HEa');
-
 			_this.socket.on('serverMessage', function (mess) {
-				console.log(mess);
-				if (mess.action == 'autoryze' && mess.data) {
-					_this.socket.emit('baseBuy', {});
-				}
-			});
 
-			_this.socket.emit('getAuctions', 'HEa');
+				console.log(mess);
+				try {
+					_this[mess.action](mess);
+				} catch (e) {
+					console.log(e);
+				}
+
+				/*console.log(mess);
+	   if (mess.action == 'autoryze' && mess.data)
+	   {
+	   	//this.socket.emit('baseBuy', {});
+	   }*/
+			});
+			_this.socket.emit('getCurrentAuction', {});
+			_this.socket.emit('getAuctions', {});
+
 			return _this;
 		}
 
 		_createClass(Sockets, [{
 			key: 'init',
 			value: function init() {
-
 				//this.socket.emit('register_user', {uname: 'test_uname', email: 'test@emailtest', pass: "123"});
 
-				this.socket.emit('login', { email: 'test@emailtest', pass: "123" });
+				//this.socket.emit('login', {email: 'test@emailtest', pass: "123"});
 				//this.socket.emit('baseBuy', {email: 'test@emailtest', pass: "123"});
 			}
 		}, {
-			key: 'authorize',
-			value: function authorize() {}
+			key: 'getCurrentAuction',
+			value: function getCurrentAuction(mess) {
+				console.log(mess);
+			}
 		}, {
-			key: 'registration',
-			value: function registration() {}
+			key: 'getAuctions',
+			value: function getAuctions(mess) {
+				console.log(mess);
+			}
 		}, {
-			key: 'buyButton',
-			value: function buyButton() {}
+			key: 'actionStarted',
+			value: function actionStarted() {}
 		}, {
-			key: 'chatTextAdd',
-			value: function chatTextAdd() {}
-		}, {
-			key: 'openTrade',
-			value: function openTrade() {}
-		}, {
-			key: 'openTrade',
-			value: function openTrade() {}
-		}, {
-			key: 'addCard',
-			value: function addCard() {}
+			key: 'auctionFinished',
+			value: function auctionFinished() {}
 		}]);
 
 		return Sockets;
@@ -190,6 +191,132 @@
 
 /***/ },
 /* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(17);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Modal = function (_Helper) {
+	    _inherits(Modal, _Helper);
+
+	    function Modal() {
+	        _classCallCheck(this, Modal);
+
+	        var _this = _possibleConstructorReturn(this, (Modal.__proto__ || Object.getPrototypeOf(Modal)).call(this));
+
+	        _this.parentWraper = document.querySelector('.a-modal');
+	        var button = document.querySelectorAll('.button-modal');
+	        var close = document.querySelectorAll('.a-modal-close');
+	        var formChange = document.querySelectorAll('.-a-form-change-listener');
+	        _this.flyEvent('add', ['click'], [button, close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
+	        return _this;
+	    }
+
+	    _createClass(Modal, [{
+	        key: 'modalHandlerIn',
+	        value: function modalHandlerIn(event) {
+
+	            var attr = event && event.target ? event.target.getAttribute('data-attr') : null;
+
+	            if (!attr) return;
+
+	            var container = document.querySelector('.' + attr);
+	            this.cssHelper([container], ["display: flex"]);
+	            this.classChange(['-animate-modal-in'], 'add', [this.parentWraper]);
+	        }
+	    }, {
+	        key: 'modalHandlerOut',
+	        value: function modalHandlerOut(event) {
+
+	            var target = event && event.target ? event && event.target : null;
+	            if (!target) return;
+
+	            this.animationEvent = this.transitionEnd.bind(this, target);
+	            this.flyEvent('add', ['animationend'], [this.parentWraper], this.animationEvent);
+	            this.classChange(['-animate-modal-out'], 'add', [this.parentWraper]);
+	        }
+	    }, {
+	        key: 'addStyleOrRemove',
+	        value: function addStyleOrRemove(el, what) {
+	            el.style.display = what;
+	        }
+	    }, {
+	        key: 'transitionEnd',
+	        value: function transitionEnd(targets, event) {
+	            var target = event && event.target;
+	            this.classChange(['-animate-modal-in', '-animate-modal-out'], 'remove', [target]);
+
+	            this.cssHelper([targets.parentNode], ["display: none"]);
+	            try {
+	                this.parentWraper.removeEventListener('animationend', this.animationEvent);
+	            } catch (e) {
+	                console.log(e);
+	            }
+	        }
+	    }, {
+	        key: 'changeForm',
+	        value: function changeForm(event) {
+	            var target = event && event.target ? event.target : null,
+	                attr = target ? target.getAttribute('data-attr') : null;
+	            if (!target || !attr) return;
+
+	            var forms = this.parentWraper.querySelectorAll('.a-form-modal');
+
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+
+	            try {
+	                for (var _iterator = forms[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var form = _step.value;
+
+	                    if (form.classList.contains(attr)) {
+	                        form.style.display = "flex";
+	                    } else {
+	                        form.style.display = "none";
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	        }
+	    }]);
+
+	    return Modal;
+	}(_helper2.default);
+
+	exports.default = Modal;
+
+/***/ },
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -361,132 +488,6 @@
 	exports.default = Helper;
 
 /***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _helper = __webpack_require__(16);
-
-	var _helper2 = _interopRequireDefault(_helper);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Modal = function (_Helper) {
-	    _inherits(Modal, _Helper);
-
-	    function Modal() {
-	        _classCallCheck(this, Modal);
-
-	        var _this = _possibleConstructorReturn(this, (Modal.__proto__ || Object.getPrototypeOf(Modal)).call(this));
-
-	        _this.parentWraper = document.querySelector('.a-modal');
-	        var button = document.querySelectorAll('.button-modal');
-	        var close = document.querySelectorAll('.a-modal-close');
-	        var formChange = document.querySelectorAll('.-a-form-change-listener');
-	        _this.flyEvent('add', ['click'], [button, close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
-	        return _this;
-	    }
-
-	    _createClass(Modal, [{
-	        key: 'modalHandlerIn',
-	        value: function modalHandlerIn(event) {
-
-	            var attr = event && event.target ? event.target.getAttribute('data-attr') : null;
-
-	            if (!attr) return;
-
-	            var container = document.querySelector('.' + attr);
-	            this.cssHelper([container], ["display: flex"]);
-	            this.classChange(['-animate-modal-in'], 'add', [this.parentWraper]);
-	        }
-	    }, {
-	        key: 'modalHandlerOut',
-	        value: function modalHandlerOut(event) {
-
-	            var target = event && event.target ? event && event.target : null;
-	            if (!target) return;
-
-	            this.animationEvent = this.transitionEnd.bind(this, target);
-	            this.flyEvent('add', ['animationend'], [this.parentWraper], this.animationEvent);
-	            this.classChange(['-animate-modal-out'], 'add', [this.parentWraper]);
-	        }
-	    }, {
-	        key: 'addStyleOrRemove',
-	        value: function addStyleOrRemove(el, what) {
-	            el.style.display = what;
-	        }
-	    }, {
-	        key: 'transitionEnd',
-	        value: function transitionEnd(targets, event) {
-	            var target = event && event.target;
-	            this.classChange(['-animate-modal-in', '-animate-modal-out'], 'remove', [target]);
-
-	            this.cssHelper([targets.parentNode], ["display: none"]);
-	            try {
-	                this.parentWraper.removeEventListener('animationend', this.animationEvent);
-	            } catch (e) {
-	                console.log(e);
-	            }
-	        }
-	    }, {
-	        key: 'changeForm',
-	        value: function changeForm(event) {
-	            var target = event && event.target ? event.target : null,
-	                attr = target ? target.getAttribute('data-attr') : null;
-	            if (!target || !attr) return;
-
-	            var forms = this.parentWraper.querySelectorAll('.a-form-modal');
-
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
-
-	            try {
-	                for (var _iterator = forms[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var form = _step.value;
-
-	                    if (form.classList.contains(attr)) {
-	                        form.style.display = "flex";
-	                    } else {
-	                        form.style.display = "none";
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
-	                    }
-	                }
-	            }
-	        }
-	    }]);
-
-	    return Modal;
-	}(_helper2.default);
-
-	exports.default = Modal;
-
-/***/ },
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -498,7 +499,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(16);
+	var _helper = __webpack_require__(17);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -553,7 +554,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(16);
+	var _helper = __webpack_require__(17);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -689,7 +690,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(16);
+	var _helper = __webpack_require__(17);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -792,7 +793,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(16);
+	var _helper = __webpack_require__(17);
 
 	var _helper2 = _interopRequireDefault(_helper);
 

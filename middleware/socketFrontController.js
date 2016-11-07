@@ -37,6 +37,8 @@ function socketFrontController(io){
         newClient.setEvent('register_user', this.register_user.bind(this));
         newClient.setEvent('getUserData', this.getUserData.bind(this));
         newClient.setEvent('baseBuy', this.baseBuy.bind(this));
+        newClient.setEvent('getCurrentAuction', this.getCurrentAuction.bind(this));
+        newClient.setEvent('getAuctions', this.getAuctions.bind(this));
     }.bind(this));
     this.productLoad();
 }
@@ -75,15 +77,16 @@ socketFrontController.prototype.register_user = function(client, data){
     usersModule.registerUser(data.uname, data.email, data.pass);
 }
 
-socketFrontController.prototype.getAuctions = function(msg){
-    this.send(productsModule.getProducts());
+socketFrontController.prototype.getAuctions = function(client, data){
+    client.socket.emit('serverMessage', this.createMessage('getAuctions', this.auctionsPull));
 }
 socketFrontController.prototype.getAuctionStatus = function(client, data){
 
 }
-socketFrontController.prototype.getCurrentAuction = function(){
+socketFrontController.prototype.getCurrentAuction = function(client, data){
 
-
+    var curr = auctionModule.getCurrent();
+    return client.socket.emit('serverMessage', this.createMessage('getCurrentAuction', curr));
 }
 socketFrontController.prototype.getAuctionHistory = function(){
 
@@ -123,9 +126,7 @@ socketFrontController.prototype.productLoad = function(){
 }
 
 socketFrontController.prototype.setProductList = function(event, products){
-    this.pro.auctionPrice +=1;
-    this.pro.title +='qw_';
-    this.pro.countInWarehouse +=1;
+    console.log(products)
     //productsModule.createProduct(this.pro);
     if (products && products.length > 0)
     {

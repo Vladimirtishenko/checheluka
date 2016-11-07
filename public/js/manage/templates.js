@@ -48,6 +48,7 @@ class Templates extends Helper{
 						      '<input type="hidden" name="consistOf" value="'+consistOf+'"/>' +
 						      '<input type="hidden" name="material" value="'+material+'"/>' +
 						      '<input type="hidden" name="price" value="'+price+'"/>' +
+						      '<input type="hidden" name="countInWarehouse" value="'+(count || 1)+'"/>' +
 						      '<div class="a-container-for-img"><img src="'+img+'" alt=""/></div>' +
 						      '<div class="a-hidden-form_description">' +
 						        '<div class="a-containet-flex-to-start-description">' +
