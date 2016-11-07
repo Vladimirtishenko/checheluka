@@ -74,14 +74,15 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	$app = {};
+
 	window.addEventListener('DOMContentLoaded', function () {
-		var socket = new _socket2.default();
+		$app.socket = new _socket2.default();
 		new _modal2.default();
 		new _chat2.default();
 		new _asyncLoad2.default(document.querySelector('.a-else-goods'));
 		new _asyncLoadAllGoods2.default(document.querySelector('.a-all-goods-table'));
 		new _zoomImg2.default(document.querySelector('.a-zoom-container'));
-		socket.init();
 	});
 
 /***/ },
@@ -136,13 +137,15 @@
 			var _this = _possibleConstructorReturn(this, (Sockets.__proto__ || Object.getPrototypeOf(Sockets)).call(this));
 
 			_this.socket = io();
+
 			_this.socket.emit('chat message', 'HEa');
+
 			_this.socket.on('serverMessage', function (mess) {
 				console.log(mess);
 				if (mess.action == 'autoryze' && mess.data) {
-					this.socket.emit('baseBuy', {});
+					_this.socket.emit('baseBuy', {});
 				}
-			}.bind(_this));
+			});
 
 			_this.socket.emit('getAuctions', 'HEa');
 			return _this;
@@ -157,6 +160,27 @@
 				this.socket.emit('login', { email: 'test@emailtest', pass: "123" });
 				//this.socket.emit('baseBuy', {email: 'test@emailtest', pass: "123"});
 			}
+		}, {
+			key: 'authorize',
+			value: function authorize() {}
+		}, {
+			key: 'registration',
+			value: function registration() {}
+		}, {
+			key: 'buyButton',
+			value: function buyButton() {}
+		}, {
+			key: 'chatTextAdd',
+			value: function chatTextAdd() {}
+		}, {
+			key: 'openTrade',
+			value: function openTrade() {}
+		}, {
+			key: 'openTrade',
+			value: function openTrade() {}
+		}, {
+			key: 'addCard',
+			value: function addCard() {}
 		}]);
 
 		return Sockets;
