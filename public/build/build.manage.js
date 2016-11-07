@@ -216,7 +216,7 @@
 	            xhr.open(method, url, true);
 
 	            if (header) {
-	                xhr.setRequestHeader('Content-type', header);
+	                xhr.setRequestHeader('Content-Type', header);
 	            }
 
 	            xhr.onreadystatechange = function () {
