@@ -28,6 +28,7 @@ Model.prototype.getRequiredFields = function(data){
 
 Model.prototype.createEntity = function(data)
 {
+    var entity = {};
     for(var i = 0; i < this.requiredFields.length; i++)
     {
         if(!data.hasOwnProperty(this.requiredFields[i]))
@@ -35,16 +36,18 @@ Model.prototype.createEntity = function(data)
             throw new error("Error entity create","Missing required property "+this.requiredFields[i],1);
         }
     }
-    this.entityData._uid = this.id_counter++;
+    entity._uid = this.id_counter++;
     for(var key in this.entityData)
     {
-        if(this.entityData.hasOwnProperty(key) && data.hasOwnProperty(key))
+        if(this.entityData.hasOwnProperty(key))
         {
-            this.entityData[key] = data[key];
+            entity[key] = (data.hasOwnProperty(key)) ? data[key]:
+                (typeof this.entityData[key] === 'object') ?
+                    JSON.parse(JSON.stringify(this.entityData[key])) : this.entityData[key];
         }
     }
-    this.table[this.entityData._uid] = this.entityData;
-    return this.entityData;
+    this.table[entity._uid] = entity;
+    return entity;
 };
 
 Model.prototype.getEntity = function(uid)

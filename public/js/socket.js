@@ -5,9 +5,14 @@ class Sockets extends Helper {
 		super();
 		this.socket = io();
 		this.socket.emit('chat message', 'HEa');
-		this.socket.on('serverMessage',function(data)
+		this.socket.on('serverMessage',function(mess)
 		{
-		});
+			console.log(mess);
+			if (mess.action == 'autoryze' && mess.data)
+			{
+				this.socket.emit('baseBuy', {});
+			}
+		}.bind(this));
 
 		this.socket.emit('getAuctions', 'HEa');
 	}
@@ -17,6 +22,7 @@ class Sockets extends Helper {
 		//this.socket.emit('register_user', {uname: 'test_uname', email: 'test@emailtest', pass: "123"});
 		
 		this.socket.emit('login', {email: 'test@emailtest', pass: "123"});
+		//this.socket.emit('baseBuy', {email: 'test@emailtest', pass: "123"});
 	}
 
 }

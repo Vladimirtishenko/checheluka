@@ -4,13 +4,13 @@ var error = require('../../../core/AppServerError');
 function User() {
     parent.apply(this, arguments);
     // Schema
-    var shema = mongoose.Schema({
+    var schema = mongoose.Schema({
         uname: String,
         email: {type: String, unique: true},
         pass: String
     }, { collection: 'users' });
     // Model
-    this.dataProvider = mongoose.model('users', shema);
+    this.dataProvider = mongoose.model('users', schema);
 
     this.requiredFields = ["uname","email","pass"];
     this.entityData = {

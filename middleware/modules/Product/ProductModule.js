@@ -11,39 +11,19 @@ ProductModule.prototype = Object.create(parent.prototype);
 ProductModule.prototype.constructor = ProductModule;
 
 //TODO:: add module for requests
-ProductModule.prototype.loadProducts = function(uri){
-    var options = {
-        host: 'localhost',
-        path: uri,
-        port: '3090',
-    };
-
-    callback = function(response) {
-        var str = ''
-        response.on('data', function (chunk) {
-            str += chunk;
-        });
-
-        response.on('end', function () {
-            var data = JSON.parse(str);
-            for(var i = 0; i < data.goods.length; i++)
-            {
-                this.createProduct(data.goods[i]);
-            }
-            this.dispatchEvent('productsLoaded', []);
-        }.bind(this));
-    }.bind(this)
-
-    var req = http.request(options, callback);
-    req.end();
+ProductModule.prototype.loadProducts = function(offset, limit){
+    productModel.getEntityCollection(offset, limit, function(productColl)
+    {
+        this.dispatchEvent('productsLoaded', productColl);
+    }.bind(this));
 };
-
-
 
 ProductModule.prototype.createProduct = function(productData){
     var product = productModel.createEntity(productData);
-    this.dispatchEvent('productCreated', product);
-    return product;
+    productModel.saveToStorage(product, 'create', function(createdProd)
+    {
+        this.dispatchEvent('productCreated', createdProd);
+    }.bind(this));
 };
 
 ProductModule.prototype.getProducts = function(uid, offset, limit){

@@ -1,6 +1,5 @@
 var parent = require('../../core/module');
 var userClass = require('./models/User');
-var userClass = require('./models/User');
 var passHash = require('./services/password');
 var usertModel = new userClass();
 
@@ -29,7 +28,6 @@ UsersModule.prototype.registerUser = function(userName, email, pass){
         this.dispatchEvent('userCreated', result);
     }.bind(this))
 };
-
 
 
 UsersModule.prototype.autoryze = function(email, pass){
