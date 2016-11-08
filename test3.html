@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery.getJSON demo</title>
+  <style>
+  img {
+    height: 100px;
+    float: left;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+ 
+<div id="images"></div>
+ 
+<script>
+(function() {
+  var link = "http://chechelyka.com/auc.php?start=0&end=1&?jsoncallback=?";
+  $.get(link).done(function( data ) {alert('ok') });
+})();
+</script>
+ 
+</body>
+</html>

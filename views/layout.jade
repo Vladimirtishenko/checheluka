@@ -9,33 +9,33 @@ html
 				span.a-modal-close
 				form.a-form-modal.-enter-placeholder
 					h2.a-modal__item_title Войти
-					input(type="text" id="a-name")
+					input(type="email" id="a-name" name="email" required)
 					label(for="#a-name") Email
-					input(type="text" id="a-pwd")
+					input(type="password" id="a-pwd" name="pass" required)
 					label(for="#a-pwd") Пароль
 					a(href="#" class="a-remember-pwd a-link-item -a-form-change-listener" data-attr="-remember-placeholder") Забыли пароль?
 					.a-button-area-modal
-						button.a-button-white.__uppercase Войти
+						button.a-button-white.__uppercase(type="submit", data-action="login") Войти
 						span.a-between или
-						a(href="#" class="a-link-item-green -a-form-change-listener" data-attr="-reg-placeholder") Зарегестрироваться
+						a(href="#" class="a-link-item-green -a-form-change-listener " data-attr="-reg-placeholder") Зарегестрироваться
 				form.a-form-modal.-reg-placeholder
 					h2.a-modal__item_title Регистрация
-					input(type="text" id="a-name")
+					input(type="email" id="a-name" name="email" required)
 					label(for="#a-name") Email
-					input(type="text" id="a-pwd")
+					input(type="password" id="a-pwd" name="pass" required)
 					label(for="#a-pwd") Пароль
-					input(type="text" id="a-pwd")
+					input(type="text" id="a-pwd" name="city" required)
 					label(for="#a-pwd") Город
 					.a-button-area-modal
-						button.a-button-white.__uppercase Зарегестрироваться
+						button.a-button-white.__uppercase(type="submit" data-action="register_user") Зарегестрироваться
 						span.a-between или
 						a(href="#" class="a-link-item-green -a-form-change-listener" data-attr="-enter-placeholder") Есть аккаунт?
 				form.a-form-modal.-remember-placeholder
 					h2.a-modal__item_title Напомнить пароль
-					input(type="text" id="a-name")
+					input(type="text" id="a-name" name="email" required)
 					label(for="#a-name") Email
 					.a-button-area-modal
-						button.a-button-white.__uppercase Вспомнить пароль
+						button.a-button-white.__uppercase(type="submit" data-action="remember_pass") Вспомнить пароль
 						span.a-between или
 						a(href="#" class="a-link-item-green -a-form-change-listener" data-attr="-enter-placeholder") уже вспомнили?
 			.a-modal__item.rules

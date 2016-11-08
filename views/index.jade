@@ -5,57 +5,9 @@ block content
 		include header.jade
 		include chat.jade
 		.a-backgroung-general-goods
-			.a-general-goods
-				.a-general-goods__image
-					span.a-general-number__this_main №1
-					.a-img-scale
-						img(src="/img/16.jpg", alt="")
-				.a-general-goods__description
-					p(class="a-general-goods__description_in-warehouse a-min-size-font")
-						| На складе: 
-						span 10 штук
-					h2.a-general-goods__description_title
-						| Красивая шапочка и девушка в подарок
-					p( class="a-general-goods__description_description")
-						| Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore reprehenderit alias, harum illo quidem, odio molestiae commodi ut incidunt cupiditate quia, reiciendis totam repudiandae ipsum provident. Earum incidunt dolore
-					.a-general-goods__description_info
-						.a-general-goods__description_info_part
-							a(href="" class="a-general-goods__description_info_part-link") 
-								i Размер:
-								span 36
-							a(href="" class="a-general-goods__description_info_part-link") 
-								i Цвет:
-								span Черный
-						.a-general-goods__description_info_part
-							a(href="" class="a-general-goods__description_info_part-link") 
-								i Состав:
-								span Хлопок 100%
-							a(href="" class="a-general-goods__description_info_part-link") 
-								i Материал: 
-								span Плащевка
-					p.a-general-goods__description_price_retail
-						| Розничная цена: 
-						span 1000 рублей
-					p.a-general-goods__description_price_now
-						| 2300 
-						span руб.
-					.a-for-mobile-absolute
-						.a-general-goods__time_to_end
-							button( class="a-general-goods__description_buy a-button-black a-inactive")
-								| Покупаю
-							p До завершения -  
-								span 00:30
-						p.a-info-about-rates Кнопки станут активны когда в торгах останеться 10 человек
-						.a-general-goods__description_rates_button.a-rates-inactive
-							button.a-button-white
-								| + 1 руб.
-							button.a-button-white
-								| + 10 руб.
-							button.a-button-white
-								| + 100 руб.
-							button.a-button-white
-								| + 500 руб.
+			.a-preloaders.__blue-preloader
+			
 		h1.a-head-font Ближайшие аукционы
 		.a-else-goods.a-zoom-container
-		
+			.a-preloaders.__yellow-preloader
 		include footer.jade

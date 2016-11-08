@@ -226,3 +226,83 @@ button
   
 .__in_flex_wrap
   flex-wrap wrap
+  
+.a-preloaders
+  width 75px
+  height 75px
+  display block
+  background-repeat no-repeat
+  position absolute
+  left 0
+  right 0
+  margin auto
+  top 0
+  bottom 0
+  
+.__blue-preloader
+  background-position -668px -286px
+  background-image url(../img/sprite.png)
+  animation rotate 2s ease infinite
+  &:before
+    background-repeat no-repeat
+    position absolute
+    content ""
+    width 55px
+    top 10px
+    left 10px
+    height 55px
+    background-position -693px -223px
+    display block
+    background-image url(../img/sprite.png)
+    animation rotateOut 2s ease infinite
+
+.__yellow-preloader
+  animation rotateOut 2s ease infinite
+  background-image url(../img/sprite.png)
+  background-position -668px -428px
+  &:before
+    background-repeat no-repeat
+    position absolute
+    content ""
+    width 55px
+    top 10px
+    left 10px
+    height 55px
+    background-position -693px -367px
+    display block
+    background-image url(../img/sprite.png)
+    animation rotate 2s ease infinite
+
+.a-invalid
+  padding 30px 0 0
+  color #fc392c
+
+.a-animates-top-goods
+  animation opacity 2s ease
+
+@keyframes opacity{
+  0%{
+    opacity 0
+  }
+  100%{
+    opacity 1
+  }
+}
+
+@keyframes rotate{
+  0%{
+    transform: rotate(0deg)
+  }
+  100%{
+    transform: rotate(360deg)
+  }
+}
+
+@keyframes rotateOut{
+  0%{
+    transform: rotate(0deg)
+  }
+  100%{
+    transform: rotate(-360deg)
+  }
+}
