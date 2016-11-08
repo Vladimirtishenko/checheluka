@@ -17,7 +17,7 @@ class AsyncLoad extends Helper {
 
 
 	getCurrentAuction(response){
-		if(!response.data && !response.data.lot) return;
+		if(!response.data || !response.data.lot) return;
 
 		let template = Template[response.action](response.data.lot, response.data.timer);
 
@@ -28,10 +28,10 @@ class AsyncLoad extends Helper {
 
 	getAuctions(response){
 		if(!response.data) return;
-
-		if(Object.keys(response.data).length > 3){
-			this.getCurrentAuction(response.data[1]);
-			delete response.data[1];
+		var keys = Object.keys(response.data);
+		if(keys.length > 3){
+			this.getCurrentAuction(response.data[keys[0]]);
+			delete response.data[keys[0]];
 		} 
 
 		let template = '<div class="a-goods__item__reisizers">',

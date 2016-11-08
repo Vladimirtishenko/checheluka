@@ -19,9 +19,8 @@ function socketFrontController(io){
         size: 'L',
         countInWarehouse: 1
     };
-    this.limit = 10;
+    this.limit = 4;
     this.offset = 0;
-    this.diffToLoad = 5;
     this.productsPull = {};
     this.auctionsPull = {};
     this.curAuction = null;
@@ -104,7 +103,6 @@ socketFrontController.prototype.baseBuy = function(client, data){
 }
 
 socketFrontController.prototype.createMessage = function(action, params){
-    console.log(params);
     return {
         action: action,
         data: params
@@ -113,15 +111,19 @@ socketFrontController.prototype.createMessage = function(action, params){
 
 socketFrontController.prototype.productLoad = function(){
     //TODO::calculate offset limit
-    productsModule.loadProducts(this.offset, this.limit);
+    var limit = this.limit;
+    var keys = Object.keys(this.productsPull);
+    if (keys.length)
+    {
+        limit = this.limit - keys.length;
+    }
+    limit = (limit <= 0) ? 1 : limit;
+    productsModule.loadProducts(this.offset, limit);
 }
 
 socketFrontController.prototype.setProductList = function(event, products){
-    console.log(products)
-    this.pro.auctionPrice +=1;
-    this.pro.title +='qw_';
-    this.pro.countInWarehouse +=1;
     //productsModule.createProduct(this.pro);
+    //console.log(products.length);
     if (products && products.length > 0)
     {
         this.offset += products.length;
@@ -129,7 +131,7 @@ socketFrontController.prototype.setProductList = function(event, products){
         {
             this.productsPull[products[i]._id] = products[i];
         }
-        this.setAuctionList();
+        this.setAuctionList(products);
     }
     else
     {
@@ -138,12 +140,12 @@ socketFrontController.prototype.setProductList = function(event, products){
     }
 }
 
-socketFrontController.prototype.setAuctionList = function(){
-    for(var i in this.productsPull)
+socketFrontController.prototype.setAuctionList = function(products){
+    for(var i in products)
     {
-        if (this.productsPull.hasOwnProperty(i))
+        if (products.hasOwnProperty(i))
         {
-            var auc = auctionModule.createAuction(this.productsPull[i], this.productsPull[i].auctionPrice);
+            var auc = auctionModule.createAuction(products[i], products[i].auctionPrice);
             this.auctionsPull[auc._uid] = auc;
         }
     }
@@ -164,7 +166,7 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     }
     delete this.productsPull[data.lot._id];
     var keys = Object.keys(this.productsPull);
-    if (keys.length < this.limit - this.diffToLoad)
+    if (keys.length < this.limit)
     {
         this.productLoad();
     }
