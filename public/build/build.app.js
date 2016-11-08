@@ -52,23 +52,23 @@
 
 	var _socket2 = _interopRequireDefault(_socket);
 
-	var _modal = __webpack_require__(17);
+	var _modal = __webpack_require__(18);
 
 	var _modal2 = _interopRequireDefault(_modal);
 
-	var _chat = __webpack_require__(18);
+	var _chat = __webpack_require__(19);
 
 	var _chat2 = _interopRequireDefault(_chat);
 
-	var _zoomImg = __webpack_require__(19);
+	var _zoomImg = __webpack_require__(20);
 
 	var _zoomImg2 = _interopRequireDefault(_zoomImg);
 
-	var _asyncLoad = __webpack_require__(20);
+	var _asyncLoad = __webpack_require__(21);
 
 	var _asyncLoad2 = _interopRequireDefault(_asyncLoad);
 
-	var _asyncLoadAllGoods = __webpack_require__(21);
+	var _asyncLoadAllGoods = __webpack_require__(22);
 
 	var _asyncLoadAllGoods2 = _interopRequireDefault(_asyncLoadAllGoods);
 
@@ -119,10 +119,6 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _template = __webpack_require__(28);
-
-	var _template2 = _interopRequireDefault(_template);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -140,78 +136,60 @@
 			var _this = _possibleConstructorReturn(this, (Sockets.__proto__ || Object.getPrototypeOf(Sockets)).call(this));
 
 			_this.socket = io();
-			_this.mainItem = document.querySelector('.a-backgroung-general-goods');
-			_this.goodsAfter = document.querySelector('.a-else-goods');
+			_this.registeredCallback = {};
 
 			_this.socket.on('serverMessage', function (mess) {
 
-				try {
-					_this[mess.action](mess);
-				} catch (e) {
-					console.log(e);
-				}
+				_this.registeredCallback[mess.action](mess);
 
-				/*console.log(mess);
-	   if (mess.action == 'autoryze' && mess.data)
+				/*try{
+	   	this[mess.action](mess);
+	   } catch(e){
+	   	console.log(e);
+	   }
+	   
+	   	if (mess.action == 'autoryze' && mess.data)
 	   {
-	   	//this.socket.emit('baseBuy', {});
+	   	this.socket.emit('getCurrentAuction', {});
+	   }
+	   	if (mess.action == 'getCurrentAuction' && mess.data)
+	   {
+	   	this.socket.emit('baseBuy', {auction_id: mess.data._uid});
 	   }*/
 			});
-			_this.socket.emit('getCurrentAuction', {});
-			_this.socket.emit('getAuctions', {});
 
 			return _this;
 		}
 
 		_createClass(Sockets, [{
-			key: 'init',
-			value: function init() {
-				//this.socket.emit('register_user', {uname: 'test_uname', email: 'test@emailtest', pass: "123"});
+			key: 'setRegisteredCallback',
+			value: function setRegisteredCallback(action, callback) {
+				this.registeredCallback[action] = callback;
+			}
+		}, {
+			key: 'authorize',
+			value: function authorize(action, data, callback) {
 
-				//this.socket.emit('login', {email: 'test@emailtest', pass: "123"});
-				//this.socket.emit('baseBuy', {email: 'test@emailtest', pass: "123"});
+				this.setRegisteredCallback(action, callback);
+
+				this.socket.emit(action, data);
 			}
 		}, {
 			key: 'getCurrentAuction',
-			value: function getCurrentAuction(response) {
+			value: function getCurrentAuction(action, callback) {
 
-				if (!response.data && !response.data.lot) return;
+				this.setRegisteredCallback(action, callback);
 
-				var template = _template2.default[response.action](response.data.lot, response.data.timer);
-
-				this.mainItem.removeChild(this.mainItem.firstElementChild);
-				this.mainItem.insertAdjacentHTML('beforeend', template);
+				this.socket.emit('getCurrentAuction', {});
 			}
 		}, {
 			key: 'getAuctions',
-			value: function getAuctions(response) {
+			value: function getAuctions(action, callback) {
 
-				if (!response.data) return;
+				this.setRegisteredCallback(action, callback);
 
-				if (Object.keys(response.data).length > 3) {
-					this.getCurrentAuction(response.data[1]);
-					delete response.data[1];
-				}
-
-				var template = '<div class="a-goods__item__reisizers">',
-				    i = 0,
-				    classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];
-
-				for (var key in response.data) {
-					template += _template2.default[response.action](response.data[key].lot, classArray[i++]);
-				}
-
-				template += '</div>';
-
-				this.goodsAfter.removeChild(this.goodsAfter.firstElementChild);
-				this.goodsAfter.insertAdjacentHTML('beforeend', template);
+				this.socket.emit('getAuctions', {});
 			}
-		}, {
-			key: 'actionStarted',
-			value: function actionStarted() {}
-		}, {
-			key: 'auctionFinished',
-			value: function auctionFinished() {}
 		}]);
 
 		return Sockets;
@@ -393,6 +371,43 @@
 
 /***/ },
 /* 17 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Template = function () {
+		function Template() {
+			_classCallCheck(this, Template);
+		}
+
+		_createClass(Template, [{
+			key: 'getCurrentAuction',
+			value: function getCurrentAuction(obj, timer) {
+				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№1</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now">' + decodeURIComponent(obj.auctionPrice) + ' <span>руб.</span></p>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black a-inactive">Покупаю</button>' + '<p>До завершения -  <span>00:' + timer + '</span></p>' + '</div>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button a-rates-inactive">' + '<button class="a-button-white">+ 1 руб.</button>' + '<button class="a-button-white">+ 10 руб.</button>' + '<button class="a-button-white">+ 100 руб.</button>' + '<button class="a-button-white">+ 500 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
+			}
+		}, {
+			key: 'getAuctions',
+			value: function getAuctions(obj, className) {
+
+				return '<div class="a-else-goods__item ' + className + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(obj.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + '<span></span>' + '</p>' + '<p class="a-else-goods-descroption">Шапка писец</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(obj.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(obj.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(obj.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(obj.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(obj.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(obj.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
+			}
+		}]);
+
+		return Template;
+	}();
+
+	exports.default = new Template();
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -562,11 +577,14 @@
 	            }
 
 	            try {
-	                this.socket.emit(action, formData);
+	                $app.socket.authorize(action, formData, this.afterResponseAuthorize.bind(this));
 	            } catch (e) {
 	                console.log(e);
 	            }
 	        }
+	    }, {
+	        key: 'afterResponseAuthorize',
+	        value: function afterResponseAuthorize() {}
 	    }, {
 	        key: 'validate',
 	        value: function validate(el, form) {
@@ -601,7 +619,7 @@
 	exports.default = Modal;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -656,7 +674,7 @@
 	exports.default = Chat;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -792,7 +810,7 @@
 	exports.default = Zoom;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -806,6 +824,10 @@
 	var _helper = __webpack_require__(16);
 
 	var _helper2 = _interopRequireDefault(_helper);
+
+	var _template = __webpack_require__(17);
+
+	var _template2 = _interopRequireDefault(_template);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -823,69 +845,47 @@
 
 			var _this = _possibleConstructorReturn(this, (AsyncLoad.__proto__ || Object.getPrototypeOf(AsyncLoad)).call(this));
 
-			if (!el) return _possibleConstructorReturn(_this);
-			_this.Number = 2;
-			_this.offset = 0;
-			_this.el = el;
-			_this.status = true;
-			_this.load = true;
-			_this.menthodToScroll = _this.initAsyncLoad.bind(_this);
+			_this.mainItem = document.querySelector('.a-backgroung-general-goods');
+			_this.goodsAfter = document.querySelector('.a-else-goods');
 
-			_this.requestModule();
-			_this.flyEvent('add', ['scroll'], [window], _this.menthodToScroll);
+			$app.socket.getCurrentAuction('getCurrentAuction', _this.getCurrentAuction.bind(_this));
+			$app.socket.getCurrentAuction('getAuctions', _this.getAuctions.bind(_this));
+
 			return _this;
 		}
 
 		_createClass(AsyncLoad, [{
-			key: 'initAsyncLoad',
-			value: function initAsyncLoad() {
+			key: 'getCurrentAuction',
+			value: function getCurrentAuction(response) {
+				if (!response.data && !response.data.lot) return;
 
-				if (document.body.clientHeight - document.body.scrollTop < 1000 && this.status && this.load) {
-					this.requestModule();
-				}
+				var template = _template2.default[response.action](response.data.lot, response.data.timer);
+
+				this.mainItem.removeChild(this.mainItem.firstElementChild);
+				this.mainItem.insertAdjacentHTML('beforeend', template);
 			}
 		}, {
-			key: 'requestModule',
-			value: function requestModule() {
-				this.status = false;
-				var url = '/allGoodsAuction?start=' + this.offset + '&limit=3';
-				this.xhrRequest('GET', url, null, null, this.generateGoods.bind(this), this);
-			}
-		}, {
-			key: 'generateGoods',
-			value: function generateGoods(obj) {
+			key: 'getAuctions',
+			value: function getAuctions(response) {
+				if (!response.data) return;
 
-				if (JSON.parse(obj).goods.length == 0) {
-					this.load = false;
-					this.flyEvent('remove', ['scroll'], [window], this.menthodToScroll);
+				if (Object.keys(response.data).length > 3) {
+					this.getCurrentAuction(response.data[1]);
+					delete response.data[1];
 				}
 
-				var response = JSON.parse(obj).goods,
-				    offset = JSON.parse(obj).offset,
-				    templateAll = '<div class="a-goods__item__reisizers">';
+				var template = '<div class="a-goods__item__reisizers">',
+				    i = 0,
+				    classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];
 
-				for (var i = 0; i < response.length; i++) {
-
-					templateAll += this.templates(response[i], i);
-					this.Number++;
+				for (var key in response.data) {
+					template += _template2.default[response.action](response.data[key].lot, classArray[i++]);
 				}
 
-				templateAll += '</div>';
+				template += '</div>';
 
-				this.el.insertAdjacentHTML('beforeend', templateAll);
-				this.offset = offset;
-				this.status = true;
-			}
-		}, {
-			key: 'templates',
-			value: function templates(goods, i) {
-
-				var classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'],
-				    newClass = i % 2 != 0 ? ' a-add-new-background' : ' ';
-
-				var template = '<div class="a-else-goods__item ' + classArray[i] + newClass + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(goods.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + '<span>' + this.Number + '</span>' + '</p>' + '<p class="a-else-goods-descroption">Шапка писец</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(goods.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(goods.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(goods.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(goods.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(goods.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(goods.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
-
-				return template;
+				this.goodsAfter.removeChild(this.goodsAfter.firstElementChild);
+				this.goodsAfter.insertAdjacentHTML('beforeend', template);
 			}
 		}]);
 
@@ -895,7 +895,7 @@
 	exports.default = AsyncLoad;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -984,49 +984,6 @@
 	}(_helper2.default);
 
 	exports.default = AsyncLoadAllGoods;
-
-/***/ },
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Template = function () {
-		function Template() {
-			_classCallCheck(this, Template);
-		}
-
-		_createClass(Template, [{
-			key: 'getCurrentAuction',
-			value: function getCurrentAuction(obj, timer) {
-				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№1</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now">' + decodeURIComponent(obj.auctionPrice) + ' <span>руб.</span></p>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black a-inactive">Покупаю</button>' + '<p>До завершения -  <span>00:' + timer + '</span></p>' + '</div>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button a-rates-inactive">' + '<button class="a-button-white">+ 1 руб.</button>' + '<button class="a-button-white">+ 10 руб.</button>' + '<button class="a-button-white">+ 100 руб.</button>' + '<button class="a-button-white">+ 500 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
-			}
-		}, {
-			key: 'getAuctions',
-			value: function getAuctions(obj, className) {
-
-				return '<div class="a-else-goods__item ' + className + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(obj.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + '<span></span>' + '</p>' + '<p class="a-else-goods-descroption">Шапка писец</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(obj.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(obj.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(obj.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(obj.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(obj.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(obj.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
-			}
-		}]);
-
-		return Template;
-	}();
-
-	exports.default = new Template();
 
 /***/ }
 /******/ ]);

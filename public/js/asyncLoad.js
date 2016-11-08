@@ -1,101 +1,55 @@
 import Helper from './helper.js';
+import Template from './template.js';
 
 class AsyncLoad extends Helper {
 	constructor(el) {
 		super();
-		if(!el) return;
-		this.Number = 2;
-		this.offset = 0;
-		this.el = el;
-		this.status = true;
-		this.load = true;
-		this.menthodToScroll = this.initAsyncLoad.bind(this)
+		this.mainItem = document.querySelector('.a-backgroung-general-goods');
+		this.goodsAfter = document.querySelector('.a-else-goods');
 
-		this.requestModule();
-		this.flyEvent('add', ['scroll'], [window], this.menthodToScroll)
+
+		$app.socket.getCurrentAuction('getCurrentAuction', this.getCurrentAuction.bind(this));
+		$app.socket.getCurrentAuction('getAuctions', this.getAuctions.bind(this));
+
 	}
 
-	initAsyncLoad(){
 
-		if((document.body.clientHeight - document.body.scrollTop) < 1000 && this.status && this.load){
-			this.requestModule();
-		}
+	getCurrentAuction(response){
+		if(!response.data && !response.data.lot) return;
+
+		let template = Template[response.action](response.data.lot, response.data.timer);
+
+		this.mainItem.removeChild(this.mainItem.firstElementChild)
+		this.mainItem.insertAdjacentHTML('beforeend' ,template);
+	}
+
+
+	getAuctions(response){
+		if(!response.data) return;
+
 		
-	}
 
-	requestModule(){
-		this.status = false;
-		let url = '/allGoodsAuction?start='+ this.offset+'&limit=3';
-		this.xhrRequest('GET', url, null, null, this.generateGoods.bind(this), this)
-	}
-
-	generateGoods(obj){
+		if(Object.keys(response.data).length > 3){
+			this.getCurrentAuction(response.data[1]);
+			delete response.data[1];
+		} 
 
 
-		if(JSON.parse(obj).goods.length == 0){
-			this.load = false;
-			this.flyEvent('remove', ['scroll'], [window], this.menthodToScroll)
+
+		let template = '<div class="a-goods__item__reisizers">',
+			i = 0,
+			classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];
+
+		for(let key in response.data){
+			template += Template[response.action](response.data[key].lot, classArray[i++]);
 		}
 
-
-		let response = JSON.parse(obj).goods,
-			offset = JSON.parse(obj).offset,
-			templateAll = '<div class="a-goods__item__reisizers">';
-
-			for (var i = 0; i < response.length; i++) {
-
-				templateAll += this.templates(response[i], i);
-				this.Number++;
-
-			}
-
-			templateAll += '</div>';
+		template += '</div>';
 
 
 
-		this.el.insertAdjacentHTML('beforeend', templateAll);
-		this.offset = offset;
-		this.status = true;
-
-	}
-
-
-
-	templates(goods, i){
-
-		let classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'],
-			newClass = (i % 2 != 0) ? ' a-add-new-background' : ' ';
-
-		let template = '<div class="a-else-goods__item '+classArray[i] + newClass + '" >' +
-						'<div class="a-resizer-masonry">' +
-							'<img src="'+decodeURIComponent(goods.src)+'" class="a-image-to-zoom"/>' +
-						'</div>' +
-						'<div class="a-else-goods__description">' +
-						  '<p class="a-number-goods"> №' +
-						    '<span>'+this.Number+'</span>' +
-						  '</p>' +
-						  '<p class="a-else-goods-descroption">Шапка писец</p>' +
-						  '<div class="a-else-goods__description_info">' +
-						  	'<span class="a-else-goods__description_info-link">'  +
-						  		'<i>Состав<span>'+decodeURIComponent(goods.consistOf)+'</span></i>' +
-						  	'</span>' +
-						  	'<span class="a-else-goods__description_info-link"> ' +
-						  		'<i>Размер<span>'+decodeURIComponent(goods.size)+'</span></i>' +
-						  '</span>' +
-						  	'<span class="a-else-goods__description_info-link"> ' +
-						  		'<i>Цвет<span>'+decodeURIComponent(goods.color)+'</span></i>' +
-						  	'</span>' +
-						  	'<span class="a-else-goods__description_info-link"> ' +
-						  		'<i>Ткань<span>'+(decodeURIComponent(goods.material)).replace(/,|;/g , '<br />')+'</span></i>' +
-						  	'</span>' +
-						 '</div>' +
-						  '<p class="a-old-price">Розничная цена<span>'+(decodeURIComponent(goods.price))+' руб.</span></p>' +
-						 ' <p class="a-new-price">Начальная ставка<span>'+(decodeURIComponent(goods.auctionPrice))+' руб.</span></p>' +
-						'</div>' +
-					 '</div>';
-
-
-		return template;			 
+		this.goodsAfter.removeChild(this.goodsAfter.firstElementChild)
+		this.goodsAfter.insertAdjacentHTML('beforeend' ,template);
 	}
 
 

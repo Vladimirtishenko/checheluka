@@ -47,9 +47,9 @@
 
 	'use strict';
 
-	__webpack_require__(22);
+	__webpack_require__(23);
 
-	var _router = __webpack_require__(24);
+	var _router = __webpack_require__(25);
 
 	var _router2 = _interopRequireDefault(_router);
 
@@ -236,14 +236,14 @@
 
 /***/ },
 
-/***/ 22:
+/***/ 23:
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
 
-/***/ 24:
+/***/ 25:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -258,7 +258,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _templates = __webpack_require__(25);
+	var _templates = __webpack_require__(26);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -344,7 +344,7 @@
 
 /***/ },
 
-/***/ 25:
+/***/ 26:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -359,7 +359,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _all_goods_load = __webpack_require__(26);
+	var _all_goods_load = __webpack_require__(27);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
 
@@ -430,7 +430,7 @@
 
 /***/ },
 
-/***/ 26:
+/***/ 27:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -445,7 +445,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _add_or_delete_action = __webpack_require__(27);
+	var _add_or_delete_action = __webpack_require__(28);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
@@ -575,7 +575,7 @@
 
 /***/ },
 
-/***/ 27:
+/***/ 28:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

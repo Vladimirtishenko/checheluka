@@ -100,13 +100,19 @@ class Modal extends Helper {
         }
 
         try{
-            this.socket.emit(action, formData);
+            $app.socket.authorize(action, formData, this.afterResponseAuthorize.bind(this));
         } catch(e){
             console.log(e);
         }
         
 
     }
+
+
+   afterResponseAuthorize(){
+
+   }
+
 
     validate(el, form){
 

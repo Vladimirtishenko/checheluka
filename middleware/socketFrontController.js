@@ -45,12 +45,12 @@ function socketFrontController(io){
 socketFrontController.prototype.login = function(client, data){
     if (client.isAutorize())
     {       
-        client.socket.emit('serverMessage', this.createMessage('autoryze', client.getUserData()));
+        client.socket.emit('serverMessage', this.createMessage('login', client.getUserData()));
     }
     //set listner for completed autorization
     usersModule.setListenere("autoryzeCompleted",function(event, data){
         client.setUserData(data);
-        client.socket.emit('serverMessage', this.createMessage('autoryze', data));
+        client.socket.emit('serverMessage', this.createMessage('login', data));
         usersModule.unsetListener(event);
     }.bind(this));
 
@@ -61,7 +61,7 @@ socketFrontController.prototype.login = function(client, data){
 socketFrontController.prototype.register_user = function(client, data){
     //set listner for completed creating user
     usersModule.setListenere("userCreated",function(event, data){
-        client.socket.emit('serverMessage', this.createMessage('registration', data));
+        client.socket.emit('serverMessage', this.createMessage('register_user', data));
         usersModule.unsetListener(event);
     }.bind(this));
 
