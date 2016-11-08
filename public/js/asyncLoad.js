@@ -4,12 +4,14 @@ import Template from './template.js';
 class AsyncLoad extends Helper {
 	constructor(el) {
 		super();
-		this.mainItem = document.querySelector('.a-backgroung-general-goods');
+		if(!el) return;
+		this.mainItem = el;
 		this.goodsAfter = document.querySelector('.a-else-goods');
 
+		console.log($app);
 
 		$app.socket.getCurrentAuction('getCurrentAuction', this.getCurrentAuction.bind(this));
-		$app.socket.getCurrentAuction('getAuctions', this.getAuctions.bind(this));
+		$app.socket.getAuctions('getAuctions', this.getAuctions.bind(this));
 
 	}
 
@@ -27,14 +29,10 @@ class AsyncLoad extends Helper {
 	getAuctions(response){
 		if(!response.data) return;
 
-		
-
 		if(Object.keys(response.data).length > 3){
 			this.getCurrentAuction(response.data[1]);
 			delete response.data[1];
 		} 
-
-
 
 		let template = '<div class="a-goods__item__reisizers">',
 			i = 0,

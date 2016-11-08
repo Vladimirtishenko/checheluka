@@ -9,8 +9,11 @@ class Sockets extends Helper {
 		this.socket.on('serverMessage',(mess) =>
 		{
 
-
-			this.registeredCallback[mess.action](mess);
+			try{
+				this.registeredCallback[mess.action](mess);
+			} catch(e){
+				console.log(e);
+			}
 
 			/*try{
 				this[mess.action](mess);
@@ -45,6 +48,7 @@ class Sockets extends Helper {
 	}
 
 	getCurrentAuction(action, callback){
+
 
 		this.setRegisteredCallback(action, callback);
 

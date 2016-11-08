@@ -13,6 +13,7 @@ window.$app = {};
 window.addEventListener('DOMContentLoaded', () => {
 	$app.socket = new Sockets();
 	new Modal();
+	new Async(document.querySelector('.a-backgroung-general-goods'));
 	new Chat();
 	new AsyncAllGoods(document.querySelector('.a-all-goods-table'));
 	new Zoom(document.querySelector('.a-zoom-container'));

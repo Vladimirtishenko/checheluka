@@ -52,19 +52,19 @@
 
 	var _socket2 = _interopRequireDefault(_socket);
 
-	var _modal = __webpack_require__(18);
+	var _modal = __webpack_require__(17);
 
 	var _modal2 = _interopRequireDefault(_modal);
 
-	var _chat = __webpack_require__(19);
+	var _chat = __webpack_require__(18);
 
 	var _chat2 = _interopRequireDefault(_chat);
 
-	var _zoomImg = __webpack_require__(20);
+	var _zoomImg = __webpack_require__(19);
 
 	var _zoomImg2 = _interopRequireDefault(_zoomImg);
 
-	var _asyncLoad = __webpack_require__(21);
+	var _asyncLoad = __webpack_require__(20);
 
 	var _asyncLoad2 = _interopRequireDefault(_asyncLoad);
 
@@ -79,6 +79,7 @@
 	window.addEventListener('DOMContentLoaded', function () {
 		$app.socket = new _socket2.default();
 		new _modal2.default();
+		new _asyncLoad2.default(document.querySelector('.a-backgroung-general-goods'));
 		new _chat2.default();
 		new _asyncLoadAllGoods2.default(document.querySelector('.a-all-goods-table'));
 		new _zoomImg2.default(document.querySelector('.a-zoom-container'));
@@ -140,7 +141,11 @@
 
 			_this.socket.on('serverMessage', function (mess) {
 
-				_this.registeredCallback[mess.action](mess);
+				try {
+					_this.registeredCallback[mess.action](mess);
+				} catch (e) {
+					console.log(e);
+				}
 
 				/*try{
 	   	this[mess.action](mess);
@@ -371,43 +376,6 @@
 
 /***/ },
 /* 17 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Template = function () {
-		function Template() {
-			_classCallCheck(this, Template);
-		}
-
-		_createClass(Template, [{
-			key: 'getCurrentAuction',
-			value: function getCurrentAuction(obj, timer) {
-				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№1</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now">' + decodeURIComponent(obj.auctionPrice) + ' <span>руб.</span></p>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black a-inactive">Покупаю</button>' + '<p>До завершения -  <span>00:' + timer + '</span></p>' + '</div>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button a-rates-inactive">' + '<button class="a-button-white">+ 1 руб.</button>' + '<button class="a-button-white">+ 10 руб.</button>' + '<button class="a-button-white">+ 100 руб.</button>' + '<button class="a-button-white">+ 500 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
-			}
-		}, {
-			key: 'getAuctions',
-			value: function getAuctions(obj, className) {
-
-				return '<div class="a-else-goods__item ' + className + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(obj.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + '<span></span>' + '</p>' + '<p class="a-else-goods-descroption">Шапка писец</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(obj.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(obj.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(obj.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(obj.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(obj.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(obj.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
-			}
-		}]);
-
-		return Template;
-	}();
-
-	exports.default = new Template();
-
-/***/ },
-/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -619,7 +587,7 @@
 	exports.default = Modal;
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -674,7 +642,7 @@
 	exports.default = Chat;
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -810,7 +778,7 @@
 	exports.default = Zoom;
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -825,7 +793,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _template = __webpack_require__(17);
+	var _template = __webpack_require__(21);
 
 	var _template2 = _interopRequireDefault(_template);
 
@@ -845,11 +813,14 @@
 
 			var _this = _possibleConstructorReturn(this, (AsyncLoad.__proto__ || Object.getPrototypeOf(AsyncLoad)).call(this));
 
-			_this.mainItem = document.querySelector('.a-backgroung-general-goods');
+			if (!el) return _possibleConstructorReturn(_this);
+			_this.mainItem = el;
 			_this.goodsAfter = document.querySelector('.a-else-goods');
 
+			console.log($app);
+
 			$app.socket.getCurrentAuction('getCurrentAuction', _this.getCurrentAuction.bind(_this));
-			$app.socket.getCurrentAuction('getAuctions', _this.getAuctions.bind(_this));
+			$app.socket.getAuctions('getAuctions', _this.getAuctions.bind(_this));
 
 			return _this;
 		}
@@ -893,6 +864,43 @@
 	}(_helper2.default);
 
 	exports.default = AsyncLoad;
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Template = function () {
+		function Template() {
+			_classCallCheck(this, Template);
+		}
+
+		_createClass(Template, [{
+			key: 'getCurrentAuction',
+			value: function getCurrentAuction(obj, timer) {
+				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№1</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now">' + decodeURIComponent(obj.auctionPrice) + ' <span>руб.</span></p>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black a-inactive">Покупаю</button>' + '<p>До завершения -  <span>00:' + timer + '</span></p>' + '</div>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button a-rates-inactive">' + '<button class="a-button-white">+ 1 руб.</button>' + '<button class="a-button-white">+ 10 руб.</button>' + '<button class="a-button-white">+ 100 руб.</button>' + '<button class="a-button-white">+ 500 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
+			}
+		}, {
+			key: 'getAuctions',
+			value: function getAuctions(obj, className) {
+
+				return '<div class="a-else-goods__item ' + className + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(obj.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + '<span></span>' + '</p>' + '<p class="a-else-goods-descroption">Шапка писец</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(obj.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(obj.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(obj.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(obj.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(obj.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(obj.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
+			}
+		}]);
+
+		return Template;
+	}();
+
+	exports.default = new Template();
 
 /***/ },
 /* 22 */
