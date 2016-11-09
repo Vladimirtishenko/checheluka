@@ -13,11 +13,7 @@ class Modal extends Helper {
         this.flyEvent('add', ['submit'], [formAll], this.sendForm.bind(this));
         this.flyEvent('add', ['keypress'], [formAll], this.removeInvalid);
 
-       /* $app.socket.socket.on('authorize', (data) => {
-
-
-          
-        });*/
+       $app.modalOpen = this.modalHandlerIn.bind(this);
         
     }
 
@@ -118,9 +114,7 @@ class Modal extends Helper {
 
    afterResponseAuthorize(target, response){
 
-        console.log(response);
-
-        if(response.data.errmsg){
+        if(response.data.errmsg || !response.data){
             target.reset();
             this.errorValidate('Такой пользователь уже есть в системе!', target);
             return;

@@ -7,11 +7,10 @@ class AsyncLoad extends Helper {
 		if(!el) return;
 		this.mainItem = el;
 		this.goodsAfter = document.querySelector('.a-else-goods');
+		this.buyAction = true;
 
 		this.init();
-
 	}
-
 
 	init(){
 
@@ -33,6 +32,11 @@ class AsyncLoad extends Helper {
 		this.mainItem.insertAdjacentHTML('beforeend' ,template);
 
 		this.timerStarted(response.data.timer);
+
+
+		this.buttonToBuy = document.querySelector('.a-general-goods__description_buy');
+
+		this.flyEvent('add', ['click'], [this.buttonToBuy], this.baseBuyInitial.bind(this));
 
 	}
 
@@ -58,6 +62,7 @@ class AsyncLoad extends Helper {
 
 		this.goodsAfter.removeChild(this.goodsAfter.firstElementChild)
 		this.goodsAfter.insertAdjacentHTML('beforeend' ,template);
+
 	}
 
 	timerStarted(time){
@@ -83,13 +88,30 @@ class AsyncLoad extends Helper {
 
 
 	auctionFinished(response){
-		console.log(response);
+		this.buyAction = true;
+		this.buttonToBuy.classList.remove('a-inactive');
+		console.log('finished');
 	}
 
 
 	actionStarted(response){
-
 		this.getCurrentAuction(response);
+	}
+
+	baseBuyInitial(event){
+
+		if(event && event.target && this.buyAction){
+			this.buyAction = false;
+			this.buttonToBuy.classList.add('a-inactive');
+			$app.socket.baseBuy('baseBuy', this.baseBuy.bind(this));
+		}
+
+	}
+
+	baseBuy(response){
+		if(response && response.data && response.data.error == 401){
+			$app.modalOpen({target: document.querySelector('.__login_action')});
+		}
 	}
 
 

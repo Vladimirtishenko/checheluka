@@ -37,7 +37,7 @@ class Template {
 				    '<p class="a-general-goods__description_price_now">'+decodeURIComponent(obj.auctionPrice)+' <span>руб.</span></p>' +
 				    '<div class="a-for-mobile-absolute">' +
 				      '<div class="a-general-goods__time_to_end">' +
-				        '<button class="a-general-goods__description_buy a-button-black a-inactive">Покупаю</button>' +
+				        '<button class="a-general-goods__description_buy a-button-black">Покупаю</button>' +
 				        '<p>До завершения -  <span class="a-times-frontend">00:'+(timer < 10 ? '0' + timer : timer)+'</span></p>' +
 				      '</div>' +
 				      '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' +

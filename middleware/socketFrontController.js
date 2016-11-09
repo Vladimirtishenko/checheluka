@@ -197,7 +197,7 @@ socketFrontController.prototype.sendToAll = function(message){
     this.io.sockets.emit('serverMessage', message);
 }
 socketFrontController.prototype.sendNotAutorize = function(client, action){
-    var mes = {error: 'Not autorize!!!'};
+    var mes = {error: 401};
     client.socket.emit('serverMessage', this.createMessage(action, mes));
 }
 

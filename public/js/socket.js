@@ -9,8 +9,6 @@ class Sockets extends Helper {
 		this.socket.on('serverMessage',(mess) =>
 		{
 
-			console.log(mess);
-
 			try{
 				this.registeredCallback[mess.action](mess);
 			} catch(e){
@@ -73,6 +71,12 @@ class Sockets extends Helper {
 
 	actionStarted(action, callback){
 		this.setRegisteredCallback(action, callback);
+	}
+
+	baseBuy(action, callback){
+		this.setRegisteredCallback(action, callback);
+
+		this.socket.emit(action, {});
 	}
 
 
