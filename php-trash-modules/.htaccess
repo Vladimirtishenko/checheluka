@@ -1,0 +1,41 @@
+#php_value error_reporting 2047
+# PHP settings
+#AddDefaultCharset WINDOWS-1251
+php_flag magic_quotes_gpc off
+php_flag magic_quotes_runtime off
+php_flag magic_quotes_sybase off
+
+php_flag display_errors off
+php_flag log_errors on
+php_value error_reporting E_ALL
+
+
+RewriteEngine On
+
+RewriteBase /
+#Options +FollowSymlinks -Indexes -MultiViews
+RewriteRule ^art/([^/]*)\/$ articles.php?art_id=$1 [L,QSA]
+RewriteRule ^page/([^/]*)\/$ pages.php?id=$1 [L,QSA]
+RewriteRule ^news/([^/]*)\/$ news.php?news_id=$1 [L,QSA]
+RewriteRule ^category/([^/]*)\/$ index.php?cat_id=$1 [L,QSA]
+RewriteRule ^catalog/$ index.php?cat_id=all [L,QSA]
+RewriteRule ^par/([^/]*)/category/([^/]*)\/$ index.php?cat_id=$1&sub_id=$2 [L,QSA]
+
+#RewriteRule ^catalog/category([^/]*).html$ index.php?maker_id=$1 [L,QSA]
+RewriteRule ^catalog/category([^/]*).html$ catbrand.php?maker_id=$1 [L,QSA]
+RewriteRule ^catalog2/category([^/]*).html$ category.php?maker_id=$1 [L,QSA]
+RewriteRule ^catalog/category([^/]*)/ex/([^/]*).html$ catbrand.php?maker_id=$1&exclude=$2 [L,QSA]
+
+RewriteRule ^product/([^/]*)\/$ product.php?prod_id=$1 [L,QSA]
+RewriteRule ^product/([^/]*)\/color/([^/]*)\/$ product.php?prod_id=$1&color=$2 [L,QSA]
+RewriteRule ^news/$ news.php?newsall=1 [L,QSA]
+RewriteRule ^art/$ articles.php [L,QSA]
+RewriteRule ^tag/([^/]*)\/$ tags.php?tags=$1 [L,QSA]
+RewriteRule ^gb/$ gb.php [L,QSA]
+RewriteRule ^orders/$ orders.php [L,QSA]
+RewriteRule ^xlsimpledata.csv$ xlsimpledata.php [L,QSA]
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+RewriteRule ^product/([^/]*).html$ product.php?prod_id_old=$1 [L,QSA]
+RewriteRule ^image___([^/]*)___([^/]*)___([^/]*)$ newimage.php?file=$3&w=$1&h=$2 [L,QSA]
+
