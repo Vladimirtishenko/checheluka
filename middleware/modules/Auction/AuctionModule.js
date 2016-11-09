@@ -37,6 +37,7 @@ AuctionModule.prototype.setToExpired = function(auction){
     {
         auction.winner = this.getWinner(auction._uid);
         var mess = "Auction for lot - "+auction.lot._id+" was finished";
+        this.started = null;
         this.dispatchEvent('finishAuction', auction, mess);
     }
 };

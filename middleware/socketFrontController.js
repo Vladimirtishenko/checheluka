@@ -150,7 +150,7 @@ socketFrontController.prototype.setAuctionList = function(products){
         }
     }
     var keys = Object.keys(this.auctionsPull);
-    if (typeof keys[0] !== 'undefined')
+    if (typeof keys[0] !== 'undefined' && !auctionModule.getCurrent())
     {
         this.curAuction = this.auctionsPull[keys[0]]._uid;
         auctionModule.startAuction(this.curAuction);
@@ -158,6 +158,8 @@ socketFrontController.prototype.setAuctionList = function(products){
 }
 
 socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, data){
+    this.sendToAll(this.createMessage('auctionFinished', data));
+    sleep(3000);
     delete this.auctionsPull[data._uid];
     var keys = Object.keys(this.auctionsPull);
     if (typeof keys[0] !== 'undefined')
@@ -181,7 +183,6 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
             console.log('Product updated');
         });
     }
-    this.sendToAll(this.createMessage('auctionFinished', data));
 }
 
 socketFrontController.prototype.notifyAuctionUpdated = function(event, data){
@@ -198,6 +199,15 @@ socketFrontController.prototype.sendToAll = function(message){
 socketFrontController.prototype.sendNotAutorize = function(client, action){
     var mes = {error: 'Not autorize!!!'};
     client.socket.emit('serverMessage', this.createMessage(action, mes));
+}
+
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+            break;
+        }
+    }
 }
 
 module.exports = socketFrontController;

@@ -25,17 +25,17 @@ Auction.prototype = Object.create(parent.prototype);
 Auction.prototype.setTimer = function(entity, timer, callback)
 {
     entity.timer = timer;
-    var intervel = null;
+    var interval = null;
     var func = function(){
         entity.timer--;
         if (entity.timer == 0)
         {
-            clearInterval(entity.intervel);
+            clearInterval(interval);
 
             callback(entity);
         }
     };
-    intervel = setInterval(func,1000);
+    interval = setInterval(func,1000);
 };
 
 Auction.prototype.saveToStorage = function(entity, callback)
