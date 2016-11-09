@@ -4,11 +4,12 @@ class Modal extends Helper {
     constructor() {
         super();
         this.parentWraper = document.querySelector('.a-modal');
+        this.close = document.querySelectorAll('.a-modal-close');
         const button = document.querySelectorAll('.button-modal');
-        const close = document.querySelectorAll('.a-modal-close');
         const formChange = document.querySelectorAll('.-a-form-change-listener');
         const formAll = document.querySelectorAll('.a-form-modal');
-        this.flyEvent('add', ['click'], [button, close, formChange], [this.modalHandlerIn.bind(this), this.modalHandlerOut.bind(this), this.changeForm.bind(this)]);
+        this.stateValidate = true;
+        this.flyEvent('add', ['click'], [button, this.close, formChange], [this.modalHandlerIn.bind(this), this.modalHandlerOut.bind(this), this.changeForm.bind(this)]);
         this.flyEvent('add', ['submit'], [formAll], this.sendForm.bind(this));
         this.flyEvent('add', ['keypress'], [formAll], this.removeInvalid);
 
@@ -66,6 +67,8 @@ class Modal extends Helper {
             attr = target.getAttribute('data-attr') || null;
         if(!target || !attr) return;
 
+        this.stateValidate = true;
+        
         let forms = this.parentWraper.querySelectorAll('.a-form-modal');
 
         for(var form of forms){
@@ -83,33 +86,46 @@ class Modal extends Helper {
         event.preventDefault();
 
          let target = event && event.target || null,
-             form = target.closest('form') || null,
-             elems = form.elements || null,
-             action = form.getAttribute('data-action'),
+             elems = target.elements || null,
+             action = target.getAttribute('data-action'),
              formData = {};
-
-             console.log(elems);
 
         if(!elems) return;
 
         for(let el of elems){
             if(el.type == "email" || el.type == "password" || el.type == "text"){
-                if(!this.validate(el, form)) return;
+                if(!this.validate(el, target)) return;
+                if(el.type == "email"){
+                    let loginEnd = el.value.indexOf('@'),
+                        login = el.value.substring(0, loginEnd);
+
+                    formData['login'] = login;
+                }
                 formData[el.name] = el.value;
             }
         }
 
-        try{
-            $app.socket.authorize(action, formData, this.afterResponseAuthorize.bind(this));
-        } catch(e){
-            console.log(e);
+        if(this.stateValidate){
+            try{
+                $app.socket.authorize(action, formData, this.afterResponseAuthorize.bind(this, target));
+            } catch(e){
+                console.log(e);
+            }
         }
-        
 
     }
 
 
-   afterResponseAuthorize(){
+   afterResponseAuthorize(target, response){
+
+        console.log(response);
+
+        if(response.data.errmsg){
+            target.reset();
+            this.errorValidate('Такой пользователь уже есть в системе!', target);
+            return;
+        }
+        this.modalHandlerOut( {target: this.close} );
 
    }
 
@@ -122,10 +138,9 @@ class Modal extends Helper {
             city: /[а-яА-Я]/
         }
 
-        console.log(el.value)
-
         if(!regExp[el.name].test(el.value)){
-            form.insertAdjacentHTML('beforeend', '<p class="a-invalid">Проверьте правильность полей!</p>')
+            this.errorValidate('Проверьте правильность полей!', form);
+           
             return false;
         }
 
@@ -133,9 +148,16 @@ class Modal extends Helper {
 
     }
 
+    errorValidate(text, form){
+        form.insertAdjacentHTML('beforeend', '<p class="a-invalid">'+text+'</p>');
+        this.stateValidate = false;
+        return false;
+    }
+
     removeInvalid(){
         try{
             this.removeChild(this.querySelector('.a-invalid'));
+            this.stateValidate = true;
         } catch(e){}
     }
 

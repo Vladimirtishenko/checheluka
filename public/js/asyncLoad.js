@@ -8,25 +8,37 @@ class AsyncLoad extends Helper {
 		this.mainItem = el;
 		this.goodsAfter = document.querySelector('.a-else-goods');
 
-		console.log($app);
+		this.init();
+
+	}
+
+
+	init(){
 
 		$app.socket.getCurrentAuction('getCurrentAuction', this.getCurrentAuction.bind(this));
 		$app.socket.getAuctions('getAuctions', this.getAuctions.bind(this));
-
+		$app.socket.auctionFinished('auctionFinished', this.auctionFinished.bind(this));
+		$app.socket.actionStarted('actionStarted', this.actionStarted.bind(this));
 	}
 
 
 	getCurrentAuction(response){
+
 		if(!response.data || !response.data.lot) return;
 
-		let template = Template[response.action](response.data.lot, response.data.timer);
+
+		let template = Template['getCurrentAuction'](response.data.lot, response.data.timer);
 
 		this.mainItem.removeChild(this.mainItem.firstElementChild)
 		this.mainItem.insertAdjacentHTML('beforeend' ,template);
+
+		this.timerStarted(response.data.timer);
+
 	}
 
 
 	getAuctions(response){
+
 		if(!response.data) return;
 		var keys = Object.keys(response.data);
 		if(keys.length > 3){
@@ -44,10 +56,40 @@ class AsyncLoad extends Helper {
 
 		template += '</div>';
 
-
-
 		this.goodsAfter.removeChild(this.goodsAfter.firstElementChild)
 		this.goodsAfter.insertAdjacentHTML('beforeend' ,template);
+	}
+
+	timerStarted(time){
+		let timer = document.querySelector('.a-times-frontend');
+
+		this.globalTimer = setTimeout(() => {
+			timer.innerHTML = "00:"+ ((time < 10) ? '0'+time : time);
+			
+			if(time < 1) {
+				this.clearTimerAndRequest(); 
+				return;
+			}
+
+			time--;
+			this.timerStarted(time);
+		}, 1000)
+
+	}
+
+	clearTimerAndRequest(){
+		clearTimeout(this.globalTimer);
+	}
+
+
+	auctionFinished(response){
+		console.log(response);
+	}
+
+
+	actionStarted(response){
+
+		this.getCurrentAuction(response);
 	}
 
 

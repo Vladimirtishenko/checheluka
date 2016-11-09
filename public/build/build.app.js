@@ -141,10 +141,13 @@
 
 			_this.socket.on('serverMessage', function (mess) {
 
+				console.log(mess);
+
 				try {
 					_this.registeredCallback[mess.action](mess);
 				} catch (e) {
 					console.log(e);
+					console.log(e.stack);
 				}
 
 				/*try{
@@ -194,6 +197,16 @@
 				this.setRegisteredCallback(action, callback);
 
 				this.socket.emit('getAuctions', {});
+			}
+		}, {
+			key: 'auctionFinished',
+			value: function auctionFinished(action, callback) {
+				this.setRegisteredCallback(action, callback);
+			}
+		}, {
+			key: 'actionStarted',
+			value: function actionStarted(action, callback) {
+				this.setRegisteredCallback(action, callback);
 			}
 		}]);
 
@@ -407,11 +420,12 @@
 	        var _this = _possibleConstructorReturn(this, (Modal.__proto__ || Object.getPrototypeOf(Modal)).call(this));
 
 	        _this.parentWraper = document.querySelector('.a-modal');
+	        _this.close = document.querySelectorAll('.a-modal-close');
 	        var button = document.querySelectorAll('.button-modal');
-	        var close = document.querySelectorAll('.a-modal-close');
 	        var formChange = document.querySelectorAll('.-a-form-change-listener');
 	        var formAll = document.querySelectorAll('.a-form-modal');
-	        _this.flyEvent('add', ['click'], [button, close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
+	        _this.stateValidate = true;
+	        _this.flyEvent('add', ['click'], [button, _this.close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
 	        _this.flyEvent('add', ['submit'], [formAll], _this.sendForm.bind(_this));
 	        _this.flyEvent('add', ['keypress'], [formAll], _this.removeInvalid);
 
@@ -470,6 +484,8 @@
 	                attr = target.getAttribute('data-attr') || null;
 	            if (!target || !attr) return;
 
+	            this.stateValidate = true;
+
 	            var forms = this.parentWraper.querySelectorAll('.a-form-modal');
 
 	            var _iteratorNormalCompletion = true;
@@ -507,12 +523,9 @@
 	            event.preventDefault();
 
 	            var target = event && event.target || null,
-	                form = target.closest('form') || null,
-	                elems = form.elements || null,
-	                action = form.getAttribute('data-action'),
+	                elems = target.elements || null,
+	                action = target.getAttribute('data-action'),
 	                formData = {};
-
-	            console.log(elems);
 
 	            if (!elems) return;
 
@@ -525,7 +538,13 @@
 	                    var el = _step2.value;
 
 	                    if (el.type == "email" || el.type == "password" || el.type == "text") {
-	                        if (!this.validate(el, form)) return;
+	                        if (!this.validate(el, target)) return;
+	                        if (el.type == "email") {
+	                            var loginEnd = el.value.indexOf('@'),
+	                                login = el.value.substring(0, loginEnd);
+
+	                            formData['login'] = login;
+	                        }
 	                        formData[el.name] = el.value;
 	                    }
 	                }
@@ -544,15 +563,27 @@
 	                }
 	            }
 
-	            try {
-	                $app.socket.authorize(action, formData, this.afterResponseAuthorize.bind(this));
-	            } catch (e) {
-	                console.log(e);
+	            if (this.stateValidate) {
+	                try {
+	                    $app.socket.authorize(action, formData, this.afterResponseAuthorize.bind(this, target));
+	                } catch (e) {
+	                    console.log(e);
+	                }
 	            }
 	        }
 	    }, {
 	        key: 'afterResponseAuthorize',
-	        value: function afterResponseAuthorize() {}
+	        value: function afterResponseAuthorize(target, response) {
+
+	            console.log(response);
+
+	            if (response.data.errmsg) {
+	                target.reset();
+	                this.errorValidate('Такой пользователь уже есть в системе!', target);
+	                return;
+	            }
+	            this.modalHandlerOut({ target: this.close });
+	        }
 	    }, {
 	        key: 'validate',
 	        value: function validate(el, form) {
@@ -563,20 +594,27 @@
 	                city: /[а-яА-Я]/
 	            };
 
-	            console.log(el.value);
-
 	            if (!regExp[el.name].test(el.value)) {
-	                form.insertAdjacentHTML('beforeend', '<p class="a-invalid">Проверьте правильность полей!</p>');
+	                this.errorValidate('Проверьте правильность полей!', form);
+
 	                return false;
 	            }
 
 	            return true;
 	        }
 	    }, {
+	        key: 'errorValidate',
+	        value: function errorValidate(text, form) {
+	            form.insertAdjacentHTML('beforeend', '<p class="a-invalid">' + text + '</p>');
+	            this.stateValidate = false;
+	            return false;
+	        }
+	    }, {
 	        key: 'removeInvalid',
 	        value: function removeInvalid() {
 	            try {
 	                this.removeChild(this.querySelector('.a-invalid'));
+	                this.stateValidate = true;
 	            } catch (e) {}
 	        }
 	    }]);
@@ -817,32 +855,42 @@
 			_this.mainItem = el;
 			_this.goodsAfter = document.querySelector('.a-else-goods');
 
-			console.log($app);
-
-			$app.socket.getCurrentAuction('getCurrentAuction', _this.getCurrentAuction.bind(_this));
-			$app.socket.getAuctions('getAuctions', _this.getAuctions.bind(_this));
+			_this.init();
 
 			return _this;
 		}
 
 		_createClass(AsyncLoad, [{
+			key: 'init',
+			value: function init() {
+
+				$app.socket.getCurrentAuction('getCurrentAuction', this.getCurrentAuction.bind(this));
+				$app.socket.getAuctions('getAuctions', this.getAuctions.bind(this));
+				$app.socket.auctionFinished('auctionFinished', this.auctionFinished.bind(this));
+				$app.socket.actionStarted('actionStarted', this.actionStarted.bind(this));
+			}
+		}, {
 			key: 'getCurrentAuction',
 			value: function getCurrentAuction(response) {
-				if (!response.data && !response.data.lot) return;
 
-				var template = _template2.default[response.action](response.data.lot, response.data.timer);
+				if (!response.data || !response.data.lot) return;
+
+				var template = _template2.default['getCurrentAuction'](response.data.lot, response.data.timer);
 
 				this.mainItem.removeChild(this.mainItem.firstElementChild);
 				this.mainItem.insertAdjacentHTML('beforeend', template);
+
+				this.timerStarted(response.data.timer);
 			}
 		}, {
 			key: 'getAuctions',
 			value: function getAuctions(response) {
-				if (!response.data) return;
 
-				if (Object.keys(response.data).length > 3) {
-					this.getCurrentAuction(response.data[1]);
-					delete response.data[1];
+				if (!response.data) return;
+				var keys = Object.keys(response.data);
+				if (keys.length > 3) {
+					this.getCurrentAuction(response.data[keys[0]]);
+					delete response.data[keys[0]];
 				}
 
 				var template = '<div class="a-goods__item__reisizers">',
@@ -857,6 +905,41 @@
 
 				this.goodsAfter.removeChild(this.goodsAfter.firstElementChild);
 				this.goodsAfter.insertAdjacentHTML('beforeend', template);
+			}
+		}, {
+			key: 'timerStarted',
+			value: function timerStarted(time) {
+				var _this2 = this;
+
+				var timer = document.querySelector('.a-times-frontend');
+
+				this.globalTimer = setTimeout(function () {
+					timer.innerHTML = "00:" + (time < 10 ? '0' + time : time);
+
+					if (time < 1) {
+						_this2.clearTimerAndRequest();
+						return;
+					}
+
+					time--;
+					_this2.timerStarted(time);
+				}, 1000);
+			}
+		}, {
+			key: 'clearTimerAndRequest',
+			value: function clearTimerAndRequest() {
+				clearTimeout(this.globalTimer);
+			}
+		}, {
+			key: 'auctionFinished',
+			value: function auctionFinished(response) {
+				console.log(response);
+			}
+		}, {
+			key: 'actionStarted',
+			value: function actionStarted(response) {
+
+				this.getCurrentAuction(response);
 			}
 		}]);
 
@@ -887,7 +970,7 @@
 		_createClass(Template, [{
 			key: 'getCurrentAuction',
 			value: function getCurrentAuction(obj, timer) {
-				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№1</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now">' + decodeURIComponent(obj.auctionPrice) + ' <span>руб.</span></p>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black a-inactive">Покупаю</button>' + '<p>До завершения -  <span>00:' + timer + '</span></p>' + '</div>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button a-rates-inactive">' + '<button class="a-button-white">+ 1 руб.</button>' + '<button class="a-button-white">+ 10 руб.</button>' + '<button class="a-button-white">+ 100 руб.</button>' + '<button class="a-button-white">+ 500 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
+				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№1</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now">' + decodeURIComponent(obj.auctionPrice) + ' <span>руб.</span></p>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black a-inactive">Покупаю</button>' + '<p>До завершения -  <span class="a-times-frontend">00:' + (timer < 10 ? '0' + timer : timer) + '</span></p>' + '</div>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button a-rates-inactive">' + '<button class="a-button-white">+ 1 руб.</button>' + '<button class="a-button-white">+ 10 руб.</button>' + '<button class="a-button-white">+ 100 руб.</button>' + '<button class="a-button-white">+ 500 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
 			}
 		}, {
 			key: 'getAuctions',

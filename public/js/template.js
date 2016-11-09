@@ -38,7 +38,7 @@ class Template {
 				    '<div class="a-for-mobile-absolute">' +
 				      '<div class="a-general-goods__time_to_end">' +
 				        '<button class="a-general-goods__description_buy a-button-black a-inactive">Покупаю</button>' +
-				        '<p>До завершения -  <span>00:'+timer+'</span></p>' +
+				        '<p>До завершения -  <span class="a-times-frontend">00:'+(timer < 10 ? '0' + timer : timer)+'</span></p>' +
 				      '</div>' +
 				      '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' +
 				      '<div class="a-general-goods__description_rates_button a-rates-inactive">' +

@@ -7,18 +7,18 @@ html
 		section.a-modal
 			.a-modal__item.enter
 				span.a-modal-close
-				form.a-form-modal.-enter-placeholder
+				form.a-form-modal.-enter-placeholder(data-action="login")
 					h2.a-modal__item_title Войти
 					input(type="email" id="a-name" name="email" required)
 					label(for="#a-name") Email
 					input(type="password" id="a-pwd" name="pass" required)
 					label(for="#a-pwd") Пароль
-					a(href="#" class="a-remember-pwd a-link-item -a-form-change-listener" data-attr="-remember-placeholder") Забыли пароль?
+					a(href="#" class="a-remember-pwd a-link-reg -a-form-change-listener" data-attr="-remember-placeholder") Забыли пароль?
 					.a-button-area-modal
-						button.a-button-white.__uppercase(type="submit", data-action="login") Войти
+						button.a-button-white.__uppercase(type="submit") Войти
 						span.a-between или
 						a(href="#" class="a-link-item-green -a-form-change-listener " data-attr="-reg-placeholder") Зарегестрироваться
-				form.a-form-modal.-reg-placeholder
+				form.a-form-modal.-reg-placeholder(data-action="register_user")
 					h2.a-modal__item_title Регистрация
 					input(type="email" id="a-name" name="email" required)
 					label(for="#a-name") Email
@@ -27,7 +27,7 @@ html
 					input(type="text" id="a-pwd" name="city" required)
 					label(for="#a-pwd") Город
 					.a-button-area-modal
-						button.a-button-white.__uppercase(type="submit" data-action="register_user") Зарегестрироваться
+						button.a-button-white.__uppercase(type="submit") Зарегестрироваться
 						span.a-between или
 						a(href="#" class="a-link-item-green -a-form-change-listener" data-attr="-enter-placeholder") Есть аккаунт?
 				form.a-form-modal.-remember-placeholder
