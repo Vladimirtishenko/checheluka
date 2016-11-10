@@ -23,8 +23,11 @@ class AsyncLoad extends Helper {
 
 	getCurrentAuction(response){
 
+		
+
 		if(!response.data || !response.data.lot) return;
 
+		this.itemCount = response.data.count;
 
 		let template = Template['getCurrentAuction'](response.data.lot, response.data.timer);
 
@@ -90,7 +93,6 @@ class AsyncLoad extends Helper {
 	auctionFinished(response){
 		this.buyAction = true;
 		this.buttonToBuy.classList.remove('a-inactive');
-		console.log(response);
 	}
 
 
@@ -100,10 +102,12 @@ class AsyncLoad extends Helper {
 
 	baseBuyInitial(event){
 
-		if(event && event.target && this.buyAction){
+		let count = document.querySelector('.a-type-to-count');
+
+		if(event && event.target && this.buyAction && count && this.auctionValidate(count)){
 			this.buyAction = false;
 			this.buttonToBuy.classList.add('a-inactive');
-			$app.socket.baseBuy('baseBuy', this.baseBuy.bind(this));
+			$app.socket.baseBuy('baseBuy', {count: count.value}, this.baseBuy.bind(this));
 		}
 
 	}
@@ -111,6 +115,13 @@ class AsyncLoad extends Helper {
 	baseBuy(response){
 		if(response && response.data && response.data.error == 401){
 			$app.modalOpen({target: document.querySelector('.__login_action')});
+		}
+	}
+
+	auctionValidate(count){
+		if(!isNaN(count.value) && count.value < 0 || count.value > this.itemCount){
+			let elToError = document.querySelector('.a-general-goods__time_to_end');
+			elToError.innerHTML += '<p>Колличесво на складе '+this.itemCount+'. Вы не можете купить больше!</p>';
 		}
 	}
 

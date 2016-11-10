@@ -38,8 +38,9 @@ class Template {
 				    '<div class="a-for-mobile-absolute">' +
 				      '<div class="a-general-goods__time_to_end">' +
 				        '<button class="a-general-goods__description_buy a-button-black">Покупаю</button>' +
-				        '<p>До завершения -  <span class="a-times-frontend">00:'+(timer < 10 ? '0' + timer : timer)+'</span></p>' +
+				        '<label class="a-type-to"> <input class="a-type-to-count" value="1" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' +
 				      '</div>' +
+				      '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:'+(timer < 10 ? '0' + timer : timer)+'</span></p>' +
 				      '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' +
 				      '<div class="a-general-goods__description_rates_button a-rates-inactive">' +
 				        '<button class="a-button-white">+ 1 руб.</button>' +

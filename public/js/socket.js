@@ -73,10 +73,10 @@ class Sockets extends Helper {
 		this.setRegisteredCallback(action, callback);
 	}
 
-	baseBuy(action, callback){
+	baseBuy(action, data, callback){
 		this.setRegisteredCallback(action, callback);
 
-		this.socket.emit(action, {});
+		this.socket.emit(action, data);
 	}
 
 
