@@ -878,7 +878,7 @@
 
 				var template = _template2.default['getCurrentAuction'](response.data.lot, response.data.timer);
 
-				this.mainItem.removeChild(this.mainItem.firstElementChild);
+				this.mainItem.innerHTML = "";
 				this.mainItem.insertAdjacentHTML('beforeend', template);
 
 				this.timerStarted(response.data.timer);
@@ -908,7 +908,7 @@
 
 				template += '</div>';
 
-				this.goodsAfter.removeChild(this.goodsAfter.firstElementChild);
+				this.goodsAfter.innerHTML = "";
 				this.goodsAfter.insertAdjacentHTML('beforeend', template);
 			}
 		}, {
@@ -940,7 +940,7 @@
 			value: function auctionFinished(response) {
 				this.buyAction = true;
 				this.buttonToBuy.classList.remove('a-inactive');
-				console.log('finished');
+				console.log(response);
 			}
 		}, {
 			key: 'actionStarted',

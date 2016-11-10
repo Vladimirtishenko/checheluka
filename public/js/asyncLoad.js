@@ -28,7 +28,7 @@ class AsyncLoad extends Helper {
 
 		let template = Template['getCurrentAuction'](response.data.lot, response.data.timer);
 
-		this.mainItem.removeChild(this.mainItem.firstElementChild)
+		this.mainItem.innerHTML = "";
 		this.mainItem.insertAdjacentHTML('beforeend' ,template);
 
 		this.timerStarted(response.data.timer);
@@ -60,7 +60,7 @@ class AsyncLoad extends Helper {
 
 		template += '</div>';
 
-		this.goodsAfter.removeChild(this.goodsAfter.firstElementChild)
+		this.goodsAfter.innerHTML = "";
 		this.goodsAfter.insertAdjacentHTML('beforeend' ,template);
 
 	}
@@ -90,7 +90,7 @@ class AsyncLoad extends Helper {
 	auctionFinished(response){
 		this.buyAction = true;
 		this.buttonToBuy.classList.remove('a-inactive');
-		console.log('finished');
+		console.log(response);
 	}
 
 
