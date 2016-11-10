@@ -13,7 +13,6 @@ class AsyncLoad extends Helper {
 	}
 
 	init(){
-
 		$app.socket.getCurrentAuction('getCurrentAuction', this.getCurrentAuction.bind(this));
 		$app.socket.getAuctions('getAuctions', this.getAuctions.bind(this));
 		$app.socket.auctionFinished('auctionFinished', this.auctionFinished.bind(this));
@@ -23,13 +22,12 @@ class AsyncLoad extends Helper {
 
 	getCurrentAuction(response){
 
-		
-
 		if(!response.data || !response.data.lot) return;
 
 		this.itemCount = response.data.count;
+		this.pretendents = (Object.keys(response.data.history).length > 1 && Object.keys(response.data.pretendents).length <= 10) ? true : false;
 
-		let template = Template['getCurrentAuction'](response.data.lot, response.data.timer);
+		let template = Template['getCurrentAuction'](response.data.lot, response.data.timer, this.pretendents);
 
 		this.mainItem.innerHTML = "";
 		this.mainItem.insertAdjacentHTML('beforeend' ,template);
@@ -38,6 +36,7 @@ class AsyncLoad extends Helper {
 
 
 		this.buttonToBuy = document.querySelector('.a-general-goods__description_buy');
+
 
 		this.flyEvent('add', ['click'], [this.buttonToBuy], this.baseBuyInitial.bind(this));
 

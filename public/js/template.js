@@ -1,5 +1,5 @@
 class Template {
-	getCurrentAuction(obj, timer){
+	getCurrentAuction(obj, timer, pretendents){
 		return '<div class="a-general-goods a-animates-top-goods">' + 
 				  '<div class="a-general-goods__image">' +
 				  	'<span class="a-general-number__this_main">№1</span>' +
@@ -42,7 +42,7 @@ class Template {
 				      '</div>' +
 				      '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:'+(timer < 10 ? '0' + timer : timer)+'</span></p>' +
 				      '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' +
-				      '<div class="a-general-goods__description_rates_button a-rates-inactive">' +
+				      '<div class="a-general-goods__description_rates_button '+ (pretendents ? "" : "a-rates-inactive") +'">' +
 				        '<button class="a-button-white">+ 1 руб.</button>' +
 				        '<button class="a-button-white">+ 10 руб.</button>' +
 				        '<button class="a-button-white">+ 100 руб.</button>' +
