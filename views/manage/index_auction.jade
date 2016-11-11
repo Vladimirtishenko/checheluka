@@ -4,12 +4,11 @@ block content
 	.a-conteiner-flexible-fixed
 		span.a-modal-close
 	include ./header
-	.a-table-admin.__a-for-goods(data-load="http://chechelyka.com/auc.php" data-template="allGoods")
+	.a-table-admin.__a-for-auction(data-load="/allGoodsAuction" data-template="allGoodsAuction")
 		.a-container-search
 			.a-search-box
 				input#a-search-admin(type='text', name='search', placeholder='Поиск товара')
 			p Искать товар по названию
-		h1.a-head-font-left-side Все товары
+		h1.a-head-font-left-side Товары аукциона
 		view.a-all-goods-table
-			
 	include ../footer

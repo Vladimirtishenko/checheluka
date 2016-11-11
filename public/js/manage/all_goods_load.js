@@ -2,29 +2,25 @@
 import Helper from '../helper.js';
 
 import ModalGoodsToAdd from './add_or_delete_action.js';
+import Templates from './templates.js';
 
 class AsyncLoadFromAnouterResourse extends Helper {
-	constructor(templates, mainblock, search, url){
+	constructor(el){
 		super();
-		if(!templates || typeof templates != "function") return;
+		if(!el) return;
 		this.offsetStart = 0;
 		this.offsetEnd = 20;
-		this.templates = templates;
-		this.mainblockTmp = mainblock;
-		this.url = url;
-		this.viewElement = document.querySelector('view');
+		this.templates = Templates[el.getAttribute('data-template')]();
+
+		this.mainblockTmp = el;
+		this.url = el.getAttribute('data-load');
+		this.viewElement = el.querySelector('view');
 		this.status = true;
-
-		this.viewElement.insertAdjacentHTML('beforeend', search + this.mainblockTmp);
-
-
-		globalRegistredModules['scrollHandlers'] = this.handlerScroll.bind(this);
-
 		this.searchButton = document.querySelector('#a-search-admin');
+		this.scrollEvent = this.handlerScroll.bind(this);
 
-
-		this.flyEvent('add', ['scroll'], [window], globalRegistredModules['scrollHandlers'])
-		this.flyEvent('add', ['keyup'], [this.searchButton], this.handlerToSearch.bind(this))
+		this.flyEvent('add', ['scroll'], [window], this.scrollEvent);
+		this.flyEvent('add', ['keyup'], [this.searchButton], this.handlerToSearch.bind(this));
 		this.tryXHR();
 
 	}
@@ -59,10 +55,16 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		let tmp = "",
 			obj = (JSON.parse(el)).goods || null;
 
+
+
+
+
 		if(!obj || obj.length == 0){
-			this.flyEvent('remove', ['scroll'], [window], globalRegistredModules['scrollHandlers']);
+			this.flyEvent('remove', ['scroll'], [window], this.scrollEvent);
 			return;
 		}
+
+		console.log(obj);
 
 		for (var i of obj) {
 			tmp += this.templates(
@@ -82,16 +84,13 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		}
 
 		if(clear){
-			this.viewElement.lastElementChild.innerHTML = "";
+			this.viewElement.innerHTML = "";
 		}
 
-		this.viewElement.lastElementChild.insertAdjacentHTML('beforeend', tmp);
+		this.viewElement.insertAdjacentHTML('beforeend', tmp);
 
-		if(!globalRegistredModules['ModalGoodsToAdd']){
-			new ModalGoodsToAdd(this.viewElement);
-			globalRegistredModules['ModalGoodsToAdd'] = true;
 
-		}
+		new ModalGoodsToAdd(this.viewElement);
 		
 
 		this.offsetStart = parseInt((JSON.parse(el)).offset);

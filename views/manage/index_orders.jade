@@ -1,0 +1,14 @@
+extends layout_manage
+
+block content
+	.a-conteiner-flexible-fixed
+		span.a-modal-close
+	include ./header
+	.a-table-admin.__a-for-orders
+		.a-container-search
+		  .a-search-box
+		    input#a-search-admin(type='text', name='search', placeholder='Поиск товара')
+		  p Искать товар по названию
+		h1.a-head-font-left-side Заказы
+		view
+	include ../footer

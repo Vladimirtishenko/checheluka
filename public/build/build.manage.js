@@ -48,16 +48,25 @@
 
 	__webpack_require__(23);
 
-	var _router = __webpack_require__(25);
+	var _add_or_delete_action = __webpack_require__(25);
 
-	var _router2 = _interopRequireDefault(_router);
+	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
+
+	var _all_goods_load = __webpack_require__(26);
+
+	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
+
+	var _config = __webpack_require__(28);
+
+	var _config2 = _interopRequireDefault(_config);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	window.globalRegistredModules = {};
 
 	window.addEventListener('DOMContentLoaded', function () {
-		new _router2.default();
+		new _all_goods_load2.default(document.querySelector('.a-table-admin.__a-for-goods') || document.querySelector('.a-table-admin.__a-for-auction'));
+		new _config2.default(document.querySelector('.a-table-admin.__a-for-config'));
 	});
 
 /***/ },
@@ -276,355 +285,6 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _templates = __webpack_require__(26);
-
-	var _templates2 = _interopRequireDefault(_templates);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Router = function (_Helper) {
-		_inherits(Router, _Helper);
-
-		function Router() {
-			_classCallCheck(this, Router);
-
-			var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this));
-
-			_this.mainView = document.querySelector('view');
-			_this.mainHeadText = document.querySelector('.a-head-font-left-side');
-			_this.defineRouts();
-			return _this;
-		}
-
-		_createClass(Router, [{
-			key: 'defineRouts',
-			value: function defineRouts() {
-				var self = this,
-				    menu = document.querySelector('.a-menu-admin__links');
-
-				this.routs = {
-					allGoods: self.changeRouts.bind(self, 'allGoods'),
-					allGoodsAuction: self.changeRouts.bind(self, 'allGoodsAuction'),
-					orders: self.changeRouts.bind(self, 'orders'),
-					config: self.changeRouts.bind(self, 'config')
-				};
-
-				this.routs['allGoods']();
-
-				menu.addEventListener('click', this.handlerToClick.bind(this));
-			}
-		}, {
-			key: 'handlerToClick',
-			value: function handlerToClick(event) {
-
-				var target = event && event.target,
-				    attr = target && target.href,
-				    innerText = target && target.innerText;
-
-				if (!attr) return;
-
-				if (globalRegistredModules['scrollHandlers']) {
-					this.flyEvent('remove', ['scroll'], [window], globalRegistredModules['scrollHandlers']);
-				}
-
-				var url = attr.indexOf('#') != -1 ? attr.substr(attr.indexOf('#') + 1) : null;
-
-				if (this.activeRouts == url || !url) return;
-
-				this.mainView.innerHTML = "";
-
-				this.routs[url](innerText);
-
-				this.activeRouts = url;
-			}
-		}, {
-			key: 'changeRouts',
-			value: function changeRouts(url, text) {
-
-				this.activeRouts = url;
-
-				var template = new _templates2.default();
-
-				template[url](text);
-			}
-		}]);
-
-		return Router;
-	}(_helper2.default);
-
-	exports.default = Router;
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _helper = __webpack_require__(16);
-
-	var _helper2 = _interopRequireDefault(_helper);
-
-	var _all_goods_load = __webpack_require__(27);
-
-	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
-
-	var _config = __webpack_require__(29);
-
-	var _config2 = _interopRequireDefault(_config);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Templates = function (_Helper) {
-		_inherits(Templates, _Helper);
-
-		function Templates() {
-			_classCallCheck(this, Templates);
-
-			return _possibleConstructorReturn(this, (Templates.__proto__ || Object.getPrototypeOf(Templates)).apply(this, arguments));
-		}
-
-		_createClass(Templates, [{
-			key: 'allGoods',
-			value: function allGoods(text) {
-
-				function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice) {
-
-					var sizeEach = function sizeEach(sizes) {
-						var sizesToArray = sizes.split(',');
-
-						var sizesTmp = "";
-						sizesToArray.forEach(function (item, i) {
-							sizesTmp += '<label for=""><span>' + item + '</span>' + '<input type="checkbox" name="size" value="' + item + '"/>' + '</label>';
-						});
-
-						return sizesTmp;
-					};
-
-					var tmp = '<div class="a-all-goods-table__item">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="title" value="' + title + '"/>' + '<input type="hidden" name="description" value="' + description + '"/>' + '<input type="hidden" name="color" value="' + color + '"/>' + '<input type="hidden" name="src" value="' + img + '"/>' + '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' + '<input type="hidden" name="material" value="' + material + '"/>' + '<input type="hidden" name="price" value="' + price + '"/>' + '<input type="hidden" name="countInWarehouse" value="' + (count || 1) + '"/>' + '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + title + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + sizeEach(size) + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цена розничная</p><span>' + price + ' руб.</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<span><input type="text" name="auctionPrice" value="30"><i> руб.</i></span>' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
-
-					return tmp;
-				}
-
-				var tmpSearchAndTitle = '<div class="a-container-search">' + '<div class="a-search-box">' + '<input type="text" id="a-search-admin" name="search" placeholder="Поиск товара"/>' + '</div>' + '<p>Искать товар по названию</p>' + '</div>' + '<h1 class="a-head-font-left-side"> ' + (text || "Все товары") + ' </h1>';
-
-				var mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table"> </div>';
-
-				new _all_goods_load2.default(templates, mainblock, tmpSearchAndTitle, 'http://chechelyka.com/auc.php');
-			}
-		}, {
-			key: 'allGoodsAuction',
-			value: function allGoodsAuction(text) {
-
-				function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice) {
-
-					var tmp = '<div class="a-all-goods-table__item">' + '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' + '<img src="' + decodeURIComponent(img) + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + decodeURIComponent(size) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + decodeURIComponent(color) + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="_id" value="' + id + '"/>' + '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' + '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' + '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' + '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' + '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' + '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' + '<input type="hidden" name="price" value="' + decodeURIComponent(price) + '"/>' + '<input type="hidden" name="auctionPrice" value="' + decodeURIComponent(auctionPrice) + '"/>' + '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + '<span>' + decodeURIComponent(size) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Колличество на складе</p>' + '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Розничная цена</p>' + '<span>' + decodeURIComponent(price) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<input type="text" name="auctionPrice" value="' + auctionPrice + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Приоритет</p>' + '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
-
-					return tmp;
-				}
-
-				var tmpSearchAndTitle = '<div class="a-container-search">' + '<div class="a-search-box">' + '<input type="text" id="a-search-admin" name="search" placeholder="Поиск товара"/>' + '</div>' + '<p>Искать товар по названию</p>' + '</div>' + '<h1 class="a-head-font-left-side"> ' + text + ' </h1>';
-
-				var mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table___own_base"> </div>';
-
-				new _all_goods_load2.default(templates, mainblock, tmpSearchAndTitle, '/allGoodsAuction');
-			}
-		}, {
-			key: 'config',
-			value: function config(text) {
-				function templates(date) {
-
-					var template = '<div class="a-config">' + '<div class="a-outer-calendar">' + '<p class="a-startet-date">Дата начала: <span>' + (date || 'Не установлена') + '</span></p>' + '<div class="a-calendar">' + '<input class="a-flatpickr" type="text" placeholder="Выбрать дату">' + '</div>' + '<button class="a-date-save">Сохранить дату</button>' + '</div>' + '</div>';
-
-					return template;
-				};
-
-				var tmpSearchAndTitle = '<h1 class="a-head-font-left-side"> ' + text + ' </h1>';
-
-				new _config2.default(templates, tmpSearchAndTitle, '/config');
-			}
-		}]);
-
-		return Templates;
-	}(_helper2.default);
-
-	exports.default = Templates;
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _helper = __webpack_require__(16);
-
-	var _helper2 = _interopRequireDefault(_helper);
-
-	var _add_or_delete_action = __webpack_require__(28);
-
-	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var AsyncLoadFromAnouterResourse = function (_Helper) {
-		_inherits(AsyncLoadFromAnouterResourse, _Helper);
-
-		function AsyncLoadFromAnouterResourse(templates, mainblock, search, url) {
-			_classCallCheck(this, AsyncLoadFromAnouterResourse);
-
-			var _this = _possibleConstructorReturn(this, (AsyncLoadFromAnouterResourse.__proto__ || Object.getPrototypeOf(AsyncLoadFromAnouterResourse)).call(this));
-
-			if (!templates || typeof templates != "function") return _possibleConstructorReturn(_this);
-			_this.offsetStart = 0;
-			_this.offsetEnd = 20;
-			_this.templates = templates;
-			_this.mainblockTmp = mainblock;
-			_this.url = url;
-			_this.viewElement = document.querySelector('view');
-			_this.status = true;
-
-			_this.viewElement.insertAdjacentHTML('beforeend', search + _this.mainblockTmp);
-
-			globalRegistredModules['scrollHandlers'] = _this.handlerScroll.bind(_this);
-
-			_this.searchButton = document.querySelector('#a-search-admin');
-
-			_this.flyEvent('add', ['scroll'], [window], globalRegistredModules['scrollHandlers']);
-			_this.flyEvent('add', ['keyup'], [_this.searchButton], _this.handlerToSearch.bind(_this));
-			_this.tryXHR();
-
-			return _this;
-		}
-
-		_createClass(AsyncLoadFromAnouterResourse, [{
-			key: 'handlerScroll',
-			value: function handlerScroll() {
-				if (document.body.clientHeight - document.body.scrollTop < 1000 && this.status) {
-					this.tryXHR();
-				}
-			}
-		}, {
-			key: 'tryXHR',
-			value: function tryXHR(urls, clear) {
-				this.status = false;
-				var search = urls || '';
-				var url = this.url + "?start=" + this.offsetStart + "&end=" + this.offsetEnd + search;
-
-				this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this, clear), this);
-			}
-		}, {
-			key: 'handlerToSearch',
-			value: function handlerToSearch() {
-				if (event && event.keyCode == 13) {
-					this.offsetStart = 0;
-					this.offsetEnd = 5;
-					this.tryXHR('&searhByTitle=' + encodeURIComponent(event.target.value), 'clear');
-				}
-			}
-		}, {
-			key: 'responseFromServerGoodsItems',
-			value: function responseFromServerGoodsItems(clear, el) {
-
-				var tmp = "",
-				    obj = JSON.parse(el).goods || null;
-
-				if (!obj || obj.length == 0) {
-					this.flyEvent('remove', ['scroll'], [window], globalRegistredModules['scrollHandlers']);
-					return;
-				}
-
-				var _iteratorNormalCompletion = true;
-				var _didIteratorError = false;
-				var _iteratorError = undefined;
-
-				try {
-					for (var _iterator = obj[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-						var i = _step.value;
-
-						tmp += this.templates(i._id, i.img || i.src, i.title, i.description, i.size, i.color, i.Material || i.material, i.Sostav || i.consistOf, i.countInWarehouse, i.priority, i.PriceRoz || i.price, i.auctionPrice);
-					}
-				} catch (err) {
-					_didIteratorError = true;
-					_iteratorError = err;
-				} finally {
-					try {
-						if (!_iteratorNormalCompletion && _iterator.return) {
-							_iterator.return();
-						}
-					} finally {
-						if (_didIteratorError) {
-							throw _iteratorError;
-						}
-					}
-				}
-
-				if (clear) {
-					this.viewElement.lastElementChild.innerHTML = "";
-				}
-
-				this.viewElement.lastElementChild.insertAdjacentHTML('beforeend', tmp);
-
-				if (!globalRegistredModules['ModalGoodsToAdd']) {
-					new _add_or_delete_action2.default(this.viewElement);
-					globalRegistredModules['ModalGoodsToAdd'] = true;
-				}
-
-				this.offsetStart = parseInt(JSON.parse(el).offset);
-				this.offsetEnd = this.offsetStart + 20;
-				this.status = true;
-			}
-		}]);
-
-		return AsyncLoadFromAnouterResourse;
-	}(_helper2.default);
-
-	exports.default = AsyncLoadFromAnouterResourse;
-
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _helper = __webpack_require__(16);
-
-	var _helper2 = _interopRequireDefault(_helper);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -767,7 +427,7 @@
 	exports.default = ModalGoodsToAdd;
 
 /***/ },
-/* 29 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -776,11 +436,228 @@
 		value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _helper = __webpack_require__(16);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _flatpickr = __webpack_require__(30);
+	var _add_or_delete_action = __webpack_require__(25);
+
+	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
+
+	var _templates = __webpack_require__(27);
+
+	var _templates2 = _interopRequireDefault(_templates);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AsyncLoadFromAnouterResourse = function (_Helper) {
+		_inherits(AsyncLoadFromAnouterResourse, _Helper);
+
+		function AsyncLoadFromAnouterResourse(el) {
+			_classCallCheck(this, AsyncLoadFromAnouterResourse);
+
+			var _this = _possibleConstructorReturn(this, (AsyncLoadFromAnouterResourse.__proto__ || Object.getPrototypeOf(AsyncLoadFromAnouterResourse)).call(this));
+
+			if (!el) return _possibleConstructorReturn(_this);
+			_this.offsetStart = 0;
+			_this.offsetEnd = 20;
+			_this.templates = _templates2.default[el.getAttribute('data-template')]();
+
+			_this.mainblockTmp = el;
+			_this.url = el.getAttribute('data-load');
+			_this.viewElement = el.querySelector('view');
+			_this.status = true;
+			_this.searchButton = document.querySelector('#a-search-admin');
+			_this.scrollEvent = _this.handlerScroll.bind(_this);
+
+			_this.flyEvent('add', ['scroll'], [window], _this.scrollEvent);
+			_this.flyEvent('add', ['keyup'], [_this.searchButton], _this.handlerToSearch.bind(_this));
+			_this.tryXHR();
+
+			return _this;
+		}
+
+		_createClass(AsyncLoadFromAnouterResourse, [{
+			key: 'handlerScroll',
+			value: function handlerScroll() {
+				if (document.body.clientHeight - document.body.scrollTop < 1000 && this.status) {
+					this.tryXHR();
+				}
+			}
+		}, {
+			key: 'tryXHR',
+			value: function tryXHR(urls, clear) {
+				this.status = false;
+				var search = urls || '';
+				var url = this.url + "?start=" + this.offsetStart + "&end=" + this.offsetEnd + search;
+
+				this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this, clear), this);
+			}
+		}, {
+			key: 'handlerToSearch',
+			value: function handlerToSearch() {
+				if (event && event.keyCode == 13) {
+					this.offsetStart = 0;
+					this.offsetEnd = 5;
+					this.tryXHR('&searhByTitle=' + encodeURIComponent(event.target.value), 'clear');
+				}
+			}
+		}, {
+			key: 'responseFromServerGoodsItems',
+			value: function responseFromServerGoodsItems(clear, el) {
+
+				var tmp = "",
+				    obj = JSON.parse(el).goods || null;
+
+				if (!obj || obj.length == 0) {
+					this.flyEvent('remove', ['scroll'], [window], this.scrollEvent);
+					return;
+				}
+
+				console.log(obj);
+
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+
+				try {
+					for (var _iterator = obj[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var i = _step.value;
+
+						tmp += this.templates(i._id, i.img || i.src, i.title, i.description, i.size, i.color, i.Material || i.material, i.Sostav || i.consistOf, i.countInWarehouse, i.priority, i.PriceRoz || i.price, i.auctionPrice);
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+
+				if (clear) {
+					this.viewElement.innerHTML = "";
+				}
+
+				this.viewElement.insertAdjacentHTML('beforeend', tmp);
+
+				new _add_or_delete_action2.default(this.viewElement);
+
+				this.offsetStart = parseInt(JSON.parse(el).offset);
+				this.offsetEnd = this.offsetStart + 20;
+				this.status = true;
+			}
+		}]);
+
+		return AsyncLoadFromAnouterResourse;
+	}(_helper2.default);
+
+	exports.default = AsyncLoadFromAnouterResourse;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Templates = function () {
+		function Templates() {
+			_classCallCheck(this, Templates);
+		}
+
+		_createClass(Templates, [{
+			key: 'allGoods',
+			value: function allGoods() {
+
+				function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice) {
+
+					var sizeEach = function sizeEach(sizes) {
+						var sizesToArray = sizes.split(',');
+
+						var sizesTmp = "";
+						sizesToArray.forEach(function (item, i) {
+							sizesTmp += '<label for=""><span>' + item + '</span>' + '<input type="checkbox" name="size" value="' + item + '"/>' + '</label>';
+						});
+
+						return sizesTmp;
+					};
+
+					var tmp = '<div class="a-all-goods-table__item">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="title" value="' + title + '"/>' + '<input type="hidden" name="description" value="' + description + '"/>' + '<input type="hidden" name="color" value="' + color + '"/>' + '<input type="hidden" name="src" value="' + img + '"/>' + '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' + '<input type="hidden" name="material" value="' + material + '"/>' + '<input type="hidden" name="price" value="' + price + '"/>' + '<input type="hidden" name="countInWarehouse" value="' + (count || 1) + '"/>' + '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + title + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + sizeEach(size) + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цена розничная</p><span>' + price + ' руб.</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<span><input type="text" name="auctionPrice" value="30"><i> руб.</i></span>' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
+
+					return tmp;
+				}
+
+				return templates;
+			}
+		}, {
+			key: 'allGoodsAuction',
+			value: function allGoodsAuction() {
+
+				function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice) {
+
+					var tmp = '<div class="a-all-goods-table__item">' + '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' + '<img src="' + decodeURIComponent(img) + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + decodeURIComponent(size) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + decodeURIComponent(color) + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="_id" value="' + id + '"/>' + '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' + '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' + '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' + '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' + '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' + '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' + '<input type="hidden" name="price" value="' + decodeURIComponent(price) + '"/>' + '<input type="hidden" name="auctionPrice" value="' + decodeURIComponent(auctionPrice) + '"/>' + '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + '<span>' + decodeURIComponent(size) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Колличество на складе</p>' + '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Розничная цена</p>' + '<span>' + decodeURIComponent(price) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<input type="text" name="auctionPrice" value="' + auctionPrice + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Приоритет</p>' + '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
+
+					return tmp;
+				}
+
+				return templates;
+			}
+		}, {
+			key: 'config',
+			value: function config() {
+				function templates(date) {
+
+					var templates = '<div class="a-config">' + '<div class="a-outer-calendar">' + '<p class="a-startet-date">Дата начала: <span>' + (date || 'Не установлена') + '</span></p>' + '<div class="a-calendar">' + '<input class="a-flatpickr" type="text" placeholder="Выбрать дату">' + '</div>' + '<button class="a-date-save">Сохранить дату</button>' + '</div>' + '</div>';
+				};
+
+				return templates;
+			}
+		}]);
+
+		return Templates;
+	}();
+
+	exports.default = new Templates();
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	var _flatpickr = __webpack_require__(29);
 
 	var _flatpickr2 = _interopRequireDefault(_flatpickr);
 
@@ -793,36 +670,78 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Config = function (_Helper) {
-		_inherits(Config, _Helper);
+	    _inherits(Config, _Helper);
 
-		function Config(templates, header, url) {
-			_classCallCheck(this, Config);
+	    function Config(el) {
+	        _classCallCheck(this, Config);
 
-			//if(!templates || typeof templates != "function") return;
+	        var _this = _possibleConstructorReturn(this, (Config.__proto__ || Object.getPrototypeOf(Config)).call(this));
 
-			var _this = _possibleConstructorReturn(this, (Config.__proto__ || Object.getPrototypeOf(Config)).call(this));
+	        if (!el) return _possibleConstructorReturn(_this);
 
-			_this.viewElement = document.querySelector('view');
-			_this.header = header;
+	        _this.saveDate = document.querySelector('.a-date-save');
+	        _this.calendarInput = document.querySelector('.a-flatpickr');
+	        _this.datetoView = document.querySelector('.a-startet-date span');
+	        _this.resultHandler = document.querySelector('.a-result');
 
-			_this.viewElement.insertAdjacentHTML('beforeend', header + templates());
+	        _this.flyEvent('add', ['click'], [_this.saveDate], _this.handlerToSave.bind(_this));
 
-			new _flatpickr2.default(document.querySelector('.a-flatpickr'), {
-				minDate: new Date(),
-				inline: true,
-				enableTime: true
-			});
+	        _this.setInputCalendar();
 
-			return _this;
-		}
+	        return _this;
+	    }
 
-		return Config;
+	    _createClass(Config, [{
+	        key: 'handlerToSave',
+	        value: function handlerToSave() {
+
+	            if (!this.calendarInput.value) return;
+
+	            var date = new Date();
+
+	            if (+new Date(this.calendarInput.value)) {
+	                date = new Date(this.calendarInput.value);
+	            } else {
+	                date = new Date(date.getTime() + 7 * 24 * 60 * 60 * 1000);
+	            }
+
+	            this.datetoView.innerHTML = (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+
+	            this.xhrRequest('POST', '/page_config', 'application/x-www-form-urlencoded', 'date=' + +date, this.responseToSaveDate.bind(this));
+	        }
+	    }, {
+	        key: 'setInputCalendar',
+	        value: function setInputCalendar(obj) {
+
+	            new _flatpickr2.default(this.calendarInput, {
+	                minDate: new Date(),
+	                inline: true,
+	                enableTime: true
+	            });
+	        }
+	    }, {
+	        key: 'responseToSaveDate',
+	        value: function responseToSaveDate(obj) {
+
+	            try {
+	                var data = JSON.parse(obj);
+
+	                if (data.status == 200) {
+	                    this.resultHandler.innerHTML = "Дата успешно установлена!";
+	                } else {
+	                    this.resultHandler.innerHTML = "Дата не установлена ошибка сервера! Попробуйте обновить страницу!";
+	                }
+	            } catch (e) {}
+	        }
+	    }]);
+
+	    return Config;
 	}(_helper2.default);
 
 	exports.default = Config;
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
