@@ -1,22 +1,17 @@
 var parent = require('../../../core/model');
 var mongoose = require('../../../../lib/mongoose');
 var error = require('../../../core/AppServerError');
+var dProv = require('./SchemaModel');
 function User() {
     parent.apply(this, arguments);
-    // Schema
-    var schema = mongoose.Schema({
-        uname: String,
-        email: {type: String, unique: true},
-        pass: String
-    }, { collection: 'users' });
-    // Model
-    this.dataProvider = mongoose.model('users', schema);
+    this.dataProvider = dProv;
 
     this.requiredFields = ["uname","email","pass"];
     this.entityData = {
         _id: 0,
         uname: '',
         email: '',
+        city: '',
         pass: ''
     }
 }

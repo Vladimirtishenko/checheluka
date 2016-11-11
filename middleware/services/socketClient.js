@@ -3,10 +3,15 @@
  */
 function socketClient(socket){
     this.socket = socket;
+    this._erroHandler;
 }
 
 socketClient.prototype.getId = function(){
     return this.socket.id;
+}
+
+socketClient.prototype.setErrorHandler = function(errorCallback){
+    this._erroHandler = errorCallback;
 }
 
 socketClient.prototype.isAutorize = function(){
@@ -35,7 +40,16 @@ socketClient.prototype.setEvent = function(event,callback)
     this.socket.on(event, function(){
         var args = Array.prototype.slice.call(arguments, 0);
         args.unshift(this);
-        callback.apply(callback.bind,  args);
+        try{
+            callback.apply(callback.bind,  args);
+        }
+        catch (error)
+        {
+            if (typeof this._erroHandler === 'funcion')
+            {
+                this._erroHandler(this, event, error);
+            }
+        }
     }.bind(this));
 }
 module.exports = socketClient;

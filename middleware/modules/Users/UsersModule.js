@@ -17,15 +17,19 @@ UsersModule.prototype = Object.create(parent.prototype);
 UsersModule.prototype.constructor = UsersModule;
 
 UsersModule.prototype.registerUser = function(userName, email, pass){
-    var user = {
+    var userData = {
         uname: userName,
         email: email,
         pass: passHash.hash(pass)
     };
-    var entity = usertModel.createEntity(user);
-    usertModel.saveToStorage(entity, 'create', function(result)
+    var entity = usertModel.createEntity(userData);
+    usertModel.saveToStorage(entity, 'create', function(user)
     {
-        this.dispatchEvent('userCreated', result);
+        if (user && user.pass)
+        {
+            delete user.pass;
+        }
+        this.dispatchEvent('userCreated', user);
     }.bind(this))
 };
 
@@ -33,16 +37,15 @@ UsersModule.prototype.registerUser = function(userName, email, pass){
 UsersModule.prototype.autoryze = function(email, pass){
     usertModel.getEntity(email, function(user)
     {
-        if (!passHash.validate(user.pass, pass))
+        if (!user || !passHash.validate(user.pass, pass))
         {
             user = false;
         }
+        else {
+            delete user.pass;
+        }
         this.dispatchEvent('autoryzeCompleted', user);
     }.bind(this));
-};
-
-UsersModule.prototype.getUser = function(id){
-    return productModel.table;
 };
 
 module.exports = UsersModule;

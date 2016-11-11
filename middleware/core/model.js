@@ -28,6 +28,11 @@ Model.prototype.getRequiredFields = function(data){
 
 Model.prototype.createEntity = function(data)
 {
+    //reset id counter;
+    if (this.id_counter > 100000)
+    {
+        this.id_counter = 1;
+    }
     var entity = {};
     for(var i = 0; i < this.requiredFields.length; i++)
     {

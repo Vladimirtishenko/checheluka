@@ -8,7 +8,16 @@ class Sockets extends Helper {
 	
 		this.socket.on('serverMessage',(mess) =>
 		{
+			console.log(mess);
+			if (mess.action == 'login' && mess.data)
+			{
+				this.socket.emit('upPrice', {auction_id:1, price: 2222});
+			}
 
+			if (mess.action == 'upPrice')
+			{
+				this.socket.emit('upCount', {auction_id:1, count: 2});
+			}
 			try{
 				this.registeredCallback[mess.action](mess);
 			} catch(e){
@@ -33,7 +42,7 @@ class Sockets extends Helper {
 				this.socket.emit('baseBuy', {auction_id: mess.data._uid});
 			}*/
 		});
-
+		this.socket.emit('login', {email: "test@emailtest", pass:"123"});
 	}
 
 	setRegisteredCallback(action, callback){

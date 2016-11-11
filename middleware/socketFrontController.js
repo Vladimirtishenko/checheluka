@@ -1,9 +1,11 @@
 var aucMod = require('./modules/Auction/AuctionModule');
 var prodModule = require('./modules/Product/ProductModule');
 var usersClass = require('./modules/Users/UsersModule');
+var orderClass = require('./modules/Orders/OrdersModule');
 var auctionModule = new aucMod();
 var productsModule = new prodModule();
 var usersModule = new usersClass();
+var ordersModule = new orderClass();
 var cookie = require('cookie');
 var socketClient = require('./services/socketClient');
 var loadProductSleepTime = 5; // if product did not loaded server slepp for $ sec
@@ -28,16 +30,23 @@ function socketFrontController(io){
     auctionModule.setListenere("finishAuction",this.sendNotifyThatAuctionFinished.bind(this));
     auctionModule.setListenere("auctionUpdated",this.notifyAuctionUpdated.bind(this));
     auctionModule.setListenere("startAuction",this.notifyAuctionStarted.bind(this));
+    auctionModule.setListenere("pretendentAdded",this.notifyPretendentAdded.bind(this));
     //initialyze client connection
     io.on('connection', function(socket){
         var newClient = new socketClient(socket);
-        //this.clients[newClient.getId()] = newClient;
+        newClient.setErrorHandler(this.onError.bind(this));
         newClient.setEvent('login', this.login.bind(this));
         newClient.setEvent('register_user', this.register_user.bind(this));
         newClient.setEvent('baseBuy', this.baseBuy.bind(this));
         newClient.setEvent('getCurrentAuction', this.getCurrentAuction.bind(this));
         newClient.setEvent('getAuctions', this.getAuctions.bind(this));
+        newClient.setEvent('upCount', this.upCount.bind(this));
+        newClient.setEvent('upPrice', this.upPrice.bind(this));
     }.bind(this));
+    io.on('error', function(err) {
+        //here i change options
+        console.log(err);
+    });
     this.productLoad();
 }
 
@@ -48,8 +57,15 @@ socketFrontController.prototype.login = function(client, data){
     }
     //set listner for completed autorization
     usersModule.setListenere("autoryzeCompleted",function(event, data){
-        client.setUserData(data);
-        client.socket.emit('serverMessage', this.createMessage('login', data));
+        var err;
+        if (!data)
+        {
+            err = this.createError(401,"not autorize");
+        }
+        else{
+            client.setUserData(data);
+        }
+        client.socket.emit('serverMessage', this.createMessage('login', data, err));
         usersModule.unsetListener(event);
     }.bind(this));
 
@@ -78,39 +94,101 @@ socketFrontController.prototype.getCurrentAuction = function(client, data){
     var curr = this.auctionsPull[this.curAuction] || auctionModule.getCurrent();
     return client.socket.emit('serverMessage', this.createMessage('getCurrentAuction', curr));
 }
-socketFrontController.prototype.getAuctionHistory = function(){
-
-
-}
 socketFrontController.prototype.baseBuy = function(client, data){
     var action = 'baseBuy';
     if (!client.isAutorize())
     {
-        return this.sendNotAutorize(client, 'baseBuy');
+        return this.sendNotAutorize(client, action);
     }
     var response = {result:'success'};
+    var err;
     var auc = auctionModule.getCurrent();
     if (auc._uid != data.auction_id)
     {
-        response = {error: 'Auction with auction_id = '+data.auction_id+' not found'};
-        return client.socket.emit('serverMessage', this.createMessage(action, response));
+        response = null;
+        err = this.createError(404, 'Auction with auction_id = '+data.auction_id+' not found');
     }
-    if (!auctionModule.setPretendent(auc._uid, client.getUserData()))
+    else if (!auctionModule.setPretendent(auc._uid, client.getUserData()))
     {
-        response = {error: 'You are already pretendent for this lot'};
+        response = null;
+        err = this.createError(403, 'You are already pretendent for this lot');
     }
-    client.socket.emit('serverMessage', this.createMessage(action, response));
-}
+    client.socket.emit('serverMessage', this.createMessage(action, response, err));
+};
 
-socketFrontController.prototype.createMessage = function(action, params){
-    return {
+socketFrontController.prototype.upCount = function(client, data){
+    var action = 'upCount';
+    if (!client.isAutorize())
+    {
+        return this.sendNotAutorize(client, action);
+    }
+    var response = true;
+    var err;
+    var auc = auctionModule.getCurrent();
+    if (auc._uid != data.auction_id)
+    {
+        response = null;
+        err = this.createError(404, 'Auction with auction_id = '+data.auction_id+' not found');
+    }
+    else if (!data.count)
+    {
+        response = null;
+        err = this.createError(400, 'Incorrect "count" parameter');
+    }
+    else if (this.productsPull[auc.lot._id].countInWarehouse < data.count
+        || !auctionModule.setCount(auc._uid, data.count, client.getUserData()))
+    {
+        response = null;
+        err = this.createError(400, 'Incorrect request');
+    }
+    client.socket.emit('serverMessage', this.createMessage(action, response, err));
+};
+
+
+socketFrontController.prototype.upPrice = function(client, data){
+    var action = 'upPrice';
+    if (!client.isAutorize())
+    {
+        return this.sendNotAutorize(client, action);
+    }
+    var response = true;
+    var err;
+    var auc = auctionModule.getCurrent();
+    if (auc._uid != data.auction_id)
+    {
+        response = null;
+        err = this.createError(404, 'Auction with auction_id = '+data.auction_id+' not found');
+    }
+    else if (!data.price)
+    {
+        response = null;
+        err = this.createError(400, 'Incorrect "count" parameter');
+    }
+    else if (!auctionModule.setPrice(auc._uid, data.price, client.getUserData()))
+    {
+        response = null;
+        err = this.createError(400, 'Incorrect request');
+    }
+    client.socket.emit('serverMessage', this.createMessage(action, response, err));
+};
+
+socketFrontController.prototype.createMessage = function(action, params, errorMess){
+    var mess = {
         action: action,
         data: params
     };
-}
+    if (errorMess)
+    {
+        mess.error = errorMess;
+    }
+    return mess;
+};
+
+socketFrontController.prototype.createError = function(code, message){
+    return {errorCode: code, errorMessage: message};
+};
 
 socketFrontController.prototype.productLoad = function(){
-    //TODO::calculate offset limit
     var limit = this.limit;
     var keys = Object.keys(this.productsPull);
     if (keys.length)
@@ -129,6 +207,7 @@ socketFrontController.prototype.setProductList = function(event, products){
         this.offset += products.length;
         for(var i = 0; i < products.length; i++)
         {
+            products[i].countInWarehouse = 10;
             this.productsPull[products[i]._id] = products[i];
         }
         this.setAuctionList(products);
@@ -136,7 +215,7 @@ socketFrontController.prototype.setProductList = function(event, products){
     else
     {
         this.offset = 0;
-        setInterval(this.productLoad.bind(this),1000*loadProductSleepTime);
+        setTimeout(this.productLoad.bind(this),1000*loadProductSleepTime);
     }
 }
 
@@ -159,6 +238,20 @@ socketFrontController.prototype.setAuctionList = function(products){
 
 socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, data){
     this.sendToAll(this.createMessage('auctionFinished', data));
+    if (data.winner && data.winner._id)
+    {
+        var updata = {
+            _id: data.lot._id,
+            countInWarehouse: data.lot.countInWarehouse - data.count
+        };
+        productsModule.setListenere("productsLoaded",function(res)
+        {
+            console.log('Product updated');
+            ordersModule.createOrder(data.winner._id, data._id);
+        });
+        productsModule.updateProduct(updata);
+    }
+    //wait 3 sec besore start new auction
     sleep(3000);
     delete this.auctionsPull[data._uid];
     var keys = Object.keys(this.auctionsPull);
@@ -171,17 +264,6 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     if (keys.length < this.limit)
     {
         this.productLoad();
-    }
-    if (data.winner && data.winner._id)
-    {
-        var updata = {
-            _id: data.lot._id,
-            countInWarehouse: data.lot.countInWarehouse - data.count
-        };
-        productsModule.updateProduct(updata,function(res)
-        {
-            console.log('Product updated');
-        });
     }
 }
 
@@ -197,10 +279,18 @@ socketFrontController.prototype.sendToAll = function(message){
     this.io.sockets.emit('serverMessage', message);
 }
 socketFrontController.prototype.sendNotAutorize = function(client, action){
-    var mes = {error: 401};
-    client.socket.emit('serverMessage', this.createMessage(action, mes));
+    var mes = this.createError(401, "not autorize");
+    client.socket.emit('serverMessage', this.createMessage(action, null, mes));
+}
+socketFrontController.prototype.notifyPretendentAdded = function(event, data)
+{
+    this.sendToAll(this.createMessage('pretendentAdded', data));
 }
 
+socketFrontController.prototype.onError = function(client, action, errors){
+    var mes = this.createError(500, "server error");
+    client.socket.emit('serverMessage', this.createMessage(action, null, mes));
+}
 function sleep(milliseconds) {
     var start = new Date().getTime();
     for (var i = 0; i < 1e7; i++) {

@@ -4,8 +4,8 @@ var auctionModel = new auctionClass();
 function AuctionModule() {
     parent.apply(this, arguments);
     this.started = null;
-    this.events = ['startAuction','finishAuction', 'auctionUpdated'];
-    this.auctionTimer = 30;
+    this.events = ['startAuction','finishAuction', 'auctionUpdated', 'pretendentAdded'];
+    this.auctionTimer = 5;
     this.upPrice = 50;
 }
 
@@ -69,8 +69,42 @@ AuctionModule.prototype.setPretendent = function(uid, user){
     auction.newPretendentInit = false;
     auction.pretendents[user._id] = user;
     var mess = "New pretendent - "+user._id+". Price - "+auction.currentPrice;
+    this.dispatchEvent('pretendentAdded', auction, mess);
+    return true;
+};
+
+AuctionModule.prototype.setCount = function(uid, count, user){
+    var auction = auctionModel.getEntity(uid);
+    if (!auction)
+    {
+        return false;
+    }
+    auction.count = count;
+    auction.newPretendentInit = true;
+    auctionModel.updateTimer(auction, this.auctionTimer);
+    this.setPretendent(uid, user);
+    var mess = "Pretendent updated auction - "+auction.lot._id+" count";
     this.dispatchEvent('auctionUpdated', auction, mess);
     return true;
+};
+
+AuctionModule.prototype.setPrice = function(uid, price, user){
+    var auction = auctionModel.getEntity(uid);
+    if (!auction || auction.nextPrice > price)
+    {
+        return false;
+    }
+    auction.currentPrice = price;
+    auction.nextPrice = auction.currentPrice + this.upPrice;
+    auction.newPretendentInit = true;
+    auctionModel.updateTimer(auction, this.auctionTimer);
+    console.log(auction);
+    if ( this.setPretendent(uid, user))
+    {
+        var mess = "Pretendent updated auction - "+auction.lot._id+" price";
+        this.dispatchEvent('auctionUpdated', auction, mess);
+        return true;
+    }
 };
 
 AuctionModule.prototype.getWinner = function(uid){
@@ -82,11 +116,14 @@ AuctionModule.prototype.getWinner = function(uid){
 
 AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMessage){
     auction.history.push({action:eventName, data:historyMessage});
+    var sended = JSON.parse(JSON.stringify(auction));
+    delete sended.history;
     if (eventName == 'startAuction')
     {
         auction.status = 'started';
         var dateSt = new Date();
         auction.stDateTime = dateSt.toString();
+        this._base_dispatchEvent(eventName, sended);
     }
     if (eventName == 'finishAuction')
     {
@@ -96,16 +133,24 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
         if (auction.winner && auction.winner._id)
         {
             auctionModel.saveToStorage(auction, function(result){
-                auctionModel.removeEntity(auction._uid)
-            })
+                console.log(result);
+                if (result)
+                {
+                    sended._id = result._id;
+                    this._base_dispatchEvent(eventName, sended);
+                }
+                auctionModel.removeEntity(auction._uid);
+            }.bind(this))
         }
         else{
-            auctionModel.removeEntity(auction._uid)
+            auctionModel.removeEntity(auction._uid);
+            this._base_dispatchEvent(eventName, sended);
         }
     }
-    var sended = JSON.parse(JSON.stringify(auction));
-    delete sended.history;
-    this._base_dispatchEvent(eventName, sended);
+    else{
+        this._base_dispatchEvent(eventName, sended);
+    }
+
 };
 AuctionModule.prototype._base_dispatchEvent = parent.prototype.dispatchEvent;
 

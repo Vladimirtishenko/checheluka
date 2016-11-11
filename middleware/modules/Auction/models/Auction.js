@@ -38,6 +38,11 @@ Auction.prototype.setTimer = function(entity, timer, callback)
     interval = setInterval(func,1000);
 };
 
+Auction.prototype.updateTimer = function(entity, timer)
+{
+    entity.timer = timer;
+};
+
 Auction.prototype.saveToStorage = function(entity, callback)
 {
     var data = {
@@ -50,9 +55,10 @@ Auction.prototype.saveToStorage = function(entity, callback)
         history: entity.history,
         count: entity.count
     };
-    this.dataProvider.create(data,function(err){
+    this.dataProvider.create(data,function(err, result){
         if(err) return callback(false);
-        return callback(true);
+        console.log(err, result);
+        return callback(result);
     });
     return;
 };

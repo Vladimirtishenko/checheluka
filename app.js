@@ -14,7 +14,6 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 app.use(cookieParser());
-console.log(config.get("db"));
 var sessionMiddleware = session({
   secret: config.get("secret"),
   store: new MongoStore(config.get("db")),
