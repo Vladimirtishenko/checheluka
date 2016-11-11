@@ -8,7 +8,6 @@ class Router extends Helper {
 		super();	
 		this.mainView = document.querySelector('view');
 		this.mainHeadText = document.querySelector('.a-head-font-left-side');
-		this.searchContainer = document.querySelector('.a-search-box');
 		this.defineRouts();
 	}
 
@@ -19,7 +18,8 @@ class Router extends Helper {
 		this.routs = {
 			allGoods: self.changeRouts.bind(self, 'allGoods'),
 			allGoodsAuction: self.changeRouts.bind(self, 'allGoodsAuction'),
-			orders: self.changeRouts.bind(self, 'orders')
+			orders: self.changeRouts.bind(self, 'orders'),
+			config: self.changeRouts.bind(self, 'config')
 		}
 
 		this.routs['allGoods']();
@@ -36,29 +36,29 @@ class Router extends Helper {
 
 		if(!attr) return;
 
+		if(globalRegistredModules['scrollHandlers']){
+			this.flyEvent('remove', ['scroll'], [window], globalRegistredModules['scrollHandlers']);
+		}
+		
 		let url = (attr.indexOf('#') != -1) ? attr.substr(attr.indexOf('#') + 1) : null;
 
 		if(this.activeRouts == url || !url) return;
 
-		this.mainHeadText.innerText = innerText;
-
 		this.mainView.innerHTML = "";
 
-		this.searchContainer.innerHTML = '<input type="text" id="a-search-admin" name="search" placeholder="Поиск товара" />';
-
-		this.routs[url]();
+		this.routs[url](innerText);
 
 		this.activeRouts = url;
 
 	}
 
-	changeRouts(url){
+	changeRouts(url, text){
 
 		this.activeRouts = url;
 
 		let template = new Templates();
 
-		template[url]();
+		template[url](text);
 
 	}
 

@@ -1,10 +1,11 @@
 import Helper from '../helper.js';
 
 import AsyncLoadFromAnouterResourse from './all_goods_load.js';
+import Config from './config.js';
 
 class Templates extends Helper{
 
-	allGoods(obj){
+	allGoods(text){
 
 		function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice){
 
@@ -81,14 +82,22 @@ class Templates extends Helper{
 
 		}
 
+		let tmpSearchAndTitle = '<div class="a-container-search">'+
+								  '<div class="a-search-box">'+
+								    '<input type="text" id="a-search-admin" name="search" placeholder="Поиск товара"/>'+
+								  '</div>'+
+								  '<p>Искать товар по названию</p>'+
+								'</div>' +
+								'<h1 class="a-head-font-left-side"> '+(text || "Все товары")+' </h1>';
+
 
 		let mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table"> </div>';
 
-		new AsyncLoadFromAnouterResourse(templates, mainblock, 'http://chechelyka.com/auc.php');
+		new AsyncLoadFromAnouterResourse(templates, mainblock, tmpSearchAndTitle, 'http://chechelyka.com/auc.php');
 	}
 
 
-	allGoodsAuction(){
+	allGoodsAuction(text){
 
 		function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice){
 
@@ -162,9 +171,40 @@ class Templates extends Helper{
 			return tmp;
 		}
 
+		let tmpSearchAndTitle = '<div class="a-container-search">'+
+								  '<div class="a-search-box">'+
+								    '<input type="text" id="a-search-admin" name="search" placeholder="Поиск товара"/>'+
+								  '</div>'+
+								  '<p>Искать товар по названию</p>'+
+								'</div>' +
+								'<h1 class="a-head-font-left-side"> '+text+' </h1>';
+
 		let mainblock = '<div class="a-all-goods-table a-form-checheluka-admin-table___own_base"> </div>';
 
-		new AsyncLoadFromAnouterResourse(templates, mainblock, '/allGoodsAuction');
+		new AsyncLoadFromAnouterResourse(templates, mainblock, tmpSearchAndTitle, '/allGoodsAuction');
+
+	}
+
+	config(text){
+		function templates(date){
+
+			let template = 	'<div class="a-config">'+
+								'<div class="a-outer-calendar">' +
+									'<p class="a-startet-date">Дата начала: <span>'+(date || 'Не установлена')+'</span></p>'+
+									'<div class="a-calendar">'+
+										'<input class="a-flatpickr" type="text" placeholder="Выбрать дату">' + 
+									'</div>'+
+									'<button class="a-date-save">Сохранить дату</button>'+
+								'</div>'+
+							'</div>';
+
+			return template;
+
+		};
+
+		let tmpSearchAndTitle = '<h1 class="a-head-font-left-side"> '+text+' </h1>';
+
+		new Config(templates, tmpSearchAndTitle, '/config');
 
 	}
 

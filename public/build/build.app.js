@@ -140,7 +140,14 @@
 			_this.registeredCallback = {};
 
 			_this.socket.on('serverMessage', function (mess) {
+				console.log(mess);
+				if (mess.action == 'login' && mess.data) {
+					_this.socket.emit('upPrice', { auction_id: 1, price: 2222 });
+				}
 
+				if (mess.action == 'upPrice') {
+					_this.socket.emit('upCount', { auction_id: 1, count: 2 });
+				}
 				try {
 					_this.registeredCallback[mess.action](mess);
 				} catch (e) {
@@ -163,7 +170,7 @@
 	   	this.socket.emit('baseBuy', {auction_id: mess.data._uid});
 	   }*/
 			});
-
+			_this.socket.emit('login', { email: "test@emailtest", pass: "123" });
 			return _this;
 		}
 

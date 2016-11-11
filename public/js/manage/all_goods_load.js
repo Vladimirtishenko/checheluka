@@ -4,7 +4,7 @@ import Helper from '../helper.js';
 import ModalGoodsToAdd from './add_or_delete_action.js';
 
 class AsyncLoadFromAnouterResourse extends Helper {
-	constructor(templates, mainblock, url){
+	constructor(templates, mainblock, search, url){
 		super();
 		if(!templates || typeof templates != "function") return;
 		this.offsetStart = 0;
@@ -13,16 +13,14 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		this.mainblockTmp = mainblock;
 		this.url = url;
 		this.viewElement = document.querySelector('view');
-		this.searchButton = document.getElementById('a-search-admin');
 		this.status = true;
-		this.viewElement.insertAdjacentHTML('beforeend',this.mainblockTmp);
 
-		
-		if(globalRegistredModules['scrollHandlers']){
-			this.flyEvent('remove', ['scroll'], [window], globalRegistredModules['scrollHandlers']);
-		}
+		this.viewElement.insertAdjacentHTML('beforeend', search + this.mainblockTmp);
+
 
 		globalRegistredModules['scrollHandlers'] = this.handlerScroll.bind(this);
+
+		this.searchButton = document.querySelector('#a-search-admin');
 
 
 		this.flyEvent('add', ['scroll'], [window], globalRegistredModules['scrollHandlers'])
@@ -84,10 +82,10 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		}
 
 		if(clear){
-			this.viewElement.firstElementChild.innerHTML = "";
+			this.viewElement.lastElementChild.innerHTML = "";
 		}
 
-		this.viewElement.firstElementChild.insertAdjacentHTML('beforeend', tmp);
+		this.viewElement.lastElementChild.insertAdjacentHTML('beforeend', tmp);
 
 		if(!globalRegistredModules['ModalGoodsToAdd']){
 			new ModalGoodsToAdd(this.viewElement);
