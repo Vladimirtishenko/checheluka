@@ -9,8 +9,11 @@ module.exports = function(app){
 
 
 	// Xhr method
+	// Add to auction
 	app.post("/allGoods", require("./allGoods").post);
+	// Delete form auction
 	app.delete("/allGoods", require("./allGoods").delete);
+	// Get all auction
 	app.get("/allGoodsAuction", require("./allGoodsAuction").get);
 
 
