@@ -7,11 +7,13 @@ import Chat from './chat.js';
 import Zoom from './zoomImg.js';
 import Async from './asyncLoad.js';
 import AsyncAllGoods from './asyncLoadAllGoods.js';
+import Timer from './timerToStart.js';
 
 window.$app = {};
 
 window.addEventListener('DOMContentLoaded', () => {
 	$app.socket = new Sockets();
+	new Timer(document.querySelector('.a-time-to-start'));
 	new Modal();
 	new Async(document.querySelector('.a-backgroung-general-goods'));
 	new Chat();

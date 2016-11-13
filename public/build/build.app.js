@@ -72,12 +72,17 @@
 
 	var _asyncLoadAllGoods2 = _interopRequireDefault(_asyncLoadAllGoods);
 
+	var _timerToStart = __webpack_require__(23);
+
+	var _timerToStart2 = _interopRequireDefault(_timerToStart);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	window.$app = {};
 
 	window.addEventListener('DOMContentLoaded', function () {
 		$app.socket = new _socket2.default();
+		new _timerToStart2.default(document.querySelector('.a-time-to-start'));
 		new _modal2.default();
 		new _asyncLoad2.default(document.querySelector('.a-backgroung-general-goods'));
 		new _chat2.default();
@@ -1116,6 +1121,97 @@
 	}(_helper2.default);
 
 	exports.default = AsyncLoadAllGoods;
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Timer = function (_Helper) {
+		_inherits(Timer, _Helper);
+
+		function Timer(el) {
+			_classCallCheck(this, Timer);
+
+			var _this = _possibleConstructorReturn(this, (Timer.__proto__ || Object.getPrototypeOf(Timer)).call(this));
+
+			if (!el) return _possibleConstructorReturn(_this);
+			_this.el = el;
+			_this.attr = _this.el.getAttribute('data-time');
+			_this.removed = el.querySelector('.a-replaced-time-container');
+
+			_this.createTimer();
+
+			return _this;
+		}
+
+		_createClass(Timer, [{
+			key: 'createTimer',
+			value: function createTimer() {
+				if (!this.attr || !+this.attr) {
+					this.removed.innerHTML = "Дата начала не определена...";
+				} else {
+					this.estimate = new Date(+this.attr);
+					this.startTimer();
+				}
+			}
+		}, {
+			key: 'startTimer',
+			value: function startTimer() {
+				var _this2 = this;
+
+				var date = Date.parse(this.estimate) - Date.parse(new Date()),
+				    dateString = {
+					seconds: Math.floor(date / 1000 % 60),
+					minutes: Math.floor(date / 1000 / 60 % 60),
+					hours: Math.floor(date / (1000 * 60 * 60) % 24),
+					days: Math.floor(date / (1000 * 60 * 60 * 24))
+				};
+
+				if (this.removed) {
+					this.removed.parentNode.removeChild(this.removed);
+					this.removed = null;
+					var span = document.createElement('span');
+					this.span = this.el.appendChild(span);
+					this.createTime(dateString);
+				} else {
+					this.createTime(dateString);
+				}
+
+				setTimeout(function () {
+					_this2.startTimer();
+				}, 1000);
+			}
+		}, {
+			key: 'createTime',
+			value: function createTime(dateString) {
+				this.span.innerHTML = (dateString.days ? dateString.days + '<mark>дней</mark>' : '') + dateString.hours + ':' + dateString.minutes + ':' + (dateString.seconds < 10 ? '0' + dateString.seconds : dateString.seconds);
+			}
+		}]);
+
+		return Timer;
+	}(_helper2.default);
+
+	exports.default = Timer;
 
 /***/ }
 /******/ ]);

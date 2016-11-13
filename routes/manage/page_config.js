@@ -1,5 +1,6 @@
 var mongoose = require('../../lib/mongoose'),
-    Config = require('../../models/config');
+    Config = require('../../models/config'),
+    variables = require('../../middleware/variablesHelper');
 
 
 module.exports.get = function(req, res, next) {
@@ -7,11 +8,7 @@ module.exports.get = function(req, res, next) {
     Config.find({}, function(err, doc) {
         if (err) next(err);
 
-        var variables = {};
-
-        for (var i = 0; i < doc.length; i++) {
-        	variables[doc[i]['fieldName']] = doc[i]['params'];
-        }
+        var variables = variables(doc);
 
         res.render('index_config', {
             title: "Checheluka Admin",
