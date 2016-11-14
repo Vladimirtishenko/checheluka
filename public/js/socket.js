@@ -9,7 +9,7 @@ class Sockets extends Helper {
 		this.socket.on('serverMessage',(mess) =>
 		{
 			console.log(mess);
-			if (mess.action == 'login' && mess.data)
+			/*if (mess.action == 'login' && mess.data)
 			{
 				this.socket.emit('upPrice', {auction_id:1, price: 2222});
 			}
@@ -17,7 +17,7 @@ class Sockets extends Helper {
 			if (mess.action == 'upPrice')
 			{
 				this.socket.emit('upCount', {auction_id:1, count: 2});
-			}
+			}*/
 			try{
 				this.registeredCallback[mess.action](mess);
 			} catch(e){
@@ -83,6 +83,12 @@ class Sockets extends Helper {
 	}
 
 	baseBuy(action, data, callback){
+		this.setRegisteredCallback(action, callback);
+
+		this.socket.emit(action, data);
+	}
+
+	upPrice(action, data, callback){
 		this.setRegisteredCallback(action, callback);
 
 		this.socket.emit(action, data);

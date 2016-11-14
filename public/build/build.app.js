@@ -146,13 +146,14 @@
 
 			_this.socket.on('serverMessage', function (mess) {
 				console.log(mess);
-				if (mess.action == 'login' && mess.data) {
-					_this.socket.emit('upPrice', { auction_id: 1, price: 2222 });
-				}
-
-				if (mess.action == 'upPrice') {
-					_this.socket.emit('upCount', { auction_id: 1, count: 2 });
-				}
+				/*if (mess.action == 'login' && mess.data)
+	   {
+	   	this.socket.emit('upPrice', {auction_id:1, price: 2222});
+	   }
+	   	if (mess.action == 'upPrice')
+	   {
+	   	this.socket.emit('upCount', {auction_id:1, count: 2});
+	   }*/
 				try {
 					_this.registeredCallback[mess.action](mess);
 				} catch (e) {
@@ -221,6 +222,13 @@
 		}, {
 			key: 'baseBuy',
 			value: function baseBuy(action, data, callback) {
+				this.setRegisteredCallback(action, callback);
+
+				this.socket.emit(action, data);
+			}
+		}, {
+			key: 'upPrice',
+			value: function upPrice(action, data, callback) {
 				this.setRegisteredCallback(action, callback);
 
 				this.socket.emit(action, data);
@@ -618,6 +626,7 @@
 	    }, {
 	        key: 'errorValidate',
 	        value: function errorValidate(text, form) {
+	            this.removeInvalid();
 	            form.insertAdjacentHTML('beforeend', '<p class="a-invalid">' + text + '</p>');
 	            this.stateValidate = false;
 	            return false;
@@ -888,7 +897,7 @@
 				if (!response.data || !response.data.lot) return;
 
 				this.itemCount = response.data.count;
-				this.pretendents = Object.keys(response.data.history).length > 1 && Object.keys(response.data.pretendents).length <= 10 ? true : false;
+				this.pretendents = true; //(Object.keys(response.data.history).length > 1 && Object.keys(response.data.pretendents).length <= 10) ? true : false;
 
 				var template = _template2.default['getCurrentAuction'](response.data.lot, response.data.timer, this.pretendents);
 
@@ -898,8 +907,9 @@
 				this.timerStarted(response.data.timer);
 
 				this.buttonToBuy = document.querySelector('.a-general-goods__description_buy');
+				this.buttonToBuyUpPrice = document.querySelector('.a-general-goods__description_rates_button');
 
-				this.flyEvent('add', ['click'], [this.buttonToBuy], this.baseBuyInitial.bind(this));
+				this.flyEvent('add', ['click'], [this.buttonToBuy, this.buttonToBuyUpPrice], [this.baseBuyInitial.bind(this), this.baseBuyInitialToUpPrice.bind(this)]);
 			}
 		}, {
 			key: 'getAuctions',
@@ -973,9 +983,33 @@
 				}
 			}
 		}, {
+			key: 'baseBuyInitialToUpPrice',
+			value: function baseBuyInitialToUpPrice(event) {
+
+				var target = event && event.target || null;
+
+				if (!target.matches('button') && !this.pretendents) return;
+
+				var buttonPriceArray = target.innerText.match(/\d+/);
+
+				if (buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) > 50 && parseInt(buttonPriceArray[0]) < 502) {
+					$app.socket.upPrice('upPrice', { price: parseInt(buttonPriceArray[0]) }, this.upPrice.bind(this));
+				}
+			}
+		}, {
+			key: 'upPrice',
+			value: function upPrice(response) {
+				this.tryAuthoryze(response);
+			}
+		}, {
 			key: 'baseBuy',
 			value: function baseBuy(response) {
-				if (response && response.data && response.data.error == 401) {
+				this.tryAuthoryze(response);
+			}
+		}, {
+			key: 'tryAuthoryze',
+			value: function tryAuthoryze() {
+				if (response && response.error && response.error == 401) {
 					$app.modalOpen({ target: document.querySelector('.__login_action') });
 				}
 			}
@@ -985,7 +1019,10 @@
 				if (!isNaN(count.value) && count.value < 0 || count.value > this.itemCount) {
 					var elToError = document.querySelector('.a-general-goods__time_to_end');
 					elToError.innerHTML += '<p>Колличесво на складе ' + this.itemCount + '. Вы не можете купить больше!</p>';
+					return false;
 				}
+
+				return true;
 			}
 		}]);
 
@@ -1016,7 +1053,7 @@
 		_createClass(Template, [{
 			key: 'getCurrentAuction',
 			value: function getCurrentAuction(obj, timer, pretendents) {
-				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№1</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now">' + decodeURIComponent(obj.auctionPrice) + ' <span>руб.</span></p>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black">Покупаю</button>' + '<label class="a-type-to"> <input class="a-type-to-count" value="1" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' + '</div>' + '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:' + (timer < 10 ? '0' + timer : timer) + '</span></p>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button ' + (pretendents ? "" : "a-rates-inactive") + '">' + '<button class="a-button-white">+ 1 руб.</button>' + '<button class="a-button-white">+ 10 руб.</button>' + '<button class="a-button-white">+ 100 руб.</button>' + '<button class="a-button-white">+ 500 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
+				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№1</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now">' + decodeURIComponent(obj.auctionPrice) + ' <span>руб.</span></p>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black">Покупаю</button>' + '<label class="a-type-to"> <input class="a-type-to-count" value="1" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' + '</div>' + '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:' + (timer < 10 ? '0' + timer : timer) + '</span></p>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button ' + (pretendents ? "" : "a-rates-inactive") + '">' + '<button class="a-button-white">+ 51 руб.</button>' + '<button class="a-button-white">+ 101 руб.</button>' + '<button class="a-button-white">+ 251 руб.</button>' + '<button class="a-button-white">+ 501 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
 			}
 		}, {
 			key: 'getAuctions',

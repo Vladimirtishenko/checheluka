@@ -20,7 +20,7 @@ module.exports.get = function(req, res, next) {
 
 module.exports.post = function(req, res, next) {
 
-	let configField = Object.keys(req.body)[0],
+	var configField = Object.keys(req.body)[0],
 		configParams = req.body[configField];
 
 

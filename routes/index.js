@@ -3,6 +3,8 @@ var dateToStart = require('../middleware/getDateToStart'),
 
 module.exports.get = function(req, res, next) {
 
+	console.log(req);
+
 	dateToStart(function (err, date) {
 		if(err) next(err);
 

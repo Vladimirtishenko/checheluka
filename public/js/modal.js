@@ -143,6 +143,7 @@ class Modal extends Helper {
     }
 
     errorValidate(text, form){
+        this.removeInvalid();
         form.insertAdjacentHTML('beforeend', '<p class="a-invalid">'+text+'</p>');
         this.stateValidate = false;
         return false;

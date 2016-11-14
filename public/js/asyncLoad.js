@@ -25,7 +25,7 @@ class AsyncLoad extends Helper {
 		if(!response.data || !response.data.lot) return;
 
 		this.itemCount = response.data.count;
-		this.pretendents = (Object.keys(response.data.history).length > 1 && Object.keys(response.data.pretendents).length <= 10) ? true : false;
+		this.pretendents = true; //(Object.keys(response.data.history).length > 1 && Object.keys(response.data.pretendents).length <= 10) ? true : false;
 
 		let template = Template['getCurrentAuction'](response.data.lot, response.data.timer, this.pretendents);
 
@@ -36,9 +36,9 @@ class AsyncLoad extends Helper {
 
 
 		this.buttonToBuy = document.querySelector('.a-general-goods__description_buy');
+		this.buttonToBuyUpPrice = document.querySelector('.a-general-goods__description_rates_button');
 
-
-		this.flyEvent('add', ['click'], [this.buttonToBuy], this.baseBuyInitial.bind(this));
+		this.flyEvent('add', ['click'], [this.buttonToBuy, this.buttonToBuyUpPrice], [this.baseBuyInitial.bind(this), this.baseBuyInitialToUpPrice.bind(this)]);
 
 	}
 
@@ -111,8 +111,34 @@ class AsyncLoad extends Helper {
 
 	}
 
+	baseBuyInitialToUpPrice(event){
+
+		let target = event && event.target || null;
+
+		if(!target.matches('button') && !this.pretendents) return;
+
+
+		let buttonPriceArray = target.innerText.match(/\d+/);
+
+		if(buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) > 50 && parseInt(buttonPriceArray[0]) < 502) {
+			$app.socket.upPrice('upPrice', {price: parseInt(buttonPriceArray[0])}, this.upPrice.bind(this));
+		}
+
+	}
+
+	upPrice(response){
+		this.tryAuthoryze(response)
+
+	}
+
+
 	baseBuy(response){
-		if(response && response.data && response.data.error == 401){
+		this.tryAuthoryze(response)
+		
+	}
+
+	tryAuthoryze(){
+		if(response && response.error && response.error == 401){
 			$app.modalOpen({target: document.querySelector('.__login_action')});
 		}
 	}
@@ -121,7 +147,11 @@ class AsyncLoad extends Helper {
 		if(!isNaN(count.value) && count.value < 0 || count.value > this.itemCount){
 			let elToError = document.querySelector('.a-general-goods__time_to_end');
 			elToError.innerHTML += '<p>Колличесво на складе '+this.itemCount+'. Вы не можете купить больше!</p>';
+			return false;
 		}
+
+		return true;
+
 	}
 
 

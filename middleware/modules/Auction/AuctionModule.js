@@ -5,7 +5,7 @@ function AuctionModule() {
     parent.apply(this, arguments);
     this.started = null;
     this.events = ['startAuction','finishAuction', 'auctionUpdated', 'pretendentAdded'];
-    this.auctionTimer = 5;
+    this.auctionTimer = 300;
     this.upPrice = 50;
 }
 
