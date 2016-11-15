@@ -120,14 +120,16 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
     if (eventName == 'startAuction')
     {
         auction.status = 'started';
+        sended.status = 'started';
         var dateSt = new Date();
         auction.stDateTime = dateSt.toString();
-        this._base_dispatchEvent(eventName, sended);
+        return this._base_dispatchEvent(eventName, sended);
     }
     if (eventName == 'finishAuction')
     {
         var dateFin = new Date();
         auction.status = 'finished';
+        sended.status = 'finished';
         auction.finDateTime = dateFin.toString();
         if (auction.winner && auction.winner._id)
         {
@@ -144,9 +146,10 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
             auctionModel.removeEntity(auction._uid);
             this._base_dispatchEvent(eventName, sended);
         }
+        return;
     }
     else{
-        this._base_dispatchEvent(eventName, sended);
+        return this._base_dispatchEvent(eventName, sended);
     }
 
 };

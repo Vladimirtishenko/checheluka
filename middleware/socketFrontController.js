@@ -67,9 +67,10 @@ socketFrontController.prototype.initStart = function(){
                         auctionModule.startAuction(self.curAuction);
                     }
                 });
+                return;
             }
             else{
-                setTimeout(self.initStart.bind(this),1000*loadProductSleepTime);
+                setTimeout(self.initStart.bind(self),1000*loadProductSleepTime);
             }
         }
         else{
