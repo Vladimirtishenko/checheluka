@@ -48,7 +48,7 @@ function socketFrontController(io){
         //here i change options
         console.log(err);
     });
-    this.initStart();
+    this.productLoad();
 }
 
 socketFrontController.prototype.initStart = function(){
@@ -60,11 +60,11 @@ socketFrontController.prototype.initStart = function(){
         {
             var d = new Date();
             var timeInt = d.getTime();
-            if (conf.params <= timeInt){
+            if (conf.params <= timeInt && self.curAuction){
                 configOptions.updateOption('date', null, function(err, data){
                     if (!err && data)
                     {
-                        self.productLoad();
+                        auctionModule.startAuction(self.curAuction);
                     }
                 });
             }
@@ -73,7 +73,7 @@ socketFrontController.prototype.initStart = function(){
             }
         }
         else{
-            setTimeout(self.initStart.bind(self),1000*loadProductSleepTime);
+            auctionModule.startAuction(self.curAuction);
         }
     });
 }
@@ -244,7 +244,7 @@ socketFrontController.prototype.setProductList = function(event, products){
     else
     {
         this.offset = 0;
-        setTimeout(this.initStart.bind(this),1000*loadProductSleepTime);
+        setTimeout(this.productLoad.bind(this),1000*loadProductSleepTime);
     }
 }
 
@@ -261,7 +261,7 @@ socketFrontController.prototype.setAuctionList = function(products){
     if (typeof keys[0] !== 'undefined' && !auctionModule.getCurrent())
     {
         this.curAuction = this.auctionsPull[keys[0]]._uid;
-        auctionModule.startAuction(this.curAuction);
+        this.initStart();
     }
 }
 
@@ -286,7 +286,8 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     var keys = Object.keys(this.auctionsPull);
     if (typeof keys[0] !== 'undefined')
     {
-        auctionModule.startAuction(this.auctionsPull[keys[0]]._uid);
+        this.curAuction = this.auctionsPull[keys[0]]._uid;
+        this.initStart();
     }
     delete this.productsPull[data.lot._id];
     var keys = Object.keys(this.productsPull);
