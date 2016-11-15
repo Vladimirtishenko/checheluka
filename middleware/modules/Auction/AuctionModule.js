@@ -75,7 +75,7 @@ AuctionModule.prototype.setPretendent = function(uid, user){
 
 AuctionModule.prototype.setCount = function(uid, count, user){
     var auction = auctionModel.getEntity(uid);
-    if (!auction)
+    if (!auction || auction.count == count)
     {
         return false;
     }
@@ -98,7 +98,6 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
     auction.nextPrice = auction.currentPrice + this.upPrice;
     auction.newPretendentInit = true;
     auctionModel.updateTimer(auction, this.auctionTimer);
-    console.log(auction);
     if ( this.setPretendent(uid, user))
     {
         var mess = "Pretendent updated auction - "+auction.lot._id+" price";
@@ -133,7 +132,6 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
         if (auction.winner && auction.winner._id)
         {
             auctionModel.saveToStorage(auction, function(result){
-                console.log(result);
                 if (result)
                 {
                     sended._id = result._id;

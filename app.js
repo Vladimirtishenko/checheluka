@@ -21,8 +21,8 @@ var sessionMiddleware = session({
   saveUninitialized: true,
   cookie: {
     secure: false,
-    expires: new Date(Date.now() + 60 * 1000), //setting cookie to not expire on session end
-    maxAge: 60 * 1000,
+    expires: new Date(Date.now() + 60 * 1000 * 24), //setting cookie to not expire on session end
+    maxAge: 60 * 1000 * 24, //one day
     key: 'connect.sid'
   }
 });
@@ -55,7 +55,6 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 require('./routes/routs')(app);

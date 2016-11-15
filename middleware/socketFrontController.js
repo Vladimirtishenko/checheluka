@@ -6,7 +6,7 @@ var auctionModule = new aucMod();
 var productsModule = new prodModule();
 var usersModule = new usersClass();
 var ordersModule = new orderClass();
-var cookie = require('cookie');
+var configOptions = require('./services/configOptions');
 var socketClient = require('./services/socketClient');
 var loadProductSleepTime = 5; // if product did not loaded server slepp for $ sec
 
@@ -26,6 +26,7 @@ function socketFrontController(io){
     this.productsPull = {};
     this.auctionsPull = {};
     this.curAuction = null;
+    this.isTimeToStart = false;
     productsModule.setListenere("productsLoaded",this.setProductList.bind(this));
     auctionModule.setListenere("finishAuction",this.sendNotifyThatAuctionFinished.bind(this));
     auctionModule.setListenere("auctionUpdated",this.notifyAuctionUpdated.bind(this));
@@ -47,7 +48,34 @@ function socketFrontController(io){
         //here i change options
         console.log(err);
     });
-    this.productLoad();
+    this.initStart();
+}
+
+socketFrontController.prototype.initStart = function(){
+    var self = this;
+    configOptions.getOption('date', function(err, conf){
+        console.log('get options');
+        console.log(err, conf);
+        if (conf && conf.params)
+        {
+            var d = new Date();
+            var timeInt = d.getTime();
+            if (conf.params <= timeInt){
+                configOptions.updateOption('date', null, function(err, data){
+                    if (!err && data)
+                    {
+                        self.productLoad();
+                    }
+                });
+            }
+            else{
+                setTimeout(self.initStart.bind(this),1000*loadProductSleepTime);
+            }
+        }
+        else{
+            setTimeout(self.initStart.bind(self),1000*loadProductSleepTime);
+        }
+    });
 }
 
 socketFrontController.prototype.login = function(client, data){
@@ -189,6 +217,7 @@ socketFrontController.prototype.createError = function(code, message){
 };
 
 socketFrontController.prototype.productLoad = function(){
+    console.log('product load');
     var limit = this.limit;
     var keys = Object.keys(this.productsPull);
     if (keys.length)
@@ -215,7 +244,7 @@ socketFrontController.prototype.setProductList = function(event, products){
     else
     {
         this.offset = 0;
-        setTimeout(this.productLoad.bind(this),1000*loadProductSleepTime);
+        setTimeout(this.initStart.bind(this),1000*loadProductSleepTime);
     }
 }
 

@@ -29,9 +29,13 @@ socketClient.prototype.setUserData = function(data){
     if(this.socket.request.session)
     {
         this.socket.request.session.user = data;
-        this.socket.request.session.save(function(err,data) {
-            //TODO:: error handling
-        });
+        if (data && data.pass)
+        {
+            delete data.pass;
+            this.socket.request.session.save(function(err,data) {
+                //TODO:: error handling
+            });
+        };
     }
 }
 

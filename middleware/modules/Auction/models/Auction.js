@@ -57,7 +57,6 @@ Auction.prototype.saveToStorage = function(entity, callback)
     };
     this.dataProvider.create(data,function(err, result){
         if(err) return callback(false);
-        console.log(err, result);
         return callback(result);
     });
     return;

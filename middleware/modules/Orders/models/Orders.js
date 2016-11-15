@@ -18,7 +18,6 @@ Orders.prototype = Object.create(parent.prototype);
 Orders.prototype.saveToStorage = function(entity, callback)
 {
     this.dataProvider.create(entity,function(err){
-        console.log(err);
         if(err) return callback(false);
         return callback(true);
     });

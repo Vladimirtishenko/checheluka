@@ -42,7 +42,6 @@ class Sockets extends Helper {
 				this.socket.emit('baseBuy', {auction_id: mess.data._uid});
 			}*/
 		});
-		this.socket.emit('login', {email: "test@emailtest", pass:"123"});
 	}
 
 	setRegisteredCallback(action, callback){
