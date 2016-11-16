@@ -84,10 +84,16 @@ class Sockets extends Helper {
 	baseBuy(action, data, callback){
 		this.setRegisteredCallback(action, callback);
 
-		this.socket.emit(action, data);
+		this.socket.emit(action);
 	}
 
 	upPrice(action, data, callback){
+		this.setRegisteredCallback(action, callback);
+
+		this.socket.emit(action, data);
+	}
+
+	upCount(action, data, callback){
 		this.setRegisteredCallback(action, callback);
 
 		this.socket.emit(action, data);

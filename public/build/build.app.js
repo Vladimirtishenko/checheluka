@@ -176,7 +176,6 @@
 	   	this.socket.emit('baseBuy', {auction_id: mess.data._uid});
 	   }*/
 			});
-			_this.socket.emit('login', { email: "test@emailtest", pass: "123" });
 			return _this;
 		}
 
@@ -224,11 +223,18 @@
 			value: function baseBuy(action, data, callback) {
 				this.setRegisteredCallback(action, callback);
 
-				this.socket.emit(action, data);
+				this.socket.emit(action);
 			}
 		}, {
 			key: 'upPrice',
 			value: function upPrice(action, data, callback) {
+				this.setRegisteredCallback(action, callback);
+
+				this.socket.emit(action, data);
+			}
+		}, {
+			key: 'upCount',
+			value: function upCount(action, data, callback) {
 				this.setRegisteredCallback(action, callback);
 
 				this.socket.emit(action, data);
@@ -915,7 +921,7 @@
 			key: 'getAuctions',
 			value: function getAuctions(response) {
 
-				if (!response.data) return;
+				if (!response.data || Object.keys(response.data).length == 0) return;
 				var keys = Object.keys(response.data);
 				if (keys.length > 3) {
 					this.getCurrentAuction(response.data[keys[0]]);
@@ -976,10 +982,18 @@
 
 				var count = document.querySelector('.a-type-to-count');
 
-				if (event && event.target && this.buyAction && count && this.auctionValidate(count)) {
+				if (!event && !event.target) return;
+
+				if (count > 2) {
 					this.buyAction = false;
 					this.buttonToBuy.classList.add('a-inactive');
-					$app.socket.baseBuy('baseBuy', { count: count.value }, this.baseBuy.bind(this));
+					$app.socket.baseBuy('upCount', { count: count.value }, this.baseBuy.bind(this));
+				}
+
+				if (this.buyAction && count && this.auctionValidate(count)) {
+					this.buyAction = false;
+					this.buttonToBuy.classList.add('a-inactive');
+					$app.socket.baseBuy('baseBuy', this.baseBuy.bind(this));
 				}
 			}
 		}, {

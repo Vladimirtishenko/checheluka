@@ -1,18 +1,17 @@
 var mongoose = require('../../lib/mongoose'),
-	configOptions = require('../../middleware/services/configOptions'),
-    variables = require('../../middleware/variablesHelper');
+	configOptions = require('../../middleware/services/configOptions');
 
 
 module.exports.get = function(req, res, next) {
 
-	configOptions.getOptions(function(err, doc) {
+	configOptions.getOptions(function(err, result) {
         if (err) next(err);
 
-        var params = variables(doc);
+        console.log(result.params)
 
         res.render('index_config', {
             title: "Checheluka Admin",
-            variables: params
+            params: result.params
         });
     })
 }

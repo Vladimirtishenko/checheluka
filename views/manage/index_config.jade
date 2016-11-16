@@ -11,7 +11,7 @@ block content
 				.a-outer-calendar
 					p.a-startet-date
 						| Дата начала: 
-						- var date = (+variables.date) ? new Date(+variables.date) : null;
+						- var date = (+params) ? new Date(+params) : null;
 						- var dateParse = (date instanceof Date) ? (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) : "Не определена"
 						span= dateParse
 				.a-calendar
