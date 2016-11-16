@@ -13,15 +13,37 @@ class Timer extends Helper {
 	}
 
 	createTimer(){
-		if(!this.attr || !(+this.attr)){
-			this.removed.innerHTML = "Дата начала не определена..."
+		if(!this.attr || this.attr == null){
+			this.removed.innerHTML = "Аукцион начался..."
 		} else {
 			this.estimate = new Date(+this.attr);
-			this.startTimer();
+
+			this.tryTime();
+			
 		}
 	}
 
+	tryTime(){
+
+		if(Date.parse(new Date()) >= Date.parse(this.estimate)){
+			
+			this.el.innerHTML = '<p> До начала аукциона осталось: </p>' +
+								'<i class="a-replaced-time-container"> Аукцион начался</i>';
+
+			try {
+				clearInterval(this.timerGlobal);
+			} catch(e){}
+
+			return false;
+
+		} else {
+			this.startTimer();
+		}
+
+	}
+
 	startTimer(){
+
 		let date = Date.parse(this.estimate) - Date.parse(new Date()),
 			dateString = {
 				seconds: Math.floor( (date/1000) % 60 ),
@@ -41,14 +63,17 @@ class Timer extends Helper {
 		}
 
 
-		setTimeout(() => {
-			this.startTimer();
+		this.timerGlobal = setTimeout(() => {
+			this.tryTime();
 		}, 1000)
 
 	}
 
 	createTime(dateString){
-		this.span.innerHTML = ((dateString.days) ? dateString.days + '<mark>дней</mark>' : '') + dateString.hours+':'+dateString.minutes+':'+(dateString.seconds < 10 ? '0' + dateString.seconds : dateString.seconds);
+		this.span.innerHTML = ((dateString.days) ? dateString.days + '<mark>дней</mark>' : '') + 
+								(dateString.hours < 10 ? '0' + dateString.hours : dateString.hours) + ':' +
+								(dateString.minutes < 10 ? '0' + dateString.minutes : dateString.minutes) + ':' +
+								(dateString.seconds < 10 ? '0' + dateString.seconds : dateString.seconds);
 	}
 
 }

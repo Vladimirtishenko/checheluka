@@ -220,7 +220,7 @@
 			}
 		}, {
 			key: 'baseBuy',
-			value: function baseBuy(action, data, callback) {
+			value: function baseBuy(action, callback) {
 				this.setRegisteredCallback(action, callback);
 
 				this.socket.emit(action);
@@ -361,6 +361,8 @@
 	        key: "cssHelper",
 	        value: function cssHelper(el, styles) {
 
+	            if (!el || !styles) return;
+
 	            if (el.length != styles.length) {
 	                throw {
 	                    message: "The number of elements does not match"
@@ -458,7 +460,7 @@
 	        _this.stateValidate = true;
 	        _this.flyEvent('add', ['click'], [button, _this.close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
 	        _this.flyEvent('add', ['submit'], [formAll], _this.sendForm.bind(_this));
-	        _this.flyEvent('add', ['keypress'], [formAll], _this.removeInvalid);
+	        _this.flyEvent('add', ['keypress'], [formAll], _this.removeInvalid.bind(_this));
 
 	        $app.modalOpen = _this.modalHandlerIn.bind(_this);
 
@@ -481,7 +483,7 @@
 	        key: 'modalHandlerOut',
 	        value: function modalHandlerOut(event) {
 
-	            var target = event && event.target ? event && event.target : null;
+	            var target = event && event.target || null;
 	            if (!target) return;
 
 	            this.animationEvent = this.transitionEnd.bind(this, target);
@@ -497,6 +499,7 @@
 	        key: 'transitionEnd',
 	        value: function transitionEnd(targets, event) {
 	            var target = event && event.target;
+
 	            this.classChange(['-animate-modal-in', '-animate-modal-out'], 'remove', [target]);
 
 	            this.cssHelper([targets.parentNode], ["display: none"]);
@@ -592,6 +595,8 @@
 	                }
 	            }
 
+	            console.log(this.stateValidate);
+
 	            if (this.stateValidate) {
 	                try {
 	                    $app.socket.authorize(action, formData, this.afterResponseAuthorize.bind(this, target));
@@ -609,7 +614,7 @@
 	                this.errorValidate('Такой пользователь уже есть в системе!', target);
 	                return;
 	            }
-	            this.modalHandlerOut({ target: this.close });
+	            this.modalHandlerOut({ target: target.parentNode.querySelector('.a-modal-close') });
 	        }
 	    }, {
 	        key: 'validate',
@@ -632,16 +637,17 @@
 	    }, {
 	        key: 'errorValidate',
 	        value: function errorValidate(text, form) {
-	            this.removeInvalid();
+	            this.removeInvalid({ target: form });
 	            form.insertAdjacentHTML('beforeend', '<p class="a-invalid">' + text + '</p>');
 	            this.stateValidate = false;
 	            return false;
 	        }
 	    }, {
 	        key: 'removeInvalid',
-	        value: function removeInvalid() {
+	        value: function removeInvalid(event) {
 	            try {
-	                this.removeChild(this.querySelector('.a-invalid'));
+	                var form = event.target.closest('form') || event.target.matches('form');
+	                form.removeChild(form.querySelector('.a-invalid'));
 	                this.stateValidate = true;
 	            } catch (e) {}
 	        }
@@ -974,27 +980,38 @@
 		}, {
 			key: 'actionStarted',
 			value: function actionStarted(response) {
+				var timer = document.querySelector('.a-time-to-start');
+
 				this.getCurrentAuction(response);
 			}
 		}, {
 			key: 'baseBuyInitial',
 			value: function baseBuyInitial(event) {
 
-				var count = document.querySelector('.a-type-to-count');
+				var countAttr = document.querySelector('.a-type-to-count'),
+				    count = isNaN(parseInt(countAttr)) ? 1 : parseInt(count);
 
-				if (!event && !event.target) return;
+				if (!event || !event.target || !this.buyAction) return;
 
-				if (count > 2) {
-					this.buyAction = false;
-					this.buttonToBuy.classList.add('a-inactive');
-					$app.socket.baseBuy('upCount', { count: count.value }, this.baseBuy.bind(this));
-				}
+				this.auctionDisabled();
 
-				if (this.buyAction && count && this.auctionValidate(count)) {
-					this.buyAction = false;
-					this.buttonToBuy.classList.add('a-inactive');
+				if (count > this.itemCount) {
+					$app.socket.upCount('upCount', { count: count.value }, this.upCount.bind(this));
+				} else {
 					$app.socket.baseBuy('baseBuy', this.baseBuy.bind(this));
 				}
+			}
+		}, {
+			key: 'auctionDisabled',
+			value: function auctionDisabled() {
+				this.buyAction = false;
+				this.buttonToBuy.classList.add('a-inactive');
+			}
+		}, {
+			key: 'auctionEnabled',
+			value: function auctionEnabled() {
+				this.buyAction = true;
+				this.buttonToBuy.classList.remove('a-inactive');
 			}
 		}, {
 			key: 'baseBuyInitialToUpPrice',
@@ -1013,18 +1030,33 @@
 		}, {
 			key: 'upPrice',
 			value: function upPrice(response) {
-				this.tryAuthoryze(response);
+				console.log(response);
+				if (!this.tryAuthoryze(response)) {
+					this.auctionEnabled();
+				}
+			}
+		}, {
+			key: 'upCount',
+			value: function upCount(response) {
+				console.log(response);
+				if (!this.tryAuthoryze(response)) {
+					this.auctionEnabled();
+				}
 			}
 		}, {
 			key: 'baseBuy',
 			value: function baseBuy(response) {
-				this.tryAuthoryze(response);
+				console.log(response);
+				if (!this.tryAuthoryze(response)) {
+					this.auctionEnabled();
+				}
 			}
 		}, {
 			key: 'tryAuthoryze',
-			value: function tryAuthoryze() {
-				if (response && response.error && response.error == 401) {
+			value: function tryAuthoryze(response) {
+				if (response && response.error && response.error.errorCode == 401) {
 					$app.modalOpen({ target: document.querySelector('.__login_action') });
+					return false;
 				}
 			}
 		}, {
@@ -1218,10 +1250,28 @@
 		_createClass(Timer, [{
 			key: 'createTimer',
 			value: function createTimer() {
-				if (!this.attr || !+this.attr) {
-					this.removed.innerHTML = "Дата начала не определена...";
+				if (!this.attr || this.attr == null) {
+					this.removed.innerHTML = "Аукцион начался...";
 				} else {
 					this.estimate = new Date(+this.attr);
+
+					this.tryTime();
+				}
+			}
+		}, {
+			key: 'tryTime',
+			value: function tryTime() {
+
+				if (Date.parse(new Date()) >= Date.parse(this.estimate)) {
+
+					this.el.innerHTML = '<p> До начала аукциона осталось: </p>' + '<i class="a-replaced-time-container"> Аукцион начался</i>';
+
+					try {
+						clearInterval(this.timerGlobal);
+					} catch (e) {}
+
+					return false;
+				} else {
 					this.startTimer();
 				}
 			}
@@ -1248,14 +1298,14 @@
 					this.createTime(dateString);
 				}
 
-				setTimeout(function () {
-					_this2.startTimer();
+				this.timerGlobal = setTimeout(function () {
+					_this2.tryTime();
 				}, 1000);
 			}
 		}, {
 			key: 'createTime',
 			value: function createTime(dateString) {
-				this.span.innerHTML = (dateString.days ? dateString.days + '<mark>дней</mark>' : '') + dateString.hours + ':' + dateString.minutes + ':' + (dateString.seconds < 10 ? '0' + dateString.seconds : dateString.seconds);
+				this.span.innerHTML = (dateString.days ? dateString.days + '<mark>дней</mark>' : '') + (dateString.hours < 10 ? '0' + dateString.hours : dateString.hours) + ':' + (dateString.minutes < 10 ? '0' + dateString.minutes : dateString.minutes) + ':' + (dateString.seconds < 10 ? '0' + dateString.seconds : dateString.seconds);
 			}
 		}]);
 

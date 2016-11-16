@@ -186,6 +186,8 @@
 	        key: "cssHelper",
 	        value: function cssHelper(el, styles) {
 
+	            if (!el || !styles) return;
+
 	            if (el.length != styles.length) {
 	                throw {
 	                    message: "The number of elements does not match"

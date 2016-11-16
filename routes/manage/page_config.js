@@ -4,11 +4,8 @@ var mongoose = require('../../lib/mongoose'),
 
 module.exports.get = function(req, res, next) {
 
-	configOptions.getOptions(function(err, result) {
+	configOptions.getOption('date', function(err, result) {
         if (err) next(err);
-
-        console.log(result.params)
-
         res.render('index_config', {
             title: "Checheluka Admin",
             params: result.params

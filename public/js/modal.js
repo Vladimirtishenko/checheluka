@@ -11,7 +11,7 @@ class Modal extends Helper {
         this.stateValidate = true;
         this.flyEvent('add', ['click'], [button, this.close, formChange], [this.modalHandlerIn.bind(this), this.modalHandlerOut.bind(this), this.changeForm.bind(this)]);
         this.flyEvent('add', ['submit'], [formAll], this.sendForm.bind(this));
-        this.flyEvent('add', ['keypress'], [formAll], this.removeInvalid);
+        this.flyEvent('add', ['keypress'], [formAll], this.removeInvalid.bind(this));
 
        $app.modalOpen = this.modalHandlerIn.bind(this);
         
@@ -32,7 +32,7 @@ class Modal extends Helper {
 
     modalHandlerOut(event) {
 
-        let target = event && event.target ? event && event.target : null
+        let target = event && event.target || null
          if (!target) return;
 
         this.animationEvent = this.transitionEnd.bind(this, target);
@@ -47,6 +47,7 @@ class Modal extends Helper {
 
     transitionEnd(targets, event) {
         let target = event && event.target;
+
         this.classChange(['-animate-modal-in', '-animate-modal-out'], 'remove', [target]);
 
         this.cssHelper([targets.parentNode], ["display: none"]);
@@ -101,6 +102,8 @@ class Modal extends Helper {
             }
         }
 
+        console.log(this.stateValidate);
+
         if(this.stateValidate){
             try{
                 $app.socket.authorize(action, formData, this.afterResponseAuthorize.bind(this, target));
@@ -119,7 +122,7 @@ class Modal extends Helper {
             this.errorValidate('Такой пользователь уже есть в системе!', target);
             return;
         }
-        this.modalHandlerOut( {target: this.close} );
+        this.modalHandlerOut( {target: target.parentNode.querySelector('.a-modal-close')} );
 
    }
 
@@ -143,15 +146,16 @@ class Modal extends Helper {
     }
 
     errorValidate(text, form){
-        this.removeInvalid();
+        this.removeInvalid({target: form});
         form.insertAdjacentHTML('beforeend', '<p class="a-invalid">'+text+'</p>');
         this.stateValidate = false;
         return false;
     }
 
-    removeInvalid(){
+    removeInvalid(event){
         try{
-            this.removeChild(this.querySelector('.a-invalid'));
+            let form = event.target.closest('form') || event.target.matches('form');
+            form.removeChild(form.querySelector('.a-invalid'));
             this.stateValidate = true;
         } catch(e){}
     }

@@ -96,27 +96,36 @@ class AsyncLoad extends Helper {
 
 
 	actionStarted(response){
+		let timer = document.querySelector('.a-time-to-start');
+
 		this.getCurrentAuction(response);
 	}
 
 	baseBuyInitial(event){
 
-		let count = document.querySelector('.a-type-to-count');
+		let countAttr = document.querySelector('.a-type-to-count'),
+			count = isNaN(parseInt(countAttr)) ? 1 : parseInt(count);
 
-		if(!event && !event.target) return;
+		if(!event || !event.target || !this.buyAction) return;
 
-		if(count > 2){
-			this.buyAction = false;
-			this.buttonToBuy.classList.add('a-inactive');
-			$app.socket.baseBuy('upCount', {count: count.value}, this.baseBuy.bind(this));
-		}
+		this.auctionDisabled();
 
-		if(this.buyAction && count && this.auctionValidate(count)){
-			this.buyAction = false;
-			this.buttonToBuy.classList.add('a-inactive');
+		if(count > this.itemCount){
+			$app.socket.upCount('upCount', {count: count.value}, this.upCount.bind(this));
+		} else {
 			$app.socket.baseBuy('baseBuy', this.baseBuy.bind(this));
 		}
 
+	}
+
+	auctionDisabled(){
+		this.buyAction = false;
+		this.buttonToBuy.classList.add('a-inactive');
+	}
+
+	auctionEnabled(){
+		this.buyAction = true;
+		this.buttonToBuy.classList.remove('a-inactive');
 	}
 
 	baseBuyInitialToUpPrice(event){
@@ -135,19 +144,33 @@ class AsyncLoad extends Helper {
 	}
 
 	upPrice(response){
-		this.tryAuthoryze(response)
+		console.log(response);
+		if(!this.tryAuthoryze(response)){
+			this.auctionEnabled();
+		}
 
+	}
+
+	upCount(response){
+		console.log(response);
+		if(!this.tryAuthoryze(response)){
+			this.auctionEnabled();
+		}
 	}
 
 
 	baseBuy(response){
-		this.tryAuthoryze(response)
+		console.log(response);
+		if(!this.tryAuthoryze(response)){
+			this.auctionEnabled();
+		}
 		
 	}
 
-	tryAuthoryze(){
-		if(response && response.error && response.error == 401){
+	tryAuthoryze(response){
+		if(response && response.error && response.error.errorCode == 401){
 			$app.modalOpen({target: document.querySelector('.__login_action')});
+			return false;
 		}
 	}
 
