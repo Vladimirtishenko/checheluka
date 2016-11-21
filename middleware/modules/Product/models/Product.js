@@ -57,7 +57,7 @@ Product.prototype.saveToStorage = function(entity, action, callback)
     }
     if (action == 'update')
     {
-        this.dataProvider.update({_id: entity._id},entity,function(err, prod) {
+        this.dataProvider.update({_id: entity._id}, entity,function(err, prod) {
             if(err) return callback(err);
             return callback(entity);
         });

@@ -16,6 +16,7 @@ AuctionModule.prototype.createAuction = function(product, basePrice){
     var data = {
         lot: product,
         basePrice: basePrice,
+        price: basePrice,
         currentPrice: basePrice,
         nextPrice: basePrice + this.upPrice,
         count: 1
@@ -26,6 +27,7 @@ AuctionModule.prototype.setToExpired = function(auction){
     var predKeys = Object.keys(auction.pretendents);
     if (predKeys.length > 0 && auction.newPretendentInit === false)
     {
+        auction.price = auction.currentPrice;
         auction.currentPrice = auction.nextPrice;
         auction.nextPrice += this.upPrice;
         auction.newPretendentInit = true;
@@ -94,6 +96,7 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
     {
         return false;
     }
+    auction.price = price;
     auction.currentPrice = price;
     auction.nextPrice = auction.currentPrice + this.upPrice;
     auction.newPretendentInit = true;

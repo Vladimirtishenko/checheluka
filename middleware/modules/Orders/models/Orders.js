@@ -10,6 +10,9 @@ function Orders() {
         userId: null,
         auctionId: null,
         createdDate: new Date(),
+        finalePrice: 0,
+        count: 0,
+        product: {},
         status: 'new'
     }
 }

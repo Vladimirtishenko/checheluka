@@ -270,20 +270,19 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     this.sendToAll(this.createMessage('auctionFinished', data));
     if (data.winner && data.winner._id)
     {
+        var prod = this.productsPull[data.lot._id];
+        prod = JSON.parse(JSON.stringify(prod));
         var updata = {
             _id: data.lot._id,
             countInWarehouse: data.lot.countInWarehouse - data.count
         };
-        productsModule.setListenere("productsLoaded",function(res)
+        productsModule.setListenere("productUpdated",function(event, product)
         {
             console.log('Product updated');
             ordersModule.createOrder(
                 data.winner._id, 
                 data._id,
-                data.lot._id,
-                data.lot.src,
-                data.lot.size,
-                data.lot.title,
+                prod,
                 data.count,
                 data.finalePrice
             );

@@ -4,7 +4,7 @@ var productModel = new productClass();
 var http = require('http');
 function ProductModule() {
     parent.apply(this, arguments);
-    this.events = ['productsLoaded','productCreated'];
+    this.events = ['productsLoaded','productCreated', 'productUpdated'];
 }
 
 ProductModule.prototype = Object.create(parent.prototype);

@@ -12,6 +12,7 @@ function User() {
         uname: '',
         email: '',
         city: '',
+        role: 'customer',
         pass: ''
     }
 }

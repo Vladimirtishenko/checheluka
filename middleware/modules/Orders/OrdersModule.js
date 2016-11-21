@@ -12,14 +12,11 @@ OrdersModule.prototype = Object.create(parent.prototype);
 OrdersModule.prototype.constructor = OrdersModule;
 
 
-OrdersModule.prototype.createOrder = function(userID, auctionID, lotId, lotSrc, lotSize, lotTitle, lotCount, lotPrice) {
+OrdersModule.prototype.createOrder = function(userID, auctionID, prod, lotCount, lotPrice) {
     var order = ordertModel.createEntity({
             userId: userID,
             auctionId: auctionID,
-            productId: lotId,
-            image: lotSrc,
-            size: lotSize,
-            title: lotTitle,
+            product: prod,
             count: lotCount,
             finalePrice: lotPrice
         }

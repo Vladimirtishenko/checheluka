@@ -6,6 +6,7 @@ var schema = mongoose.Schema({
     uname: String,
     email: {type: String, unique: true},
     city: String,
+    role: {type: String, default: 'customer'},
     pass: String
 }, { collection: 'users' });
 // Model

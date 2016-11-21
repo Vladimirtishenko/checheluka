@@ -21,8 +21,8 @@ var sessionMiddleware = session({
   saveUninitialized: true,
   cookie: {
     secure: false,
-    expires: new Date(Date.now() + 60 * 1000 * 24), //setting cookie to not expire on session end
-    maxAge: 60 * 1000 * 24, //one day
+    expires: new Date(Date.now() + 3600 * 1000 * 24), //setting cookie to not expire on session end
+    maxAge: 3600 * 1000 * 24, //one day
     key: 'connect.sid'
   }
 });
