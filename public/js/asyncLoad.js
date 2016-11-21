@@ -30,7 +30,7 @@ class AsyncLoad extends Helper {
 		this.currentPrice = response.data.currentPrice;
 		this.butonsDefferent = ($app.local.gets('id') == this.auctionId) && (this.currentPrice == $app.local.gets('price')) ? true : false;
 		this.pretendentsAuction = response.data.pretendents;
-		this.pretendents = true; //(Object.keys(response.data.history).length > 1 && Object.keys(response.data.pretendents).length <= 10) ? true : false;
+		this.pretendents = Object.keys(response.data.pretendents).length <= 10 ? true : false;
 
 
 		if(response.data.status != 'started'){
