@@ -47,6 +47,8 @@ Auction.prototype.saveToStorage = function(entity, callback)
 {
     var data = {
         productId: entity.lot._id,
+        image: entity.lot.src,
+        title: entity.lot.title,
         finalePrice: entity.currentPrice,
         status: entity.status,
         winnerUserId: (entity.winner && entity.winner._id) ? entity.winner._id : null,

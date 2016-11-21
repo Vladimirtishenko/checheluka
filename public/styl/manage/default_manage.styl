@@ -132,7 +132,23 @@ input[type="text"]
   background #fff 
   padding 10px
 
+table
+  border 1px solid fontg
+  width 100%
 
+th
+  background greys
+  font-weight 400
+  padding 10px
+  text-align left
+  font-family HelveticaLight
+  border 1px solid fontg
+  
+td 
+  border 1px solid fontg
+  padding 10px
+  font-family HelveticaLight
+  
 .a-button-white
   background rgba(0,0,0,0)
   border 2px solid #000
@@ -462,3 +478,88 @@ input[type="text"]
   padding-top 20px
   font-family HelveticaThin
   font-size 20px
+  
+.a-privat-table_bought
+  width w
+  margin 0 auto
+  position relative
+  &:nth-child(2n + 2):after 
+    content ""
+    position absolute
+    width 100px
+    height 100px
+    background url('../../img/sprite.png') -483px -293px
+    left -102px
+  
+.a-privat-table_bought__number
+  display flex 
+  align-items center
+  justify-content space-between
+  padding 14px
+  background greys
+  border-bottom 2px solid #000
+  
+.a-privat-table_bought__number p 
+  font-family HelveticaRoman
+  font-size 14px
+  
+.a-privat-table_bought__number p span 
+  font-family HelveticaRoman
+  color fontg 
+
+.a-privat-table__bought
+  margin 20px 0
+  
+.a-privat-table_bought .a-privat-table__count_and_price p span
+  font-family HelveticaRoman
+  color fontg 
+  font-size 14px
+
+.a-privat-main .a-time-to-start
+  display none
+  
+.a-data-order
+  width 100%
+  
+.a-privat-table__orders
+  display flex
+  justify-content space-between
+  
+.a-privat-table__info_order
+  width 50%
+
+.a-privat-table__user
+  width 50%
+  padding-left 20px
+  
+.a-privat-table_bought h5
+  padding 10px
+  font-family HelveticaLight
+  
+.a-privat-table__user p
+  padding 5px
+  font-family HelveticaLight
+  
+.a-privat-table__user span
+  color greys
+  font-family HelveticaLight
+  
+.a-privat-table__changed
+  padding 10px 30px 
+  border none
+  margin-right 10px
+
+.a-privat-table__submit
+  padding 13px 20px 10px
+  border none
+  font-family HelveticaLight
+  cursor pointer
+  
+.a-status-orders
+  font-size 16px
+  font-family HelveticaLight
+  
+.a-status-orders span
+  color fontg
+  font-size 16px
+  font-family HelveticaLight

@@ -1,94 +1,140 @@
 extends layout
 
 block content
-	section.a-main.a-privat-main
-		include header.jade
-		include chat.jade
-		.a-backgroung-general-goods.a-privat-block-top
-			.a-general-goods.__in_flex_wrap.__background_left
-				span.a-triangle__pseudo
-				h1.a-head-font-left-side.__in_flex Не оплаченные заказы
-				.a-privat-table
-					.a-privat-table__image_block
-						img(src="/img/16.jpg", alt="")
-						p 
-							span №22
-							| Красивая шапочка и девушка в подарок
-					.a-privat-table__count_and_price
-						p Колличество
-							span 2 шт.
-						p Стоимость
-							span 22 000 руб.
-				.a-privat-table
-					.a-privat-table__image_block
-						img(src="/img/2.jpg", alt="")
-						p 
-							span №23
-							| Красивая шапочка и девушка в подарок
-					.a-privat-table__count_and_price
-						p Колличество
-							span 1 шт.
-						p Стоимость
-							span 1000 руб.
-				.a-privat-price-to-change
-					.a-privat-table__all-price
-						p.a-privat-table__all-price_text Общая стоимость:
-						p.a-privat-table__all-price_price 1000 руб.
-					.a-privat-table__all-price
-						button.a-button-black
-							| Оформить заказ
+	section.a-main.a-privat-main.a-flexed-block-main
+		.a-flexed-block-main__item
+			include header.jade
+			.a-privat-block-top
+				.a-general-goods.__in_flex_wrap.__background_left
+					span.a-triangle__pseudo
+					- if (data && data.length > 0) 
+						h1.a-head-font-left-side.__in_flex Корзина
+						- var allcount = 0;
+						form.a-data-order
+							each item, i in data
+								- allcount += item.finalePrice * item.count
+								.a-privat-table
+									.a-privat-table__image_block
+										- var img = decodeURIComponent(item.image)
+										img(src=img, alt="")
+										- var title = decodeURIComponent(item.title)
+										p 
+											| #{title}
+									.a-privat-table__count_and_price
+										p Колличество
+											span #{item.count} 
+												| шт.
+										p Стоимость
+											span #{item.finalePrice * item.count}
+												| руб.
+									input(type="hidden" data-id=item.productId data-count=item.count 	data-price=item.finalePrice * item.count data-title=title data-size=item.size data-image=img)
+						.a-privat-price-to-change
+							.a-privat-table__all-price
+								p.a-privat-table__all-price_text Общая стоимость:
+								p.a-privat-table__all-price_price #{allcount} 
+									| руб.
+							.a-privat-table__all-price
+								button.a-button-black.a-button-to-submits-order(data-attr="order")
+									| Оформить заказ
+					- else
+						h1.a-head-font-left-side.__in_flex Нет заказов
+			- if (ordersUnpaid)
+				h1.a-head-font-left-side Не оплаченные заказы
+				each orderBase in ordersUnpaid
+					.a-privat-table_bought
+						.a-privat-table_bought__number
+							- var date = orderBase.date.getDate() + "/" + orderBase.date.getMonth() + "/" + orderBase.date.getFullYear();
+							p 
+								span Заказ 
+								| №
+								| #{orderBase.orderNumber} 
+								span от 
+								| #{date} 
+							p На сумму: 
+								span #{orderBase.priceCommon} 
+									| руб.
+						-var ob = orderBase.goods;
+						-for(var prop in ob)
+							.a-privat-table.a-privat-table__bought
+								.a-privat-table__image_block
+									img(src=ob[prop].image, alt="")
+									p 
+										span 
+											| размер:
+											| #{ob[prop].size} 
+										| #{ob[prop].title}
+								.a-privat-table__count_and_price
+									p Колличество
+										span #{ob[prop].count}
+											| шт.
+									p Стоимость
+										span #{ob[prop].price}
+											| руб.
+				
 
-		h1.a-head-font-left-side Оплаченные заказы
-		.a-privat-table_bought
-			.a-privat-table_bought__number
-				p 
-					span Заказ 
-					| №10 
-					span от 
-					| 12.10.2016
-				p На сумму: 
-					span 22 000 руб.
-			.a-privat-table.a-privat-table__bought
-				.a-privat-table__image_block
-					img(src="/img/16.jpg", alt="")
-					p 
-						span №22
-						| Красивая шапочка и девушка в подарок
-				.a-privat-table__count_and_price
-					p Колличество
-						span 2 шт.
-					p Стоимость
-						span 22 000 руб.
-			.a-privat-table
-				.a-privat-table__image_block
-					img(src="/img/2.jpg", alt="")
-					p 
-						span №23
-						| Красивая шапочка и девушка в подарок
-				.a-privat-table__count_and_price
-					p Колличество
-						span 1 шт.
-					p Стоимость
-						span 1000 руб.
-		.a-privat-table_bought
-			.a-privat-table_bought__number
-				p 
-					span Заказ 
-					| №10 
-					span от 
-					| 12.10.2016
-				p На сумму: 
-					span 1 000 руб.
-			.a-privat-table.a-privat-table__bought
-				.a-privat-table__image_block
-					img(src="/img/10.jpg", alt="")
-					p 
-						span №22
-						| Красивая шапочка и девушка в подарок
-				.a-privat-table__count_and_price
-					p Колличество
-						span 2 шт.
-					p Стоимость
-						span 22 000 руб.
+			- if(ordersPaid)
+				h1.a-head-font-left-side Оплаченные заказы
+				each itemP in ordersPaid
+					.a-privat-table_bought
+						.a-privat-table_bought__number
+							- var date = itemP.date.getDate() + "/" + itemP.date.getMonth() + "/" + itemP.date.getFullYear();
+							p 
+								span Заказ 
+								| №
+								| #{itemP.orderNumber} 
+								span от 
+								| #{date} 
+							p На сумму: 
+								span #{itemP.priceCommon} 
+									| руб.
+						-var ob = itemP.goods;
+						-for(var prop in ob)
+							.a-privat-table.a-privat-table__bought
+								.a-privat-table__image_block
+									img(src=ob[prop].image, alt="")
+									p 
+										span 
+											| размер:
+											| #{ob[prop].size} 
+										| #{ob[prop].title}
+								.a-privat-table__count_and_price
+									p Колличество
+										span #{ob[prop].count}
+											| шт.
+									p Стоимость
+										span #{ob[prop].price}
+											| руб.
 
+			- if(ordersCancel)
+				h1.a-head-font-left-side Отмененные заказы
+				each itemC in ordersCancel
+					.a-privat-table_bought
+						.a-privat-table_bought__number
+							- var date = itemC.date.getDate() + "/" + itemC.date.getMonth() + "/" + itemC.date.getFullYear();
+							p 
+								span Заказ 
+								| №
+								| #{itemC.orderNumber} 
+								span от 
+								| #{date} 
+							p На сумму: 
+								span #{itemC.priceCommon} 
+									| руб.
+						-var ob = itemC.goods;
+						-for(var prop in ob)
+							.a-privat-table.a-privat-table__bought
+								.a-privat-table__image_block
+									img(src=ob[prop].image, alt="")
+									p 
+										span 
+											| размер:
+											| #{ob[prop].size} 
+										| #{ob[prop].title}
+								.a-privat-table__count_and_price
+									p Колличество
+										span #{ob[prop].count}
+											| шт.
+									p Стоимость
+										span #{ob[prop].price}
+											| руб.
 		include footer.jade

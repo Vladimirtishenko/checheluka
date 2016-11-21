@@ -1,181 +1,291 @@
 class Templates {
 
-	allGoods(){
+    allGoods() {
 
-		function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice){
+        function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice) {
 
-			 let sizeEach = (sizes) => {
-			 	let sizesToArray = sizes.split(',');
+            let sizeEach = (sizes) => {
+                let sizesToArray = sizes.split(',');
 
-			 	let sizesTmp = ""
-			 	sizesToArray.forEach((item, i) => {
-			 		sizesTmp += '<label for=""><span>'+item+'</span>' +
-					              '<input type="checkbox" name="size" value="'+item+'"/>' +
-					            '</label>';
-			 	});
+                let sizesTmp = ""
+                sizesToArray.forEach((item, i) => {
+                    sizesTmp += '<label for=""><span>' + item + '</span>' +
+                        '<input type="checkbox" name="size" value="' + item + '"/>' +
+                        '</label>';
+                });
 
-			 	return sizesTmp;
-			 }
+                return sizesTmp;
+            }
 
-		     let tmp = '<div class="a-all-goods-table__item">' +
-					   		'<img src="'+img+'" alt=""/>' +
-						    '<div class="a-all-goods-table__description">' +
-						      '<p class="a-all-goods-table__description_info">'+title+'</p>' +
-						    '</div>' +
-						    '<div class="a-hidden-block">' +
-						      '<div class="a-hidden-block__description">' +
-						        '<div class="a-hidden-block__description__outer">' +
-						        	'<span class="a-hidden-block__description-link">'  +
-						        		'<i>Размер </i>' +
-						        		'<span>'+size+'</span>' +
-						        	'</span>' +
-						        	'<span class="a-hidden-block__description-link"> ' +
-						        		'<i>Цвет</i>' +
-						        		'<span>'+color+'</span>' +
-						        	'</span>' +
-						        '</div>' +
-						      '</div>' +
-						   '</div>' +
-						    '<form class="a-hidden-form">' +
-						      '<input type="hidden" name="title" value="'+title+'"/>' +
-						      '<input type="hidden" name="description" value="'+description+'"/>' +
-						      '<input type="hidden" name="color" value="'+color+'"/>' +
-						      '<input type="hidden" name="src" value="'+img+'"/>' +
-						      '<input type="hidden" name="consistOf" value="'+consistOf+'"/>' +
-						      '<input type="hidden" name="material" value="'+material+'"/>' +
-						      '<input type="hidden" name="price" value="'+price+'"/>' +
-						      '<input type="hidden" name="countInWarehouse" value="'+(count || 1)+'"/>' +
-						      '<div class="a-container-for-img"><img src="'+img+'" alt=""/></div>' +
-						      '<div class="a-hidden-form_description">' +
-						        '<div class="a-containet-flex-to-start-description">' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__title">'+title+'</p>' +
-						          '</div>' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Цвет</p><span>'+color+'</span>' +
-						          '</div>' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Размеры</p>' +
-						            sizeEach(size) +
-						          '</div>' +
-						           '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Цена розничная</p><span>'+price+' руб.</span>' +
-						          '</div>' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Начальная ставка</p>' +
-						            '<span><input type="text" name="auctionPrice" value="30"><i> руб.</i></span>' +
-						          '</div>' +
-						        '</div>' +
-						        '<div class="a-containet-flex-to-end-button">' +
-						          '<input value="Добавить товар" type="submit" class="a-button-white"/>' +
-						        '</div>' +
-						      '</div>' +
-						    '</form>' +
-						 '</div>';
+            let tmp = '<div class="a-all-goods-table__item">' +
+                '<img src="' + img + '" alt=""/>' +
+                '<div class="a-all-goods-table__description">' +
+                '<p class="a-all-goods-table__description_info">' + title + '</p>' +
+                '</div>' +
+                '<div class="a-hidden-block">' +
+                '<div class="a-hidden-block__description">' +
+                '<div class="a-hidden-block__description__outer">' +
+                '<span class="a-hidden-block__description-link">' +
+                '<i>Размер </i>' +
+                '<span>' + size + '</span>' +
+                '</span>' +
+                '<span class="a-hidden-block__description-link"> ' +
+                '<i>Цвет</i>' +
+                '<span>' + color + '</span>' +
+                '</span>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<form class="a-hidden-form">' +
+                '<input type="hidden" name="title" value="' + title + '"/>' +
+                '<input type="hidden" name="description" value="' + description + '"/>' +
+                '<input type="hidden" name="color" value="' + color + '"/>' +
+                '<input type="hidden" name="src" value="' + img + '"/>' +
+                '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' +
+                '<input type="hidden" name="material" value="' + material + '"/>' +
+                '<input type="hidden" name="price" value="' + price + '"/>' +
+                '<input type="hidden" name="countInWarehouse" value="' + (count || 1) + '"/>' +
+                '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' +
+                '<div class="a-hidden-form_description">' +
+                '<div class="a-containet-flex-to-start-description">' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__title">' + title + '</p>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Размеры</p>' +
+                sizeEach(size) +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Цена розничная</p><span>' + price + ' руб.</span>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Начальная ставка</p>' +
+                '<span><input type="text" name="auctionPrice" value="30"><i> руб.</i></span>' +
+                '</div>' +
+                '</div>' +
+                '<div class="a-containet-flex-to-end-button">' +
+                '<input value="Добавить товар" type="submit" class="a-button-white"/>' +
+                '</div>' +
+                '</div>' +
+                '</form>' +
+                '</div>';
 
-				return tmp;
-		}
+            return tmp;
+        }
 
-		return templates;
+        return templates;
 
-	}
+    }
 
 
-	allGoodsAuction(){
+    allGoodsAuction() {
 
-		function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice){
+        function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice) {
 
-		     let tmp = '<div class="a-all-goods-table__item">' +
-		     				'<span class="a-delete-this-item-with-id" data-id="'+id+'"></span>' +
-					   		'<img src="'+decodeURIComponent(img)+'" alt=""/>' +
-						    '<div class="a-all-goods-table__description">' +
-						      '<p class="a-all-goods-table__description_info">'+decodeURIComponent(title)+'</p>' +
-						    '</div>' +
-						    '<div class="a-hidden-block">' +
-						      '<div class="a-hidden-block__description">' +
-						        '<div class="a-hidden-block__description__outer">' +
-						        	'<span class="a-hidden-block__description-link">'  +
-						        		'<i>Размер </i>' +
-						        		'<span>'+decodeURIComponent(size)+'</span>' +
-						        	'</span>' +
-						        	'<span class="a-hidden-block__description-link"> ' +
-						        		'<i>Цвет</i>' +
-						        		'<span>'+decodeURIComponent(color)+'</span>' +
-						        	'</span>' +
-						        '</div>' +
-						      '</div>' +
-						   '</div>' +
-						   '<form class="a-hidden-form">' +
-						      '<input type="hidden" name="_id" value="'+id+'"/>' +
-						      '<input type="hidden" name="title" value="'+decodeURIComponent(title)+'"/>' +
-						      '<input type="hidden" name="description" value="'+decodeURIComponent(description)+'"/>' +
-						      '<input type="hidden" name="color" value="'+decodeURIComponent(color)+'"/>' +
-						      '<input type="hidden" name="src" value="'+decodeURIComponent(img)+'"/>' +
-						      '<input type="hidden" name="consistOf" value="'+decodeURIComponent(consistOf)+'"/>' +
-						      '<input type="hidden" name="material" value="'+decodeURIComponent(material)+'"/>' +
-						      '<input type="hidden" name="price" value="'+decodeURIComponent(price)+'"/>' +
-						      '<input type="hidden" name="auctionPrice" value="'+decodeURIComponent(auctionPrice)+'"/>' +
-						      '<div class="a-container-for-img"><img src="'+decodeURIComponent(img)+'" alt=""/></div>' +
-						      '<div class="a-hidden-form_description">' +
-						        '<div class="a-containet-flex-to-start-description">' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__title">'+decodeURIComponent(title)+'</p>' +
-						          '</div>' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Цвет</p><span>'+decodeURIComponent(color)+'</span>' +
-						          '</div>' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Размеры</p>' +
-						            '<span>'+decodeURIComponent(size)+'</span>' +
-						          '</div>' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Колличество на складе</p>' +
-						            '<input type="text" name="countInWarehouse" value="'+(count || 1)+'"/>' +
-						          '</div>' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Розничная цена</p>' +
-						            '<span>'+decodeURIComponent(price)+'</span>' +
-						          '</div>' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Начальная ставка</p>' +
-						            '<input type="text" name="auctionPrice" value="'+auctionPrice+'"/>' +
-						          '</div>' +
-						          '<div class="container-description-form">' +
-						            '<p class="container-description-form__else_params">Приоритет</p>' +
-						            '<input type="checkbox" name="priority" '+ (priority ? "checked" : "") +' />' +
-						          '</div>' +
-						        '</div>' +
-						        '<div class="a-containet-flex-to-end-button">' +
-						          '<input value="Добавить товар" type="submit" class="a-button-white"/>' +
-						        '</div>' +
-						      '</div>' +
-						    '</form>' +
-						 '</div>';
+            let tmp = '<div class="a-all-goods-table__item">' +
+                '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' +
+                '<img src="' + decodeURIComponent(img) + '" alt=""/>' +
+                '<div class="a-all-goods-table__description">' +
+                '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' +
+                '</div>' +
+                '<div class="a-hidden-block">' +
+                '<div class="a-hidden-block__description">' +
+                '<div class="a-hidden-block__description__outer">' +
+                '<span class="a-hidden-block__description-link">' +
+                '<i>Размер </i>' +
+                '<span>' + decodeURIComponent(size) + '</span>' +
+                '</span>' +
+                '<span class="a-hidden-block__description-link"> ' +
+                '<i>Цвет</i>' +
+                '<span>' + decodeURIComponent(color) + '</span>' +
+                '</span>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<form class="a-hidden-form">' +
+                '<input type="hidden" name="_id" value="' + id + '"/>' +
+                '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' +
+                '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' +
+                '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' +
+                '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' +
+                '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' +
+                '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' +
+                '<input type="hidden" name="price" value="' + decodeURIComponent(price) + '"/>' +
+                '<input type="hidden" name="auctionPrice" value="' + decodeURIComponent(auctionPrice) + '"/>' +
+                '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' +
+                '<div class="a-hidden-form_description">' +
+                '<div class="a-containet-flex-to-start-description">' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Размеры</p>' +
+                '<span>' + decodeURIComponent(size) + '</span>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Колличество на складе</p>' +
+                '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Розничная цена</p>' +
+                '<span>' + decodeURIComponent(price) + '</span>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Начальная ставка</p>' +
+                '<input type="text" name="auctionPrice" value="' + auctionPrice + '"/>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Приоритет</p>' +
+                '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' +
+                '</div>' +
+                '</div>' +
+                '<div class="a-containet-flex-to-end-button">' +
+                '<input value="Добавить товар" type="submit" class="a-button-white"/>' +
+                '</div>' +
+                '</div>' +
+                '</form>' +
+                '</div>';
 
-				return tmp;
-		}
+            return tmp;
+        }
 
-		return templates;
+        return templates;
 
-	}
+    }
 
-	config(){
-		function templates(date){
+    config() {
+        function templates(date) {
 
-			let templates = '<div class="a-config">'+
-								'<div class="a-outer-calendar">' +
-									'<p class="a-startet-date">Дата начала: <span>'+(date || 'Не установлена')+'</span></p>'+
-									'<div class="a-calendar">'+
-										'<input class="a-flatpickr" type="text" placeholder="Выбрать дату">' + 
-									'</div>'+
-									'<button class="a-date-save">Сохранить дату</button>'+
-								'</div>'+
-							'</div>';
-		};
+            let templates = '<div class="a-config">' +
+                '<div class="a-outer-calendar">' +
+                '<p class="a-startet-date">Дата начала: <span>' + (date || 'Не установлена') + '</span></p>' +
+                '<div class="a-calendar">' +
+                '<input class="a-flatpickr" type="text" placeholder="Выбрать дату">' +
+                '</div>' +
+                '<button class="a-date-save">Сохранить дату</button>' +
+                '</div>' +
+                '</div>';
+        };
 
-		return templates;
+        return templates;
 
-	}
+    }
+
+    orders() {
+
+        function templates(data) {
+
+
+            let constructorDate = new Date(data.date),
+                date = constructorDate.getDate() + "/" + constructorDate.getMonth() + "/" +  constructorDate.getFullYear();
+
+
+
+            let templates = '<div class="a-privat-table_bought">' +
+                				'<div class="a-privat-table_bought__number">' +
+                					'<p> <span>Заказ </span>№ ' +data.orderNumber+ '<span>от </span> '+date+' </p>' +
+                					'<p>На сумму: <span>'+data.priceCommon+' руб.</span></p>' +
+                				'</div>' +
+                				'<div class="a-privat-table a-privat-table__bought a-privat-table__orders">' +
+                                    '<div class="a-privat-table__info_order">' +
+                                        '<h5>Заказ:</h5>' +
+                    					'<table>'+
+    					                	'<tr>'+
+    					                		'<th>Наименование</th>'+
+    					                		'<th>Размер</th>'+
+    					                		'<th>Колличество</th>'+
+    					                		'<th>Цена</th>'+
+    					                	'</tr>'+
+    					                	ordersOne(data.goods) + 
+					                   '</table>'+
+                                       '<h5 class="a-status-orders">Статус: <span>'+(data.status == 0 ? 'Не оплачен' : data.status == 1 ? 'Оплачен' : "Отменен")+'<span></h5>' +
+                                       '<select class="a-privat-table__changed" name="status">'+
+                                            '<option value="0">' +
+                                                'Не оплачен' + 
+                                            '</option>' + 
+                                            '<option value="1">' +
+                                                'Оплачен' + 
+                                            '</option>' + 
+                                            '<option value="2">' +
+                                                'Отменен' + 
+                                            '</option>' + 
+                                       '</select>'+
+                                       '<button class="a-privat-table__submit" data-value="'+data.orderNumber+'">Сохранить статус</button>' +
+                                    '</div>' +
+	                				'<div class="a-privat-table__user">' +
+	                					'<h5>Информация о заказе:</h5>' +
+                                        '<table>'+
+                                            '<tr>'+
+                                                '<th>Страна</th>' +
+                                                '<td>'+decodeURIComponent(data.country)+'</td>' +
+                                            '</tr>'+
+                                             '<tr>'+
+                                                '<th>Город</th>' +
+                                                '<td>'+decodeURIComponent(data.sity)+'</td>' +
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<th>Служба доставки</th>' +
+                                                '<td>'+decodeURIComponent(data.delivery)+'</td>' +
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<th>Склад</th>' +
+                                                '<td>'+decodeURIComponent(data.warehouse)+'</td>' +
+                                            '</tr>'+
+                                        '</table>'+
+	                					'<h5>Информация о клиенте:</h5>' +
+                                        '<table>'+
+                                            '<tr>'+
+                                                '<th>ФИО</th>' +
+                                                '<td>'+decodeURIComponent(data.fio)+'</td>' +
+                                            '</tr>'+
+                                             '<tr>'+
+                                                '<th>Номер телефона</th>' +
+                                                '<td>'+decodeURIComponent(data.number)+'</td>' +
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<th>Почта</th>' +
+                                                '<td>'+decodeURIComponent(data.email)+'</td>' +
+                                            '</tr>'+
+                                        '</table>'+
+	                				'</div>' +
+                				'</div>'+
+            				'</div>';
+
+
+
+            function ordersOne(goods) {
+                var tmp = "";
+
+                for (var key in goods) {
+
+                    tmp += '<tr>'+
+		                		'<td>'+decodeURIComponent(goods[key].title)+'</td>'+
+		                		'<td>'+decodeURIComponent(goods[key].size)+'</td>'+
+		                		'<td>'+goods[key].count+'</td>'+
+		                		'<td>'+goods[key].price+'</td>'+
+		                	'</tr>';
+                }
+
+                return tmp;
+
+
+            }
+
+            return templates;
+
+        }
+
+
+        return templates;
+
+
+    }
 
 
 

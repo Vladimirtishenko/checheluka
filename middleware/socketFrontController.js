@@ -129,9 +129,9 @@ socketFrontController.prototype.baseBuy = function(client, data){
     {
         return this.sendNotAutorize(client, action);
     }
-    var response = {result:'success'};
     var err;
     var auc = auctionModule.getCurrent();
+    var response = {result: 'success', id: auc._uid, price: auc.currentPrice};
     if (auc._uid != data.auction_id)
     {
         response = null;
@@ -277,7 +277,16 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
         productsModule.setListenere("productsLoaded",function(res)
         {
             console.log('Product updated');
-            ordersModule.createOrder(data.winner._id, data._id);
+            ordersModule.createOrder(
+                data.winner._id, 
+                data._id,
+                data.lot._id,
+                data.lot.src,
+                data.lot.size,
+                data.lot.title,
+                data.count,
+                data.finalePrice
+            );
         });
         productsModule.updateProduct(updata);
     }

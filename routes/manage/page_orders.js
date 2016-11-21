@@ -1,6 +1,6 @@
 module.exports.get = function(req, res, next) {
 
-    res.render('index_manage', {
+    res.render('index_orders', {
         title: "Hello Express"
     });
 

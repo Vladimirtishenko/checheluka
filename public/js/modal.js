@@ -7,7 +7,7 @@ class Modal extends Helper {
         this.close = document.querySelectorAll('.a-modal-close');
         const button = document.querySelectorAll('.button-modal');
         const formChange = document.querySelectorAll('.-a-form-change-listener');
-        const formAll = document.querySelectorAll('.a-form-modal');
+        const formAll = document.querySelectorAll('.a-form-submit');
         this.stateValidate = true;
         this.flyEvent('add', ['click'], [button, this.close, formChange], [this.modalHandlerIn.bind(this), this.modalHandlerOut.bind(this), this.changeForm.bind(this)]);
         this.flyEvent('add', ['submit'], [formAll], this.sendForm.bind(this));
@@ -19,11 +19,14 @@ class Modal extends Helper {
 
     modalHandlerIn(event) {
 
-        let attr = event && event.target ? event.target.getAttribute('data-attr') : null;
+        let attr = event && event.attr ? event.attr : event && event.target ? event.target.getAttribute('data-attr') : null;
 
         if (!attr) return;
 
         let container = document.querySelector('.' + attr);
+        if(event.winner){
+            container.querySelector('.a-winner-block').innerHTML = event.winner;
+        }
         this.cssHelper([container], ["display: flex"]);
         this.classChange(['-animate-modal-in'], 'add', [this.parentWraper])
 
@@ -87,8 +90,6 @@ class Modal extends Helper {
              action = target.getAttribute('data-action'),
              formData = {};
 
-        if(!elems) return;
-
         for(let el of elems){
             if(el.type == "email" || el.type == "password" || el.type == "text"){
                 if(!this.validate(el, target)) return;
@@ -122,7 +123,7 @@ class Modal extends Helper {
             this.errorValidate('Такой пользователь уже есть в системе!', target);
             return;
         }
-        this.modalHandlerOut( {target: target.parentNode.querySelector('.a-modal-close')} );
+        location.reload();
 
    }
 

@@ -5,8 +5,12 @@ var mongoose = require('../../../../lib/mongoose');
 var schema = mongoose.Schema({
     userId:String,
     auctionId: String,
-    createdDate: Date,
-    status:{type: String, default: 'new'}
+    productId:String,
+    image:String,
+    title:String,
+    finalePrice: String,
+    size:String,
+    count: {type: Number, default: 1},
 }, { collection: 'orders' });
 // Model
 module.exports = mongoose.model('orders', schema);

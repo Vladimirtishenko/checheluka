@@ -1,10 +1,9 @@
 extends layout
 
 block content
-	section.a-main 
-		include header.jade
-		include chat.jade
-		h1.a-head-font-left-side Все товары
-		.a-all-goods-table.a-zoom-container		
-		
+	section.a-main.a-flexed-block-main
+		.a-flexed-block-main__item
+			include header.jade
+			h1.a-head-font-left-side Все товары
+			.a-all-goods-table.a-zoom-container
 		include footer.jade

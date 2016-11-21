@@ -4,11 +4,11 @@ block content
 	.a-conteiner-flexible-fixed
 		span.a-modal-close
 	include ./header
-	.a-table-admin.__a-for-orders
+	.a-table-admin.__a-for-orders(data-load="/orderAdminLoads" data-template="orders")
 		.a-container-search
-		  .a-search-box
-		    input#a-search-admin(type='text', name='search', placeholder='Поиск товара')
-		  p Искать товар по названию
+			.a-search-box
+				input#a-search-admin(type='text', name='search', placeholder='Поиск заказа')
+			p Искать номер заказа
 		h1.a-head-font-left-side Заказы
-		view
+		view.a-all-goods-table
 	include ../footer

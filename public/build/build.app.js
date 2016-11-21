@@ -76,16 +76,26 @@
 
 	var _timerToStart2 = _interopRequireDefault(_timerToStart);
 
+	var _privat = __webpack_require__(24);
+
+	var _privat2 = _interopRequireDefault(_privat);
+
+	var _localBase = __webpack_require__(25);
+
+	var _localBase2 = _interopRequireDefault(_localBase);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	window.$app = {};
 
 	window.addEventListener('DOMContentLoaded', function () {
 		$app.socket = new _socket2.default();
+		$app.local = new _localBase2.default();
 		new _timerToStart2.default(document.querySelector('.a-time-to-start'));
+		new _chat2.default(document.querySelector('.a-chat-container'));
 		new _modal2.default();
-		new _asyncLoad2.default(document.querySelector('.a-backgroung-general-goods'));
-		new _chat2.default();
+		new _privat2.default(document.querySelector('.a-button-to-submits-order'));
+		new _asyncLoad2.default(document.querySelector('.__index-auction'));
 		new _asyncLoadAllGoods2.default(document.querySelector('.a-all-goods-table'));
 		new _zoomImg2.default(document.querySelector('.a-zoom-container'));
 	});
@@ -219,15 +229,22 @@
 				this.setRegisteredCallback(action, callback);
 			}
 		}, {
+			key: 'auctionUpdated',
+			value: function auctionUpdated(action, callback) {
+				this.setRegisteredCallback(action, callback);
+			}
+		}, {
 			key: 'baseBuy',
-			value: function baseBuy(action, callback) {
+			value: function baseBuy(action, data, callback) {
+				console.log(arguments);
 				this.setRegisteredCallback(action, callback);
 
-				this.socket.emit(action);
+				this.socket.emit(action, data);
 			}
 		}, {
 			key: 'upPrice',
 			value: function upPrice(action, data, callback) {
+				console.log(arguments);
 				this.setRegisteredCallback(action, callback);
 
 				this.socket.emit(action, data);
@@ -456,7 +473,7 @@
 	        _this.close = document.querySelectorAll('.a-modal-close');
 	        var button = document.querySelectorAll('.button-modal');
 	        var formChange = document.querySelectorAll('.-a-form-change-listener');
-	        var formAll = document.querySelectorAll('.a-form-modal');
+	        var formAll = document.querySelectorAll('.a-form-submit');
 	        _this.stateValidate = true;
 	        _this.flyEvent('add', ['click'], [button, _this.close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
 	        _this.flyEvent('add', ['submit'], [formAll], _this.sendForm.bind(_this));
@@ -471,11 +488,14 @@
 	        key: 'modalHandlerIn',
 	        value: function modalHandlerIn(event) {
 
-	            var attr = event && event.target ? event.target.getAttribute('data-attr') : null;
+	            var attr = event && event.attr ? event.attr : event && event.target ? event.target.getAttribute('data-attr') : null;
 
 	            if (!attr) return;
 
 	            var container = document.querySelector('.' + attr);
+	            if (event.winner) {
+	                container.querySelector('.a-winner-block').innerHTML = event.winner;
+	            }
 	            this.cssHelper([container], ["display: flex"]);
 	            this.classChange(['-animate-modal-in'], 'add', [this.parentWraper]);
 	        }
@@ -559,8 +579,6 @@
 	                action = target.getAttribute('data-action'),
 	                formData = {};
 
-	            if (!elems) return;
-
 	            var _iteratorNormalCompletion2 = true;
 	            var _didIteratorError2 = false;
 	            var _iteratorError2 = undefined;
@@ -614,7 +632,7 @@
 	                this.errorValidate('Такой пользователь уже есть в системе!', target);
 	                return;
 	            }
-	            this.modalHandlerOut({ target: target.parentNode.querySelector('.a-modal-close') });
+	            location.reload();
 	        }
 	    }, {
 	        key: 'validate',
@@ -685,26 +703,80 @@
 	var Chat = function (_Helper) {
 		_inherits(Chat, _Helper);
 
-		function Chat() {
+		function Chat(el) {
 			_classCallCheck(this, Chat);
 
 			var _this = _possibleConstructorReturn(this, (Chat.__proto__ || Object.getPrototypeOf(Chat)).call(this));
 
+			if (!el) return _possibleConstructorReturn(_this);
+			_this.el = el;
+			_this.beforeEl = document.querySelector('.a-chat-title');
 			_this.button = document.querySelector('.a-chat-container__button');
 			_this.flyEvent('add', ['click'], [_this.button], _this.chatHandler.bind(_this));
 			_this.arrayPosition = ['-631px 0', '-684px 0'];
+
+			$app.chat = {
+				add: _this.addChat.bind(_this),
+				clearTemplate: _this.clearTemplate.bind(_this),
+				clear: _this.clearChat.bind(_this)
+			};
+
 			return _this;
 		}
 
 		_createClass(Chat, [{
 			key: 'chatHandler',
 			value: function chatHandler() {
-				var chat = document.querySelector('.a-chat-container');
-				if (!chat) return;
-
-				chat.classList.toggle('-animate-chat');
+				this.el.classList.toggle('-animate-chat');
 				this.button.style.cssText = "background-position: " + this.arrayPosition[0];
 				this.arrayPosition.reverse();
+			}
+		}, {
+			key: 'addChat',
+			value: function addChat(pretendents, price) {
+
+				if (Object.keys(pretendents).length == 0) return;
+
+				this.beforeEl.insertAdjacentHTML('afterend', this.chatTemplate(pretendents, price));
+			}
+		}, {
+			key: 'clearChat',
+			value: function clearChat() {
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Аукционы пока не начались! </p>' + '</div>';
+
+				this.beforeEl.insertAdjacentHTML('afterend', template);
+			}
+		}, {
+			key: 'clearTemplate',
+			value: function clearTemplate(id) {
+
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Торги по аукциону <span>№' + id + '</span></p>' + '</div>';
+
+				this.beforeEl.insertAdjacentHTML('afterend', template);
+			}
+		}, {
+			key: 'chatTemplate',
+			value: function chatTemplate(pretendents, price) {
+
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Готовы купить за<span>' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + this.chatTemplateUsers(pretendents) + '</p>' + '</div>';
+
+				return template;
+			}
+		}, {
+			key: 'chatTemplateUsers',
+			value: function chatTemplateUsers(pretendents) {
+
+				var template = '';
+
+				if (Object.keys(pretendents).length > 10) {
+					template = Object.keys(pretendents).length + 'чел.';
+				} else {
+					for (var user in pretendents) {
+						template += '<i>' + pretendents[user].email + '</i>';
+					}
+				}
+
+				return template;
 			}
 		}]);
 
@@ -901,6 +973,7 @@
 				$app.socket.getAuctions('getAuctions', this.getAuctions.bind(this));
 				$app.socket.auctionFinished('auctionFinished', this.auctionFinished.bind(this));
 				$app.socket.actionStarted('actionStarted', this.actionStarted.bind(this));
+				$app.socket.auctionUpdated('auctionUpdated', this.auctionUpdated.bind(this));
 			}
 		}, {
 			key: 'getCurrentAuction',
@@ -909,17 +982,35 @@
 				if (!response.data || !response.data.lot) return;
 
 				this.itemCount = response.data.count;
+				this.auctionId = response.data._uid;
+				this.currentPrice = response.data.currentPrice;
+				this.butonsDefferent = $app.local.gets('id') == this.auctionId && this.currentPrice == $app.local.gets('price') ? true : false;
+				this.pretendentsAuction = response.data.pretendents;
 				this.pretendents = true; //(Object.keys(response.data.history).length > 1 && Object.keys(response.data.pretendents).length <= 10) ? true : false;
 
-				var template = _template2.default['getCurrentAuction'](response.data.lot, response.data.timer, this.pretendents);
+
+				if (response.data.status != 'started') {
+					$app.chat.clear();
+				} else {
+					$app.chat.clearTemplate(this.auctionId);
+					$app.chat.add(this.pretendentsAuction, this.currentPrice);
+				}
+
+				var template = _template2.default['getCurrentAuction'](this.auctionId, response.data.lot, this.currentPrice, response.data.timer, this.pretendents, this.itemCount, this.butonsDefferent);
 
 				this.mainItem.innerHTML = "";
 				this.mainItem.insertAdjacentHTML('beforeend', template);
 
+				try {
+					clearTimeout(this.globalTimer);
+				} catch (e) {}
 				this.timerStarted(response.data.timer);
 
 				this.buttonToBuy = document.querySelector('.a-general-goods__description_buy');
 				this.buttonToBuyUpPrice = document.querySelector('.a-general-goods__description_rates_button');
+				this.priceNow = document.querySelector('.a-general-goods__description_price_now_upgraded');
+				this.countNow = document.querySelector('.a-type-to-count');
+				this.notification = document.querySelector('.a-add-rate');
 
 				this.flyEvent('add', ['click'], [this.buttonToBuy, this.buttonToBuyUpPrice], [this.baseBuyInitial.bind(this), this.baseBuyInitialToUpPrice.bind(this)]);
 			}
@@ -939,7 +1030,7 @@
 				    classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];
 
 				for (var key in response.data) {
-					template += _template2.default[response.action](response.data[key].lot, classArray[i++]);
+					template += _template2.default[response.action](response.data[key]._uid, response.data[key].lot, classArray[i++]);
 				}
 
 				template += '</div>';
@@ -976,29 +1067,52 @@
 			value: function auctionFinished(response) {
 				this.buyAction = true;
 				this.buttonToBuy.classList.remove('a-inactive');
+				$app.modalOpen({ attr: 'a-modal-goods-winner', winner: response.data && response.data.winner && response.data.winner.email || 'Победителей нет' });
+			}
+		}, {
+			key: 'auctionUpdated',
+			value: function auctionUpdated(response) {
+
+				console.log(response);
+
+				if (response && response.data) {
+
+					this.priceNow.innerHTML = response.data.currentPrice;
+					this.countNow.value = response.data.count;
+					this.currentPrice = response.data.currentPrice;
+					this.pretendentsAuction = response.data.pretendents;
+					this.notification.innerHTML = "";
+					this.auctionEnabled();
+
+					$app.chat.add(this.pretendentsAuction, this.currentPrice);
+
+					try {
+						clearTimeout(this.globalTimer);
+					} catch (e) {}
+					this.timerStarted(response.data.timer);
+				}
 			}
 		}, {
 			key: 'actionStarted',
 			value: function actionStarted(response) {
-				var timer = document.querySelector('.a-time-to-start');
-
 				this.getCurrentAuction(response);
 			}
 		}, {
 			key: 'baseBuyInitial',
 			value: function baseBuyInitial(event) {
 
-				var countAttr = document.querySelector('.a-type-to-count'),
-				    count = isNaN(parseInt(countAttr)) ? 1 : parseInt(count);
+				var countAttr = document.querySelector('.a-type-to-count').value,
+				    count = isNaN(parseInt(countAttr)) ? 1 : parseInt(countAttr);
 
 				if (!event || !event.target || !this.buyAction) return;
 
 				this.auctionDisabled();
+				$app.local.sets(['id', 'price'], [this.auctionId, this.currentPrice]);
 
 				if (count > this.itemCount) {
-					$app.socket.upCount('upCount', { count: count.value }, this.upCount.bind(this));
+					$app.socket.upCount('upCount', { auction_id: this.auctionId, count: count }, this.upCount.bind(this));
 				} else {
-					$app.socket.baseBuy('baseBuy', this.baseBuy.bind(this));
+					$app.socket.baseBuy('baseBuy', { auction_id: this.auctionId }, this.baseBuy.bind(this));
 				}
 			}
 		}, {
@@ -1006,11 +1120,15 @@
 			value: function auctionDisabled() {
 				this.buyAction = false;
 				this.buttonToBuy.classList.add('a-inactive');
+				this.notification.innerHTML = "Ставка сделана!";
+				console.log(this.buttonToBuy);
 			}
 		}, {
 			key: 'auctionEnabled',
 			value: function auctionEnabled() {
+				$app.local.remove(['id', 'price']);
 				this.buyAction = true;
+				this.notification.innerHTML = "";
 				this.buttonToBuy.classList.remove('a-inactive');
 			}
 		}, {
@@ -1024,7 +1142,7 @@
 				var buttonPriceArray = target.innerText.match(/\d+/);
 
 				if (buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) > 50 && parseInt(buttonPriceArray[0]) < 502) {
-					$app.socket.upPrice('upPrice', { price: parseInt(buttonPriceArray[0]) }, this.upPrice.bind(this));
+					$app.socket.upPrice('upPrice', { auction_id: this.auctionId, price: parseInt(buttonPriceArray[0]) }, this.upPrice.bind(this));
 				}
 			}
 		}, {
@@ -1058,6 +1176,7 @@
 					$app.modalOpen({ target: document.querySelector('.__login_action') });
 					return false;
 				}
+				return true;
 			}
 		}, {
 			key: 'auctionValidate',
@@ -1098,14 +1217,14 @@
 
 		_createClass(Template, [{
 			key: 'getCurrentAuction',
-			value: function getCurrentAuction(obj, timer, pretendents) {
-				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№1</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now">' + decodeURIComponent(obj.auctionPrice) + ' <span>руб.</span></p>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black">Покупаю</button>' + '<label class="a-type-to"> <input class="a-type-to-count" value="1" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' + '</div>' + '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:' + (timer < 10 ? '0' + timer : timer) + '</span></p>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button ' + (pretendents ? "" : "a-rates-inactive") + '">' + '<button class="a-button-white">+ 51 руб.</button>' + '<button class="a-button-white">+ 101 руб.</button>' + '<button class="a-button-white">+ 251 руб.</button>' + '<button class="a-button-white">+ 501 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
+			value: function getCurrentAuction(id, obj, price, timer, pretendents, count, difference) {
+				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№' + id + '</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now"><i class="a-general-goods__description_price_now_upgraded">' + price + '</i> <span>руб.</span></p>' + '<span class="a-add-rate">' + (difference ? 'Вы сделали ставку' : '') + '</span>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black ' + (difference ? "a-inactive" : "") + '">Покупаю</button>' + '<label class="a-type-to"> <input class="a-type-to-count" value="' + count + '" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' + '</div>' + '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:' + (timer < 10 ? '0' + timer : timer) + '</span></p>' + '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' + '<div class="a-general-goods__description_rates_button ' + (pretendents ? "" : "a-rates-inactive") + '">' + '<button class="a-button-white">+ 51 руб.</button>' + '<button class="a-button-white">+ 101 руб.</button>' + '<button class="a-button-white">+ 251 руб.</button>' + '<button class="a-button-white">+ 501 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
 			}
 		}, {
 			key: 'getAuctions',
-			value: function getAuctions(obj, className) {
+			value: function getAuctions(id, obj, className) {
 
-				return '<div class="a-else-goods__item ' + className + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(obj.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + '<span></span>' + '</p>' + '<p class="a-else-goods-descroption">Шапка писец</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(obj.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(obj.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(obj.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(obj.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(obj.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(obj.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
+				return '<div class="a-else-goods__item ' + className + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(obj.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + id + '<span></span>' + '</p>' + '<p class="a-else-goods-descroption">Шапка писец</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(obj.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(obj.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(obj.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(obj.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(obj.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(obj.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
 			}
 		}]);
 
@@ -1313,6 +1432,191 @@
 	}(_helper2.default);
 
 	exports.default = Timer;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Privat = function (_Helper) {
+		_inherits(Privat, _Helper);
+
+		function Privat(el) {
+			_classCallCheck(this, Privat);
+
+			var _this = _possibleConstructorReturn(this, (Privat.__proto__ || Object.getPrototypeOf(Privat)).call(this));
+
+			if (!el) return _possibleConstructorReturn(_this);
+
+			_this.button = el;
+			_this.form = document.querySelector('.a-data-order');
+			_this.sendButton = document.querySelector('.a-data-order-send');
+
+			_this.flyEvent('add', ['click'], [_this.button], [_this.openForm.bind(_this)]);
+			_this.flyEvent('add', ['click'], [_this.sendButton], _this.sendForm.bind(_this));
+			return _this;
+		}
+
+		_createClass(Privat, [{
+			key: 'openForm',
+			value: function openForm(event) {
+
+				if (!event && !event.target) return;
+
+				$app.modalOpen({ attr: 'order' });
+			}
+		}, {
+			key: 'sendForm',
+			value: function sendForm(event) {
+
+				event.preventDefault();
+
+				var parentForm = event && event.target && event.target.closest('form') || null,
+				    data = {};
+
+				if (!parentForm) return;
+
+				var elementsUserData = parentForm.elements,
+				    dataGoods = this.returnsDataObjectGoods(this.form.elements);
+
+				data.goods = dataGoods.goods;
+				data.priceCommon = dataGoods.priceCommon;
+
+				for (var i = 0; i < elementsUserData.length; i++) {
+					if (elementsUserData[i].type == 'text' || elementsUserData[i].tagName == "SELECT") {
+						data[elementsUserData[i].name] = encodeURIComponent(elementsUserData[i].value);
+					}
+				}
+
+				data.date = new Date();
+				data.status = 0;
+
+				this.xhrRequest('POST', '/orderCreate', 'application/json', JSON.stringify(data), this.afterResponse.bind(this, parentForm));
+			}
+		}, {
+			key: 'afterResponse',
+			value: function afterResponse(form, obj) {
+
+				try {
+					var object = JSON.parse(obj);
+					if (object.status == 200) {
+						form.insertAdjacentHTML('beforeend', '<p>Ваш заказ отправлен на обработку!</p>');
+					} else {
+						form.insertAdjacentHTML('beforeend', '<p>Произошла ошибка, попробуйте позже!</p>');
+					}
+				} catch (e) {}
+			}
+		}, {
+			key: 'returnsDataObjectGoods',
+			value: function returnsDataObjectGoods(elems) {
+
+				var goods = {},
+				    priceCommon = 0;
+
+				for (var i = 0; i < elems.length; i++) {
+					priceCommon += parseInt(elems[i].getAttribute('data-price'));
+					goods[i] = {
+						id: elems[i].getAttribute('data-id'),
+						count: elems[i].getAttribute('data-count'),
+						price: elems[i].getAttribute('data-price'),
+						title: elems[i].getAttribute('data-title'),
+						size: elems[i].getAttribute('data-size'),
+						image: elems[i].getAttribute('data-image')
+					};
+				}
+
+				return { priceCommon: priceCommon, goods: goods };
+			}
+		}]);
+
+		return Privat;
+	}(_helper2.default);
+
+	exports.default = Privat;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var LocalBase = function (_Helper) {
+		_inherits(LocalBase, _Helper);
+
+		function LocalBase() {
+			_classCallCheck(this, LocalBase);
+
+			return _possibleConstructorReturn(this, (LocalBase.__proto__ || Object.getPrototypeOf(LocalBase)).call(this));
+		}
+
+		_createClass(LocalBase, [{
+			key: 'sets',
+			value: function sets(field, value) {
+				console.log(arguments);
+				for (var i = 0; i < field.length; i++) {
+					localStorage.setItem(field[i], value[i]);
+				}
+			}
+		}, {
+			key: 'gets',
+			value: function gets(field) {
+				return localStorage.getItem(field) || null;
+			}
+		}, {
+			key: 'remove',
+			value: function remove(field) {
+				for (var i = 0; i < field.length; i++) {
+					localStorage.removeItem(field[i]);
+				}
+			}
+		}, {
+			key: 'removeAll',
+			value: function removeAll() {
+				localStorage.clear();
+			}
+		}]);
+
+		return LocalBase;
+	}(_helper2.default);
+
+	exports.default = LocalBase;
 
 /***/ }
 /******/ ]);

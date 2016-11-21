@@ -2,10 +2,7 @@ module.exports = function(app){
 
 	// Static Index Routes
 
-	app.get("/", require("./index").get);
-	app.get("/all_list", require("./goods").get);
-	app.get("/comments", require("./comments").get);
-	app.get("/privat", require("./privat").get);
+	app.get(["/", "/goods", "/comments", "/privat"], require("./static_page").get);
 
 
 	// Xhr method
@@ -15,6 +12,11 @@ module.exports = function(app){
 	app.delete("/allGoods", require("./allGoods").delete);
 	// Get all auction
 	app.get("/allGoodsAuction", require("./allGoodsAuction").get);
+	// Add order 
+	app.post("/orderCreate", require("./order").post);
+	// Admin order find
+	app.get("/orderAdminLoads", require("./orderAdminLoads").get);
+	app.post("/orderAdminLoads", require("./orderAdminLoads").post);
 
 
 	// Manage Routes

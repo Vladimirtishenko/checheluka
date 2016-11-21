@@ -9,6 +9,6 @@ import Config from './config.js';
 window.globalRegistredModules = {};
 
 window.addEventListener('DOMContentLoaded', () => {
-	new AsyncLoadFromAnouterResourse(document.querySelector('.a-table-admin.__a-for-goods') || document.querySelector('.a-table-admin.__a-for-auction'));
+	new AsyncLoadFromAnouterResourse(document.querySelector('.a-table-admin.__a-for-goods') || document.querySelector('.a-table-admin.__a-for-auction') || document.querySelector('.a-table-admin.__a-for-orders') );
 	new Config(document.querySelector('.a-table-admin.__a-for-config'));
 })

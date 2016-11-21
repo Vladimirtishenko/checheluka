@@ -2,6 +2,7 @@
 import Helper from '../helper.js';
 
 import ModalGoodsToAdd from './add_or_delete_action.js';
+import ChangeStatus from './privat_change_status_order.js';
 import Templates from './templates.js';
 
 class AsyncLoadFromAnouterResourse extends Helper {
@@ -10,7 +11,9 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		if(!el) return;
 		this.offsetStart = 0;
 		this.offsetEnd = 20;
-		this.templates = Templates[el.getAttribute('data-template')]();
+		this.action = el.getAttribute('data-template');
+		this.templates = Templates[this.action]();
+
 
 		this.mainblockTmp = el;
 		this.url = el.getAttribute('data-load');
@@ -64,24 +67,32 @@ class AsyncLoadFromAnouterResourse extends Helper {
 			return;
 		}
 
-		console.log(obj);
 
-		for (var i of obj) {
-			tmp += this.templates(
-					i._id,
-					i.img || i.src, 
-					i.title, 
-					i.description,
-					i.size, 
-					i.color, 
-					i.Material || i.material, 
-					i.Sostav || i.consistOf,
-					i.countInWarehouse,
-					i.priority,
-					i.PriceRoz || i.price,
-					i.auctionPrice
-					);
+		if(this.action == 'orders'){
+			for (var i of obj) {
+				tmp += this.templates(
+						i
+						);
+			}
+		} else {
+			for (var i of obj) {
+				tmp += this.templates(
+						i._id,
+						i.img || i.src, 
+						i.title, 
+						i.description,
+						i.size, 
+						i.color, 
+						i.Material || i.material, 
+						i.Sostav || i.consistOf,
+						i.countInWarehouse,
+						i.priority,
+						i.PriceRoz || i.price,
+						i.auctionPrice
+						);
+			}
 		}
+
 
 		if(clear){
 			this.viewElement.innerHTML = "";
@@ -89,8 +100,11 @@ class AsyncLoadFromAnouterResourse extends Helper {
 
 		this.viewElement.insertAdjacentHTML('beforeend', tmp);
 
-
-		new ModalGoodsToAdd(this.viewElement);
+		if(this.action != 'orders'){
+			new ModalGoodsToAdd(this.viewElement);
+		} else {
+			new ChangeStatus(this.viewElement);
+		}
 		
 
 		this.offsetStart = parseInt((JSON.parse(el)).offset);

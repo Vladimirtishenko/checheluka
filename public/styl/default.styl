@@ -51,10 +51,10 @@ time, mark, audio, video
   padding 0
   vertical-align baseline
 
-body 
+html, body 
   line-height 1 
-  background backGrey
   font-family Arial
+  height 100%
 
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section
@@ -153,7 +153,7 @@ button
 .a-button-white
   background rgba(0,0,0,0)
   border 2px solid #000
-  padding 15px 17px
+  padding 16px 17px 14px
   font-size 14px
   font-family HelveticaRoman
   color #000
@@ -286,6 +286,12 @@ button
   z-index 10
   height 100%
   background rgba(245,245,245,.9)
+
+.a-flexed-block-main
+  display flex 
+  flex-direction column
+  justify-content space-between
+  min-height 100%
 
 @keyframes opacity{
   0%{

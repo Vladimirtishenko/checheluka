@@ -7,7 +7,7 @@ html
 		section.a-modal
 			.a-modal__item.enter
 				span.a-modal-close
-				form.a-form-modal.-enter-placeholder(data-action="login")
+				form.a-form-submit.a-form-modal.-enter-placeholder(data-action="login")
 					h2.a-modal__item_title Войти
 					input(type="email" id="a-name" name="email" required)
 					label(for="#a-name") Email
@@ -18,7 +18,7 @@ html
 						button.a-button-white.__uppercase(type="submit") Войти
 						span.a-between или
 						a(href="#" class="a-link-item-green -a-form-change-listener " data-attr="-reg-placeholder") Зарегестрироваться
-				form.a-form-modal.-reg-placeholder(data-action="register_user")
+				form.a-form-submit.a-form-modal.-reg-placeholder(data-action="register_user")
 					h2.a-modal__item_title Регистрация
 					input(type="email" id="a-name" name="email" required)
 					label(for="#a-name") Email
@@ -30,7 +30,7 @@ html
 						button.a-button-white.__uppercase(type="submit") Зарегестрироваться
 						span.a-between или
 						a(href="#" class="a-link-item-green -a-form-change-listener" data-attr="-enter-placeholder") Есть аккаунт?
-				form.a-form-modal.-remember-placeholder
+				form.a-form-submit.a-form-modal.-remember-placeholder
 					h2.a-modal__item_title Напомнить пароль
 					input(type="text" id="a-name" name="email" required)
 					label(for="#a-name") Email
@@ -44,9 +44,44 @@ html
 				p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint excepturi vitae dolores maiores quam delectus in adipisci reiciendis ea sapiente neque, aliquam alias natus corporis esse facere saepe! Voluptatum, iste? block content  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis, eius fugit ipsa tenetur ipsum quis saepe unde a-modal__item
 				p perferendis quaerat error, odio cupiditate doloremque, quasi temporibus rem sapiente magnam officia modi!  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla nisi doloremque incidunt obcaecati, debitis accusantium a at ratione ut. Corporis amet adipisci perspiciatis quam deleniti, sit? 
 				p Animi incidunt vero et!  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quae dolorum aut, quod repellendus eligendi eius inventore illum odio tempora vero voluptas natus, in, maxime id voluptates facilis. Dolore, nesciunt
+			.a-modal__item.order
+				span.a-modal-close
+				form.a-form-submit-order.a-form-modal.-enter-placeholder(data-action="order")
+					h2.a-modal__item_title Оформить заказ
+					select(id="a-country" name="country" required)
+						option(value="" selected disabled) Выбрать страну
+						option(value="Россия") Россия
+						option(value="Белоруссия") Белоруссия
+						option(value="Казахстан") Казахстан
+					label(for="#a-country") Страна
+					input(type="text" id="a-sity" placeholder="Город доставки" name="sity" required)
+					label(for="#a-sity") Город
+					input(type="text" id="a-fio" placeholder="Ваше ФИО" name="fio" required)
+					label(for="#a-fio") ФИО
+					select(id="a-delivery" name="delivery" required)
+						option(value="" selected disabled) Выбрать способ доставки
+						option(value="КИТ") КИТ
+						option(value="ПЭК") ПЭК
+						option(value="Желдороэкспедиция") Желдороэкспедиция
+						option(value="Деловые линии") Деловые линии
+						option(value="Байкал сервис") Байкал сервис
+						option(value="Почта России") Почта России
+						option(value="СДЭК") СДЭК
+					label(for="#a-delivery") Способ доставки
+					input(type="text" id="a-warehouse" placeholder="Номер склада" name="warehouse" required)
+					label(for="#a-warehouse") Склад
+					input(type="text" id="a-number" name="number" placeholder="Пример: 79225551234" required)
+					label(for="#a-number") Номер телефона
+					.a-button-area-modal
+						button.a-button-white.__uppercase.a-data-order-send Купить
 			.a-inner-background
 				span.a-modal-close
 				.a-outer-for-image
+			.a-modal__item.a-modal-goods-winner
+				span.a-modal-close
+				h2.a-modal__item_title Аукцион по товару завершен:
+				p Выиграл: 
+					span.a-winner-block
 		block content
 		script(src="https://cdn.socket.io/socket.io-1.4.5.js")
 		script(src="/build/build.app.js")

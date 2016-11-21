@@ -17,6 +17,7 @@ class AsyncLoad extends Helper {
 		$app.socket.getAuctions('getAuctions', this.getAuctions.bind(this));
 		$app.socket.auctionFinished('auctionFinished', this.auctionFinished.bind(this));
 		$app.socket.actionStarted('actionStarted', this.actionStarted.bind(this));
+		$app.socket.auctionUpdated('auctionUpdated', this.auctionUpdated.bind(this));
 	}
 
 
@@ -25,25 +26,46 @@ class AsyncLoad extends Helper {
 		if(!response.data || !response.data.lot) return;
 
 		this.itemCount = response.data.count;
+		this.auctionId = response.data._uid;
+		this.currentPrice = response.data.currentPrice;
+		this.butonsDefferent = ($app.local.gets('id') == this.auctionId) && (this.currentPrice == $app.local.gets('price')) ? true : false;
+		this.pretendentsAuction = response.data.pretendents;
 		this.pretendents = true; //(Object.keys(response.data.history).length > 1 && Object.keys(response.data.pretendents).length <= 10) ? true : false;
 
-		let template = Template['getCurrentAuction'](response.data.lot, response.data.timer, this.pretendents);
+
+		if(response.data.status != 'started'){
+			$app.chat.clear();
+		} else {
+			$app.chat.clearTemplate(this.auctionId);
+			$app.chat.add(this.pretendentsAuction, this.currentPrice);
+		}
+
+
+		let template = Template['getCurrentAuction'](this.auctionId, response.data.lot, this.currentPrice, response.data.timer, this.pretendents, this.itemCount, this.butonsDefferent);
 
 		this.mainItem.innerHTML = "";
 		this.mainItem.insertAdjacentHTML('beforeend' ,template);
 
+		try{
+			clearTimeout(this.globalTimer);
+		} catch(e){}
 		this.timerStarted(response.data.timer);
 
 
 		this.buttonToBuy = document.querySelector('.a-general-goods__description_buy');
 		this.buttonToBuyUpPrice = document.querySelector('.a-general-goods__description_rates_button');
+		this.priceNow = document.querySelector('.a-general-goods__description_price_now_upgraded');
+		this.countNow = document.querySelector('.a-type-to-count');
+		this.notification = document.querySelector('.a-add-rate');
 
 		this.flyEvent('add', ['click'], [this.buttonToBuy, this.buttonToBuyUpPrice], [this.baseBuyInitial.bind(this), this.baseBuyInitialToUpPrice.bind(this)]);
+
 
 	}
 
 
 	getAuctions(response){
+
 
 		if(!response.data || Object.keys(response.data).length == 0) return;
 		var keys = Object.keys(response.data);
@@ -57,7 +79,7 @@ class AsyncLoad extends Helper {
 			classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];
 
 		for(let key in response.data){
-			template += Template[response.action](response.data[key].lot, classArray[i++]);
+			template += Template[response.action](response.data[key]._uid, response.data[key].lot, classArray[i++]);
 		}
 
 		template += '</div>';
@@ -92,28 +114,53 @@ class AsyncLoad extends Helper {
 	auctionFinished(response){
 		this.buyAction = true;
 		this.buttonToBuy.classList.remove('a-inactive');
+		$app.modalOpen({attr: 'a-modal-goods-winner', winner: response.data && response.data.winner && response.data.winner.email || 'Победителей нет'});
+	}
+
+	auctionUpdated(response){
+
+		console.log(response);
+
+		if(response && response.data){
+
+			this.priceNow.innerHTML = response.data.currentPrice;
+			this.countNow.value = response.data.count;
+			this.currentPrice = response.data.currentPrice;
+			this.pretendentsAuction = response.data.pretendents;
+			this.notification.innerHTML = "";
+			this.auctionEnabled();
+
+			$app.chat.add(this.pretendentsAuction, this.currentPrice);
+
+			try{
+				clearTimeout(this.globalTimer);
+			} catch(e){}
+			this.timerStarted(response.data.timer);
+
+		}
+		
+		
 	}
 
 
 	actionStarted(response){
-		let timer = document.querySelector('.a-time-to-start');
-
 		this.getCurrentAuction(response);
 	}
 
 	baseBuyInitial(event){
 
-		let countAttr = document.querySelector('.a-type-to-count'),
-			count = isNaN(parseInt(countAttr)) ? 1 : parseInt(count);
+		let countAttr = document.querySelector('.a-type-to-count').value,
+			count = isNaN(parseInt(countAttr)) ? 1 : parseInt(countAttr);
 
 		if(!event || !event.target || !this.buyAction) return;
 
 		this.auctionDisabled();
+		$app.local.sets(['id', 'price'], [this.auctionId, this.currentPrice]);
 
 		if(count > this.itemCount){
-			$app.socket.upCount('upCount', {count: count.value}, this.upCount.bind(this));
+			$app.socket.upCount('upCount', {auction_id: this.auctionId, count: count}, this.upCount.bind(this));
 		} else {
-			$app.socket.baseBuy('baseBuy', this.baseBuy.bind(this));
+			$app.socket.baseBuy('baseBuy', {auction_id: this.auctionId}, this.baseBuy.bind(this));
 		}
 
 	}
@@ -121,10 +168,14 @@ class AsyncLoad extends Helper {
 	auctionDisabled(){
 		this.buyAction = false;
 		this.buttonToBuy.classList.add('a-inactive');
+		this.notification.innerHTML = "Ставка сделана!";
+		console.log(this.buttonToBuy);
 	}
 
 	auctionEnabled(){
+		$app.local.remove(['id', 'price']);
 		this.buyAction = true;
+		this.notification.innerHTML = "";
 		this.buttonToBuy.classList.remove('a-inactive');
 	}
 
@@ -138,7 +189,7 @@ class AsyncLoad extends Helper {
 		let buttonPriceArray = target.innerText.match(/\d+/);
 
 		if(buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) > 50 && parseInt(buttonPriceArray[0]) < 502) {
-			$app.socket.upPrice('upPrice', {price: parseInt(buttonPriceArray[0])}, this.upPrice.bind(this));
+			$app.socket.upPrice('upPrice', {auction_id: this.auctionId, price: parseInt(buttonPriceArray[0])}, this.upPrice.bind(this));
 		}
 
 	}
@@ -172,6 +223,7 @@ class AsyncLoad extends Helper {
 			$app.modalOpen({target: document.querySelector('.__login_action')});
 			return false;
 		}
+		return true;
 	}
 
 	auctionValidate(count){

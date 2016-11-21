@@ -1,8 +1,8 @@
 class Template {
-	getCurrentAuction(obj, timer, pretendents){
+	getCurrentAuction(id, obj, price, timer, pretendents, count, difference){
 		return '<div class="a-general-goods a-animates-top-goods">' + 
 				  '<div class="a-general-goods__image">' +
-				  	'<span class="a-general-number__this_main">№1</span>' +
+				  	'<span class="a-general-number__this_main">№'+id+'</span>' +
 				   	'<div class="a-img-scale">' +
 				    	'<img src="'+decodeURIComponent(obj.src)+'" alt=""/>' +
 				    '</div>' +
@@ -34,11 +34,12 @@ class Template {
 				      '</div>' +
 				    '</div>' +
 				    '<p class="a-general-goods__description_price_retail">Розничная цена: <span>'+decodeURIComponent(obj.price)+' рублей</span></p>' +
-				    '<p class="a-general-goods__description_price_now">'+decodeURIComponent(obj.auctionPrice)+' <span>руб.</span></p>' +
+				    '<p class="a-general-goods__description_price_now"><i class="a-general-goods__description_price_now_upgraded">'+price+'</i> <span>руб.</span></p>' +
+				    '<span class="a-add-rate">'+(difference ? 'Вы сделали ставку' : '')+'</span>' +
 				    '<div class="a-for-mobile-absolute">' +
 				      '<div class="a-general-goods__time_to_end">' +
-				        '<button class="a-general-goods__description_buy a-button-black">Покупаю</button>' +
-				        '<label class="a-type-to"> <input class="a-type-to-count" value="1" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' +
+				        '<button class="a-general-goods__description_buy a-button-black '+(difference ? "a-inactive" : "")+'">Покупаю</button>' +
+				        '<label class="a-type-to"> <input class="a-type-to-count" value="'+count+'" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' +
 				      '</div>' +
 				      '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:'+(timer < 10 ? '0' + timer : timer)+'</span></p>' +
 				      '<p class="a-info-about-rates">Кнопки станут активны когда в торгах останеться 10 человек</p>' +
@@ -53,14 +54,14 @@ class Template {
 				'</div>';
 	}
 
-	getAuctions(obj, className){
+	getAuctions(id, obj, className){
 
 		return '<div class="a-else-goods__item '+ className +'" >' +
 						'<div class="a-resizer-masonry">' +
 							'<img src="'+decodeURIComponent(obj.src)+'" class="a-image-to-zoom"/>' +
 						'</div>' +
 						'<div class="a-else-goods__description">' +
-						  '<p class="a-number-goods"> №' +
+						  '<p class="a-number-goods"> №'+id +
 						    '<span></span>' +
 						  '</p>' +
 						  '<p class="a-else-goods-descroption">Шапка писец</p>' +

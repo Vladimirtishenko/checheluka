@@ -4,6 +4,9 @@
 var mongoose = require('../../../../lib/mongoose');
 var schema = mongoose.Schema({
     productId:String,
+    image:String,
+    title:String,
+    size:String,
     finalePrice: {type: Number, default: 1},
     status:String,
     winnerUserId:{type: String, default: null},
