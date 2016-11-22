@@ -11,6 +11,7 @@ module.exports.post = function(req, res, next) {
             orderNumberTry = 1;
 
         data.userId = req.session.user._id;
+        data.email = req.session.user.email;
 
         orders.find({}, function(err, doc) {
 

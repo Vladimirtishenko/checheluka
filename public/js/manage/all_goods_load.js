@@ -100,9 +100,13 @@ class AsyncLoadFromAnouterResourse extends Helper {
 
 		this.viewElement.insertAdjacentHTML('beforeend', tmp);
 
-		if(this.action != 'orders'){
+
+
+		if(this.action != 'orders' && !window.globalRegistredModules['ModalGoodsToAdd']){
+			window.globalRegistredModules['ModalGoodsToAdd'] = true;
 			new ModalGoodsToAdd(this.viewElement);
-		} else {
+		} else if(this.action == 'orders' && !window.globalRegistredModules['ChangeStatus']) {
+			window.globalRegistredModules['ChangeStatus'] = true;
 			new ChangeStatus(this.viewElement);
 		}
 		

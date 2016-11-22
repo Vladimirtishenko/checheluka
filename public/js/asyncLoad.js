@@ -28,7 +28,13 @@ class AsyncLoad extends Helper {
 		this.itemCount = response.data.count;
 		this.auctionId = response.data._uid;
 		this.currentPrice = response.data.currentPrice;
+		this.previousPrice = response.data.price;
 		this.butonsDefferent = ($app.local.gets('id') == this.auctionId) && (this.currentPrice == $app.local.gets('price')) ? true : false;
+
+		if(this.butonsDefferent){
+			this.buyAction = false;
+		}
+
 		this.pretendentsAuction = response.data.pretendents;
 		this.pretendents = Object.keys(response.data.pretendents).length <= 10 ? true : false;
 
@@ -37,7 +43,7 @@ class AsyncLoad extends Helper {
 			$app.chat.clear();
 		} else {
 			$app.chat.clearTemplate(this.auctionId);
-			$app.chat.add(this.pretendentsAuction, this.currentPrice);
+			$app.chat.add(this.pretendentsAuction, this.previousPrice);
 		}
 
 
@@ -165,26 +171,15 @@ class AsyncLoad extends Helper {
 
 	}
 
-	auctionDisabled(){
-		this.buyAction = false;
-		this.buttonToBuy.classList.add('a-inactive');
-		this.notification.innerHTML = "Ставка сделана!";
-		console.log(this.buttonToBuy);
-	}
-
-	auctionEnabled(){
-		$app.local.remove(['id', 'price']);
-		this.buyAction = true;
-		this.notification.innerHTML = "";
-		this.buttonToBuy.classList.remove('a-inactive');
-	}
-
 	baseBuyInitialToUpPrice(event){
 
 		let target = event && event.target || null;
 
-		if(!target.matches('button') && !this.pretendents) return;
+		if(!this.buyAction || (!target.matches('button') && !this.pretendents)) return;
 
+		console.log(this.buyAction);
+
+		this.auctionDisabled();
 
 		let buttonPriceArray = target.innerText.match(/\d+/);
 
@@ -192,6 +187,21 @@ class AsyncLoad extends Helper {
 			$app.socket.upPrice('upPrice', {auction_id: this.auctionId, price: parseInt(buttonPriceArray[0])}, this.upPrice.bind(this));
 		}
 
+	}
+
+	auctionDisabled(){
+		this.buyAction = false;
+		this.buttonToBuy.classList.add('a-inactive');
+		this.buttonToBuyUpPrice.classList.add('a-rates-inactive');
+		this.notification.innerHTML = "Ставка сделана!";
+	}
+
+	auctionEnabled(){
+		$app.local.remove(['id', 'price']);
+		this.buyAction = true;
+		this.notification.innerHTML = "";
+		this.buttonToBuy.classList.remove('a-inactive');
+		this.buttonToBuyUpPrice.classList.remove('a-rates-inactive');
 	}
 
 	upPrice(response){

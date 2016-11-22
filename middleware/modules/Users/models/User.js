@@ -6,7 +6,7 @@ function User() {
     parent.apply(this, arguments);
     this.dataProvider = dProv;
 
-    this.requiredFields = ["uname","email","pass"];
+    this.requiredFields = ["email","pass"];
     this.entityData = {
         _id: 0,
         uname: '',

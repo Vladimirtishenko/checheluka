@@ -1,6 +1,6 @@
 var dateToStart = require('../middleware/services/configOptions'),
     mongoose = require('../lib/mongoose'),
-    Auction = require("../middleware/modules/Auction/models/SchemaModel"),
+    ordersBucket = require('../middleware/modules/Orders/models/SchemaModel'),
     async = require("async"),
     orders = require('../models/order_save');
 
@@ -15,8 +15,6 @@ module.exports.get = function(req, res, next) {
             dataOrders,
             AuctionTry
         ], function(err, result) {
-
-            console.log(result)
 
             if(view == 'privat' && typeof result.orders == 'object'){
                 var paid = [],
@@ -80,14 +78,14 @@ module.exports.get = function(req, res, next) {
 
     function AuctionTry(date, orders, callback) {
 
-        Auction.find({ winnerUserId: req.session.user._id }, function(err, data) {
+        ordersBucket.find({ userId: req.session.user._id }, function(err, data) {
             var priseSum = 0,
                 count = 0;
 
             for (var i = 0; i < data.length; i++) {
                 count += data[i].count;
-                priseSum += data[i].finalePrice * data[i].count;
-            }
+                priseSum += parseInt(data[i].finalePrice) * data[i].count;
+            } 
 
             callback(null, { date: date, orders: orders, priseSum: priseSum, count: count, data: view == 'privat' ? data : null });
 

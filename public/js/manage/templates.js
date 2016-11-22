@@ -177,6 +177,30 @@ class Templates {
 
     }
 
+    templatesForUsers(){
+
+        function templates(user) {
+
+            let template = '<tr>'+
+                                '<td>'+
+                                    user.email +
+                                '</td>' +
+                                '<td>'+
+                                    user.role + 
+                                '</td>' +
+                                '<td>'+
+                                    '<span class="a-user-remove" data-user="'+user.id+'" > Удалить</span>' +
+                                '</td>' +
+                           '</tr>';
+
+            return template;
+
+        }
+
+        return templates;
+
+    }
+
     orders() {
 
         function templates(data) {

@@ -1,4 +1,5 @@
 import Helper from './helper.js';
+import Errors from './error.js';
 
 class Modal extends Helper {
     constructor() {
@@ -11,7 +12,6 @@ class Modal extends Helper {
         this.stateValidate = true;
         this.flyEvent('add', ['click'], [button, this.close, formChange], [this.modalHandlerIn.bind(this), this.modalHandlerOut.bind(this), this.changeForm.bind(this)]);
         this.flyEvent('add', ['submit'], [formAll], this.sendForm.bind(this));
-        this.flyEvent('add', ['keypress'], [formAll], this.removeInvalid.bind(this));
 
        $app.modalOpen = this.modalHandlerIn.bind(this);
         
@@ -93,17 +93,10 @@ class Modal extends Helper {
         for(let el of elems){
             if(el.type == "email" || el.type == "password" || el.type == "text"){
                 if(!this.validate(el, target)) return;
-                if(el.type == "email"){
-                    let loginEnd = el.value.indexOf('@'),
-                        login = el.value.substring(0, loginEnd);
-
-                    formData['login'] = login;
-                }
+                    
                 formData[el.name] = el.value;
             }
         }
-
-        console.log(this.stateValidate);
 
         if(this.stateValidate){
             try{
@@ -118,9 +111,12 @@ class Modal extends Helper {
 
    afterResponseAuthorize(target, response){
 
-        if(response.data.errmsg || !response.data){
+
+        if(response.error || response.data.errmsg){
             target.reset();
-            this.errorValidate('Такой пользователь уже есть в системе!', target);
+            this.errorValidate(Errors.errorCodes(
+                (response.error && response.error.errorCode) || response.data.code
+            ), target);
             return;
         }
         location.reload();
@@ -147,19 +143,10 @@ class Modal extends Helper {
     }
 
     errorValidate(text, form){
-        this.removeInvalid({target: form});
-        form.insertAdjacentHTML('beforeend', '<p class="a-invalid">'+text+'</p>');
-        this.stateValidate = false;
+        form.insertAdjacentHTML('beforeend', '<p class="a-notify">'+text+'</p>');
         return false;
     }
 
-    removeInvalid(event){
-        try{
-            let form = event.target.closest('form') || event.target.matches('form');
-            form.removeChild(form.querySelector('.a-invalid'));
-            this.stateValidate = true;
-        } catch(e){}
-    }
 
 }
 

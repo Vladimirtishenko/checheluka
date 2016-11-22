@@ -16,11 +16,13 @@ function UsersModule() {
 UsersModule.prototype = Object.create(parent.prototype);
 UsersModule.prototype.constructor = UsersModule;
 
-UsersModule.prototype.registerUser = function(userName, email, pass){
+UsersModule.prototype.registerUser = function(email, pass, city, role, callback){
     var userData = {
-        uname: userName,
+        uname: email.split('@')[0],
         email: email,
-        pass: passHash.hash(pass)
+        pass: passHash.hash(pass),
+        city: city || 'Белгород',
+        role: role || 'customer'
     };
     var entity = usertModel.createEntity(userData);
     usertModel.saveToStorage(entity, 'create', function(user)
@@ -29,12 +31,16 @@ UsersModule.prototype.registerUser = function(userName, email, pass){
         {
             delete user.pass;
         }
-        this.dispatchEvent('userCreated', user);
+        if(callback){
+            callback(user);
+        } else {
+            this.dispatchEvent('userCreated', user);
+        }
     }.bind(this))
 };
 
 
-UsersModule.prototype.autoryze = function(email, pass){
+UsersModule.prototype.autoryze = function(email, pass, callback){
     usertModel.getEntity(email, function(user)
     {
         if (!user || !passHash.validate(user.pass, pass))
@@ -44,7 +50,11 @@ UsersModule.prototype.autoryze = function(email, pass){
         else {
             delete user.pass;
         }
-        this.dispatchEvent('autoryzeCompleted', user);
+        if(callback){
+            callback(user);
+        } else {
+          this.dispatchEvent('autoryzeCompleted', user);  
+        }
     }.bind(this));
 };
 

@@ -1,16 +1,37 @@
 var mongoose = require('../../lib/mongoose'),
-	configOptions = require('../../middleware/services/configOptions');
+	configOptions = require('../../middleware/services/configOptions'),
+	Users = require('../../middleware/modules/Users/models/SchemaModel'),
+	async = require("async");
 
 
 module.exports.get = function(req, res, next) {
 
-	configOptions.getOption('date', function(err, result) {
-        if (err) next(err);
-        res.render('index_config', {
-            title: "Checheluka Admin",
-            params: result.params
-        });
-    })
+	 async.waterfall([
+            dataTry,
+            users,
+        ], function(err, result) {
+        	if(err) next(err);
+        	res.render('index_config', {
+	            title: "Checheluka Admin",
+	            params: result.date,
+	            users: result.users
+	        });
+        })
+
+
+	 function dataTry(callback){
+	 	configOptions.getOption('date', function(err, result) {
+	        if (err) next(err);
+	        callback(null, result.params)
+	    })
+	 }
+
+	 function users(date, callback){
+	 	Users.find({role: 'admin'}, function(err, users){
+	 		if (err) next(err);
+	        callback(null, {date: date, users: users})
+		})
+	 }
 }
 
 

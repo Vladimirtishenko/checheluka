@@ -7,7 +7,16 @@ module.exports.post = function(req, res, next) {
 
     each(req.body, function(file, callback) {
 
-        var _id = file._id || new mongoose.mongo.ObjectID();
+        var _id = file._id || new mongoose.mongo.ObjectID(),
+            date = new Date();
+
+        file.date = date; 
+
+        if(!file.priority){
+           file.priority = 0;
+        } else {
+            file.priority = 1;
+        } 
 
         Goods.findOneAndUpdate({
             _id: _id

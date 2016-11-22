@@ -43,7 +43,7 @@ class Template {
 				      '</div>' +
 				      '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:'+(timer < 10 ? '0' + timer : timer)+'</span></p>' +
 				      '<p class="a-info-about-rates">Система повышает ставки автоматически на 50 руб. если хотете повысит ставку стразу нажмите на одну из кнопок ниже!</p>' +
-				      '<div class="a-general-goods__description_rates_button '+ (pretendents ? "" : "a-rates-inactive") +'">' +
+				      '<div class="a-general-goods__description_rates_button '+ (pretendents && !difference ? "" : "a-rates-inactive") +'">' +
 				        '<button class="a-button-white">+ 101 руб.</button>' +
 				        '<button class="a-button-white">+ 251 руб.</button>' +
 				        '<button class="a-button-white">+ 501 руб.</button>' +

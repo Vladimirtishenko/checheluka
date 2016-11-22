@@ -11,7 +11,8 @@ var schema = mongoose.Schema({
     delivery: String,
     warehouse: String,
     number: String,
-    goods: Object
+    goods: Object,
+    email: String
 }, { collection: 'order_save' });
 // Model
 module.exports = mongoose.model('order_save', schema);

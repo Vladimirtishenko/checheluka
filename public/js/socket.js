@@ -86,7 +86,6 @@ class Sockets extends Helper {
 	}
 
 	baseBuy(action, data, callback){
-		console.log(arguments);
 		this.setRegisteredCallback(action, callback);
 
 		this.socket.emit(action, data);

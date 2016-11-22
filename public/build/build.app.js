@@ -236,7 +236,6 @@
 		}, {
 			key: 'baseBuy',
 			value: function baseBuy(action, data, callback) {
-				console.log(arguments);
 				this.setRegisteredCallback(action, callback);
 
 				this.socket.emit(action, data);
@@ -453,6 +452,10 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
+	var _error = __webpack_require__(34);
+
+	var _error2 = _interopRequireDefault(_error);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -477,7 +480,6 @@
 	        _this.stateValidate = true;
 	        _this.flyEvent('add', ['click'], [button, _this.close, formChange], [_this.modalHandlerIn.bind(_this), _this.modalHandlerOut.bind(_this), _this.changeForm.bind(_this)]);
 	        _this.flyEvent('add', ['submit'], [formAll], _this.sendForm.bind(_this));
-	        _this.flyEvent('add', ['keypress'], [formAll], _this.removeInvalid.bind(_this));
 
 	        $app.modalOpen = _this.modalHandlerIn.bind(_this);
 
@@ -589,12 +591,7 @@
 
 	                    if (el.type == "email" || el.type == "password" || el.type == "text") {
 	                        if (!this.validate(el, target)) return;
-	                        if (el.type == "email") {
-	                            var loginEnd = el.value.indexOf('@'),
-	                                login = el.value.substring(0, loginEnd);
 
-	                            formData['login'] = login;
-	                        }
 	                        formData[el.name] = el.value;
 	                    }
 	                }
@@ -613,8 +610,6 @@
 	                }
 	            }
 
-	            console.log(this.stateValidate);
-
 	            if (this.stateValidate) {
 	                try {
 	                    $app.socket.authorize(action, formData, this.afterResponseAuthorize.bind(this, target));
@@ -627,9 +622,9 @@
 	        key: 'afterResponseAuthorize',
 	        value: function afterResponseAuthorize(target, response) {
 
-	            if (response.data.errmsg || !response.data) {
+	            if (response.error || response.data.errmsg) {
 	                target.reset();
-	                this.errorValidate('Такой пользователь уже есть в системе!', target);
+	                this.errorValidate(_error2.default.errorCodes(response.error && response.error.errorCode || response.data.code), target);
 	                return;
 	            }
 	            location.reload();
@@ -655,19 +650,8 @@
 	    }, {
 	        key: 'errorValidate',
 	        value: function errorValidate(text, form) {
-	            this.removeInvalid({ target: form });
-	            form.insertAdjacentHTML('beforeend', '<p class="a-invalid">' + text + '</p>');
-	            this.stateValidate = false;
+	            form.insertAdjacentHTML('beforeend', '<p class="a-notify">' + text + '</p>');
 	            return false;
-	        }
-	    }, {
-	        key: 'removeInvalid',
-	        value: function removeInvalid(event) {
-	            try {
-	                var form = event.target.closest('form') || event.target.matches('form');
-	                form.removeChild(form.querySelector('.a-invalid'));
-	                this.stateValidate = true;
-	            } catch (e) {}
 	        }
 	    }]);
 
@@ -984,7 +968,13 @@
 				this.itemCount = response.data.count;
 				this.auctionId = response.data._uid;
 				this.currentPrice = response.data.currentPrice;
+				this.previousPrice = response.data.price;
 				this.butonsDefferent = $app.local.gets('id') == this.auctionId && this.currentPrice == $app.local.gets('price') ? true : false;
+
+				if (this.butonsDefferent) {
+					this.buyAction = false;
+				}
+
 				this.pretendentsAuction = response.data.pretendents;
 				this.pretendents = Object.keys(response.data.pretendents).length <= 10 ? true : false;
 
@@ -992,7 +982,7 @@
 					$app.chat.clear();
 				} else {
 					$app.chat.clearTemplate(this.auctionId);
-					$app.chat.add(this.pretendentsAuction, this.currentPrice);
+					$app.chat.add(this.pretendentsAuction, this.previousPrice);
 				}
 
 				var template = _template2.default['getCurrentAuction'](this.auctionId, response.data.lot, this.currentPrice, response.data.timer, this.pretendents, this.itemCount, this.butonsDefferent);
@@ -1115,12 +1105,30 @@
 				}
 			}
 		}, {
+			key: 'baseBuyInitialToUpPrice',
+			value: function baseBuyInitialToUpPrice(event) {
+
+				var target = event && event.target || null;
+
+				if (!this.buyAction || !target.matches('button') && !this.pretendents) return;
+
+				console.log(this.buyAction);
+
+				this.auctionDisabled();
+
+				var buttonPriceArray = target.innerText.match(/\d+/);
+
+				if (buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) > 50 && parseInt(buttonPriceArray[0]) < 502) {
+					$app.socket.upPrice('upPrice', { auction_id: this.auctionId, price: parseInt(buttonPriceArray[0]) }, this.upPrice.bind(this));
+				}
+			}
+		}, {
 			key: 'auctionDisabled',
 			value: function auctionDisabled() {
 				this.buyAction = false;
 				this.buttonToBuy.classList.add('a-inactive');
+				this.buttonToBuyUpPrice.classList.add('a-rates-inactive');
 				this.notification.innerHTML = "Ставка сделана!";
-				console.log(this.buttonToBuy);
 			}
 		}, {
 			key: 'auctionEnabled',
@@ -1129,20 +1137,7 @@
 				this.buyAction = true;
 				this.notification.innerHTML = "";
 				this.buttonToBuy.classList.remove('a-inactive');
-			}
-		}, {
-			key: 'baseBuyInitialToUpPrice',
-			value: function baseBuyInitialToUpPrice(event) {
-
-				var target = event && event.target || null;
-
-				if (!target.matches('button') && !this.pretendents) return;
-
-				var buttonPriceArray = target.innerText.match(/\d+/);
-
-				if (buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) > 50 && parseInt(buttonPriceArray[0]) < 502) {
-					$app.socket.upPrice('upPrice', { auction_id: this.auctionId, price: parseInt(buttonPriceArray[0]) }, this.upPrice.bind(this));
-				}
+				this.buttonToBuyUpPrice.classList.remove('a-rates-inactive');
 			}
 		}, {
 			key: 'upPrice',
@@ -1217,7 +1212,7 @@
 		_createClass(Template, [{
 			key: 'getCurrentAuction',
 			value: function getCurrentAuction(id, obj, price, timer, pretendents, count, difference) {
-				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№' + id + '</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now"><i class="a-general-goods__description_price_now_upgraded">' + price + '</i> <span>руб.</span></p>' + '<span class="a-add-rate">' + (difference ? 'Вы сделали ставку' : '') + '</span>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black ' + (difference ? "a-inactive" : "") + '">Покупаю</button>' + '<label class="a-type-to"> <input class="a-type-to-count" value="' + count + '" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' + '</div>' + '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:' + (timer < 10 ? '0' + timer : timer) + '</span></p>' + '<p class="a-info-about-rates">Система повышает ставки автоматически на 50 руб. если хотете повысит ставку стразу нажмите на одну из кнопок ниже!</p>' + '<div class="a-general-goods__description_rates_button ' + (pretendents ? "" : "a-rates-inactive") + '">' + '<button class="a-button-white">+ 101 руб.</button>' + '<button class="a-button-white">+ 251 руб.</button>' + '<button class="a-button-white">+ 501 руб.</button>' + '<button class="a-button-white">+ 751 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
+				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№' + id + '</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title) + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + decodeURIComponent(obj.consistOf) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + decodeURIComponent(obj.material) + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now"><i class="a-general-goods__description_price_now_upgraded">' + price + '</i> <span>руб.</span></p>' + '<span class="a-add-rate">' + (difference ? 'Вы сделали ставку' : '') + '</span>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black ' + (difference ? "a-inactive" : "") + '">Покупаю</button>' + '<label class="a-type-to"> <input class="a-type-to-count" value="' + count + '" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' + '</div>' + '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:' + (timer < 10 ? '0' + timer : timer) + '</span></p>' + '<p class="a-info-about-rates">Система повышает ставки автоматически на 50 руб. если хотете повысит ставку стразу нажмите на одну из кнопок ниже!</p>' + '<div class="a-general-goods__description_rates_button ' + (pretendents && !difference ? "" : "a-rates-inactive") + '">' + '<button class="a-button-white">+ 101 руб.</button>' + '<button class="a-button-white">+ 251 руб.</button>' + '<button class="a-button-white">+ 501 руб.</button>' + '<button class="a-button-white">+ 751 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
 			}
 		}, {
 			key: 'getAuctions',
@@ -1518,9 +1513,11 @@
 				try {
 					var object = JSON.parse(obj);
 					if (object.status == 200) {
-						form.insertAdjacentHTML('beforeend', '<p>Ваш заказ отправлен на обработку!</p>');
+						form.insertAdjacentHTML('beforeend', '<p class="a-notify">Ваш заказ отправлен на обработку!</p>');
+						this.form.parentNode.removeItem(this.form);
+						this.el.closest('.a-privat-price-to-change').removeItem(this.el);
 					} else {
-						form.insertAdjacentHTML('beforeend', '<p>Произошла ошибка, попробуйте позже!</p>');
+						form.insertAdjacentHTML('beforeend', '<p class="a-notify">Произошла ошибка, попробуйте позже!</p>');
 					}
 				} catch (e) {}
 			}
@@ -1616,6 +1613,58 @@
 	}(_helper2.default);
 
 	exports.default = LocalBase;
+
+/***/ },
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ErrorCode = function () {
+		function ErrorCode() {
+			_classCallCheck(this, ErrorCode);
+
+			window.addEventListener('click', function () {
+				var errorPlaceholders = document.querySelectorAll('.a-notify');
+
+				for (var i = 0; i < errorPlaceholders.length; i++) {
+					errorPlaceholders[i].parentNode.removeChild(errorPlaceholders[i]);
+				}
+			});
+		}
+
+		_createClass(ErrorCode, [{
+			key: 'errorCodes',
+			value: function errorCodes(code) {
+				var codesState = {
+					11000: 'Такой пользователь уже есть в системе',
+					401: 'Не правильно введен логин или пароль'
+				};
+
+				return codesState[code];
+			}
+		}]);
+
+		return ErrorCode;
+	}();
+
+	exports.default = new ErrorCode();
 
 /***/ }
 /******/ ]);

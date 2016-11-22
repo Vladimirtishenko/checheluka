@@ -13,7 +13,8 @@ var schema = mongoose.Schema({
     countInWarehouse: {type: Number, default: 1},
     auctionPrice: {type: Number, default: 30},
     price: {type: Number, default: 0},
-    priority: Boolean
+    priority: {type: Number, default: 0},
+    date: Date
 }, { collection: 'goods' });
 // Model
 module.exports = mongoose.model('goods', schema);

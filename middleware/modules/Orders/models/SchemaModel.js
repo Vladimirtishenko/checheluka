@@ -7,7 +7,7 @@ var schema = mongoose.Schema({
     auctionId: String,
     product: mongoose.Schema.Types.Mixed,
     finalePrice: String,
-    count: {type: Number, default: 1},
+    count: {type: Number, default: 1}
 }, { collection: 'orders' });
 // Model
 module.exports = mongoose.model('orders', schema);

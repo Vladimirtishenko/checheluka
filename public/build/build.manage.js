@@ -590,9 +590,11 @@
 
 				this.viewElement.insertAdjacentHTML('beforeend', tmp);
 
-				if (this.action != 'orders') {
+				if (this.action != 'orders' && !window.globalRegistredModules['ModalGoodsToAdd']) {
+					window.globalRegistredModules['ModalGoodsToAdd'] = true;
 					new _add_or_delete_action2.default(this.viewElement);
-				} else {
+				} else if (this.action == 'orders' && !window.globalRegistredModules['ChangeStatus']) {
+					window.globalRegistredModules['ChangeStatus'] = true;
 					new _privat_change_status_order2.default(this.viewElement);
 				}
 
@@ -674,6 +676,19 @@
 	            return templates;
 	        }
 	    }, {
+	        key: 'templatesForUsers',
+	        value: function templatesForUsers() {
+
+	            function templates(user) {
+
+	                var template = '<tr>' + '<td>' + user.email + '</td>' + '<td>' + user.role + '</td>' + '<td>' + '<span class="a-user-remove" data-user="' + user.id + '" > Удалить</span>' + '</td>' + '</tr>';
+
+	                return template;
+	            }
+
+	            return templates;
+	        }
+	    }, {
 	        key: 'orders',
 	        value: function orders() {
 
@@ -727,6 +742,14 @@
 
 	var _flatpickr2 = _interopRequireDefault(_flatpickr);
 
+	var _templates = __webpack_require__(30);
+
+	var _templates2 = _interopRequireDefault(_templates);
+
+	var _error = __webpack_require__(34);
+
+	var _error2 = _interopRequireDefault(_error);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -749,8 +772,12 @@
 	        _this.calendarInput = document.querySelector('.a-flatpickr');
 	        _this.datetoView = document.querySelector('.a-startet-date span');
 	        _this.resultHandler = document.querySelector('.a-result');
+	        _this.formUser = document.querySelector('.a-form-to-add-user');
+	        _this.usersTable = document.querySelector('.a-users-table');
+	        _this.templates = _templates2.default['templatesForUsers']();
 
-	        _this.flyEvent('add', ['click'], [_this.saveDate], _this.handlerToSave.bind(_this));
+	        _this.flyEvent('add', ['click'], [_this.saveDate, _this.usersTable], [_this.handlerToSave.bind(_this), _this.handlerToRemoveUser.bind(_this)]);
+	        _this.flyEvent('add', ['submit'], [_this.formUser], _this.handlerToAddUser.bind(_this));
 
 	        _this.setInputCalendar();
 
@@ -784,6 +811,67 @@
 	                inline: true,
 	                enableTime: true
 	            });
+	        }
+	    }, {
+	        key: 'handlerToAddUser',
+	        value: function handlerToAddUser(event) {
+	            event.preventDefault();
+
+	            var form = event && event.target || null,
+	                data = '';
+
+	            if (!form) return;
+
+	            var elems = form.elements;
+
+	            for (var i = 0; i < elems.length; i++) {
+	                if (elems[i].tagName == 'INPUT') {
+	                    data += '&' + elems[i].name + '=' + elems[i].value;
+	                }
+	            }
+
+	            this.xhrRequest('PUT', '/users', 'application/x-www-form-urlencoded', data.slice(1), this.responseToSaveUser.bind(this));
+	        }
+	    }, {
+	        key: 'handlerToRemoveUser',
+	        value: function handlerToRemoveUser(event) {
+	            event.preventDefault();
+
+	            var removerId = event && event.target && event.target.classList.contains('a-user-remove') ? event.target.getAttribute('data-user') : null,
+	                allUser = document.querySelectorAll('.a-user-remove');
+
+	            if (!removerId || allUser.length == 1) return;
+
+	            this.xhrRequest('DELETE', '/users', 'application/x-www-form-urlencoded', 'id=' + removerId, this.responseToDeleteUser.bind(this, event.target));
+	        }
+	    }, {
+	        key: 'responseToSaveUser',
+	        value: function responseToSaveUser(obj) {
+
+	            try {
+	                var object = JSON.parse(obj),
+	                    user = object.user;
+
+	                if (user.errmsg) {
+	                    this.usersTable.insertAdjacentHTML('afterend', '<p class="a-notify">' + _error2.default.errorCodes(user.code) + '</p>');
+	                } else {
+	                    this.usersTable.insertAdjacentHTML('beforeend', this.templates(user));
+	                }
+	            } catch (e) {}
+	        }
+	    }, {
+	        key: 'responseToDeleteUser',
+	        value: function responseToDeleteUser(target, obj) {
+
+	            try {
+	                var data = JSON.parse(obj);
+
+	                if (data.user.n > 0) {
+	                    var tr = target.closest('tr');
+
+	                    tr.parentNode.removeChild(tr);
+	                }
+	            } catch (e) {}
 	        }
 	    }, {
 	        key: 'responseToSaveDate',
@@ -2362,6 +2450,50 @@
 	}(_helper2.default);
 
 	exports.default = ChangeStatus;
+
+/***/ },
+/* 34 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ErrorCode = function () {
+		function ErrorCode() {
+			_classCallCheck(this, ErrorCode);
+
+			window.addEventListener('click', function () {
+				var errorPlaceholders = document.querySelectorAll('.a-notify');
+
+				for (var i = 0; i < errorPlaceholders.length; i++) {
+					errorPlaceholders[i].parentNode.removeChild(errorPlaceholders[i]);
+				}
+			});
+		}
+
+		_createClass(ErrorCode, [{
+			key: 'errorCodes',
+			value: function errorCodes(code) {
+				var codesState = {
+					11000: 'Такой пользователь уже есть в системе',
+					401: 'Не правильно введен логин или пароль'
+				};
+
+				return codesState[code];
+			}
+		}]);
+
+		return ErrorCode;
+	}();
+
+	exports.default = new ErrorCode();
 
 /***/ }
 /******/ ]);
