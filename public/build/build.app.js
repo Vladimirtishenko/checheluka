@@ -56,31 +56,31 @@
 
 	var _modal2 = _interopRequireDefault(_modal);
 
-	var _chat = __webpack_require__(18);
+	var _chat = __webpack_require__(19);
 
 	var _chat2 = _interopRequireDefault(_chat);
 
-	var _zoomImg = __webpack_require__(19);
+	var _zoomImg = __webpack_require__(20);
 
 	var _zoomImg2 = _interopRequireDefault(_zoomImg);
 
-	var _asyncLoad = __webpack_require__(20);
+	var _asyncLoad = __webpack_require__(21);
 
 	var _asyncLoad2 = _interopRequireDefault(_asyncLoad);
 
-	var _asyncLoadAllGoods = __webpack_require__(22);
+	var _asyncLoadAllGoods = __webpack_require__(23);
 
 	var _asyncLoadAllGoods2 = _interopRequireDefault(_asyncLoadAllGoods);
 
-	var _timerToStart = __webpack_require__(23);
+	var _timerToStart = __webpack_require__(24);
 
 	var _timerToStart2 = _interopRequireDefault(_timerToStart);
 
-	var _privat = __webpack_require__(24);
+	var _privat = __webpack_require__(25);
 
 	var _privat2 = _interopRequireDefault(_privat);
 
-	var _localBase = __webpack_require__(25);
+	var _localBase = __webpack_require__(26);
 
 	var _localBase2 = _interopRequireDefault(_localBase);
 
@@ -155,36 +155,9 @@
 			_this.registeredCallback = {};
 
 			_this.socket.on('serverMessage', function (mess) {
-				console.log(mess);
-				/*if (mess.action == 'login' && mess.data)
-	   {
-	   	this.socket.emit('upPrice', {auction_id:1, price: 2222});
-	   }
-	   	if (mess.action == 'upPrice')
-	   {
-	   	this.socket.emit('upCount', {auction_id:1, count: 2});
-	   }*/
 				try {
 					_this.registeredCallback[mess.action](mess);
-				} catch (e) {
-					console.log(e);
-					console.log(e.stack);
-				}
-
-				/*try{
-	   	this[mess.action](mess);
-	   } catch(e){
-	   	console.log(e);
-	   }
-	   
-	   	if (mess.action == 'autoryze' && mess.data)
-	   {
-	   	this.socket.emit('getCurrentAuction', {});
-	   }
-	   	if (mess.action == 'getCurrentAuction' && mess.data)
-	   {
-	   	this.socket.emit('baseBuy', {auction_id: mess.data._uid});
-	   }*/
+				} catch (e) {}
 			});
 			return _this;
 		}
@@ -452,7 +425,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _error = __webpack_require__(34);
+	var _error = __webpack_require__(18);
 
 	var _error2 = _interopRequireDefault(_error);
 
@@ -662,6 +635,50 @@
 
 /***/ },
 /* 18 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ErrorCode = function () {
+		function ErrorCode() {
+			_classCallCheck(this, ErrorCode);
+
+			window.addEventListener('click', function () {
+				var errorPlaceholders = document.querySelectorAll('.a-notify');
+
+				for (var i = 0; i < errorPlaceholders.length; i++) {
+					errorPlaceholders[i].parentNode.removeChild(errorPlaceholders[i]);
+				}
+			});
+		}
+
+		_createClass(ErrorCode, [{
+			key: 'errorCodes',
+			value: function errorCodes(code) {
+				var codesState = {
+					11000: 'Такой пользователь уже есть в системе',
+					401: 'Не правильно введен логин или пароль'
+				};
+
+				return codesState[code];
+			}
+		}]);
+
+		return ErrorCode;
+	}();
+
+	exports.default = new ErrorCode();
+
+/***/ },
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -770,7 +787,7 @@
 	exports.default = Chat;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -906,7 +923,7 @@
 	exports.default = Zoom;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -921,7 +938,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _template = __webpack_require__(21);
+	var _template = __webpack_require__(22);
 
 	var _template2 = _interopRequireDefault(_template);
 
@@ -1008,11 +1025,6 @@
 			value: function getAuctions(response) {
 
 				if (!response.data || Object.keys(response.data).length == 0) return;
-				var keys = Object.keys(response.data);
-				if (keys.length > 3) {
-					this.getCurrentAuction(response.data[keys[0]]);
-					delete response.data[keys[0]];
-				}
 
 				var template = '<div class="a-goods__item__reisizers">',
 				    i = 0,
@@ -1073,7 +1085,7 @@
 					this.notification.innerHTML = "";
 					this.auctionEnabled();
 
-					$app.chat.add(this.pretendentsAuction, this.currentPrice);
+					$app.chat.add(this.pretendentsAuction, response.data.price);
 
 					try {
 						clearTimeout(this.globalTimer);
@@ -1191,7 +1203,7 @@
 	exports.default = AsyncLoad;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1228,7 +1240,7 @@
 	exports.default = new Template();
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1319,7 +1331,7 @@
 	exports.default = AsyncLoadAllGoods;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1428,7 +1440,7 @@
 	exports.default = Timer;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1550,7 +1562,7 @@
 	exports.default = Privat;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1613,58 +1625,6 @@
 	}(_helper2.default);
 
 	exports.default = LocalBase;
-
-/***/ },
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var ErrorCode = function () {
-		function ErrorCode() {
-			_classCallCheck(this, ErrorCode);
-
-			window.addEventListener('click', function () {
-				var errorPlaceholders = document.querySelectorAll('.a-notify');
-
-				for (var i = 0; i < errorPlaceholders.length; i++) {
-					errorPlaceholders[i].parentNode.removeChild(errorPlaceholders[i]);
-				}
-			});
-		}
-
-		_createClass(ErrorCode, [{
-			key: 'errorCodes',
-			value: function errorCodes(code) {
-				var codesState = {
-					11000: 'Такой пользователь уже есть в системе',
-					401: 'Не правильно введен логин или пароль'
-				};
-
-				return codesState[code];
-			}
-		}]);
-
-		return ErrorCode;
-	}();
-
-	exports.default = new ErrorCode();
 
 /***/ }
 /******/ ]);

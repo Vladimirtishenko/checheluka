@@ -8,19 +8,11 @@ var usersModule = new usersClass();
 var ordersModule = new orderClass();
 var configOptions = require('./services/configOptions');
 var socketClient = require('./services/socketClient');
-var loadProductSleepTime = 5; // if product did not loaded server slepp for $ sec
+var loadProductSleepTime = 120; // if product did not loaded server slepp for $ sec
 
 function socketFrontController(io){
     this.io = io;
     //set starting data
-    this.pro = {
-        auctionPrice: 10,
-        title: 'qqq',
-        description: 'wq',
-        color: '12',
-        size: 'L',
-        countInWarehouse: 1
-    };
     this.limit = 4;
     this.offset = 0;
     this.productsPull = {};
@@ -113,12 +105,16 @@ socketFrontController.prototype.register_user = function(client, data){
     usersModule.registerUser(data.email, data.pass, data.city);
 }
 
-socketFrontController.prototype.getAuctions = function(client, data){
+socketFrontController.prototype.getAuctionsAll = function(client, data){
     client.socket.emit('serverMessage', this.createMessage('getAuctions', this.auctionsPull));
 }
-socketFrontController.prototype.getAuctionStatus = function(client, data){
 
+socketFrontController.prototype.getAuctions = function(client, data){
+    var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
+    delete auctions[this.curAuction];
+    client.socket.emit('serverMessage', this.createMessage('getAuctions', auctions));
 }
+
 socketFrontController.prototype.getCurrentAuction = function(client, data){
     var curr = this.auctionsPull[this.curAuction] || auctionModule.getCurrent();
     return client.socket.emit('serverMessage', this.createMessage('getCurrentAuction', curr));
@@ -237,7 +233,6 @@ socketFrontController.prototype.setProductList = function(event, products){
         this.offset += products.length;
         for(var i = 0; i < products.length; i++)
         {
-            products[i].countInWarehouse = 10;
             this.productsPull[products[i]._id] = products[i];
         }
         this.setAuctionList(products);
@@ -264,6 +259,9 @@ socketFrontController.prototype.setAuctionList = function(products){
         this.curAuction = this.auctionsPull[keys[0]]._uid;
         this.initStart();
     }
+    var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
+    delete auctions[this.curAuction];
+    this.sendToAll(this.createMessage('getAuctions', auctions));
 }
 
 socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, data){
@@ -284,7 +282,7 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
                 data._id,
                 prod,
                 data.count,
-                data.finalePrice
+                data.price
             );
         });
         productsModule.updateProduct(updata);

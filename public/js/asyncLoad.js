@@ -72,14 +72,8 @@ class AsyncLoad extends Helper {
 
 	getAuctions(response){
 
-
 		if(!response.data || Object.keys(response.data).length == 0) return;
-		var keys = Object.keys(response.data);
-		if(keys.length > 3){
-			this.getCurrentAuction(response.data[keys[0]]);
-			delete response.data[keys[0]];
-		} 
-
+	 
 		let template = '<div class="a-goods__item__reisizers">',
 			i = 0,
 			classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];
@@ -136,7 +130,7 @@ class AsyncLoad extends Helper {
 			this.notification.innerHTML = "";
 			this.auctionEnabled();
 
-			$app.chat.add(this.pretendentsAuction, this.currentPrice);
+			$app.chat.add(this.pretendentsAuction, response.data.price);
 
 			try{
 				clearTimeout(this.globalTimer);

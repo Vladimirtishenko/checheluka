@@ -15,9 +15,9 @@ block content
 								- allcount += item.finalePrice * item.count
 								.a-privat-table
 									.a-privat-table__image_block
-										- var img = decodeURIComponent(item.image)
+										- var img = decodeURIComponent(item.product.src)
 										img(src=img, alt="")
-										- var title = decodeURIComponent(item.title)
+										- var title = decodeURIComponent(item.product.title)
 										p 
 											| #{title}
 									.a-privat-table__count_and_price

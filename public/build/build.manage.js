@@ -46,17 +46,17 @@
 
 	'use strict';
 
-	__webpack_require__(26);
+	__webpack_require__(27);
 
-	var _add_or_delete_action = __webpack_require__(28);
+	var _add_or_delete_action = __webpack_require__(29);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _all_goods_load = __webpack_require__(29);
+	var _all_goods_load = __webpack_require__(30);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
 
-	var _config = __webpack_require__(31);
+	var _config = __webpack_require__(33);
 
 	var _config2 = _interopRequireDefault(_config);
 
@@ -260,7 +260,50 @@
 
 /***/ },
 /* 17 */,
-/* 18 */,
+/* 18 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ErrorCode = function () {
+		function ErrorCode() {
+			_classCallCheck(this, ErrorCode);
+
+			window.addEventListener('click', function () {
+				var errorPlaceholders = document.querySelectorAll('.a-notify');
+
+				for (var i = 0; i < errorPlaceholders.length; i++) {
+					errorPlaceholders[i].parentNode.removeChild(errorPlaceholders[i]);
+				}
+			});
+		}
+
+		_createClass(ErrorCode, [{
+			key: 'errorCodes',
+			value: function errorCodes(code) {
+				var codesState = {
+					11000: 'Такой пользователь уже есть в системе',
+					401: 'Не правильно введен логин или пароль'
+				};
+
+				return codesState[code];
+			}
+		}]);
+
+		return ErrorCode;
+	}();
+
+	exports.default = new ErrorCode();
+
+/***/ },
 /* 19 */,
 /* 20 */,
 /* 21 */,
@@ -268,14 +311,15 @@
 /* 23 */,
 /* 24 */,
 /* 25 */,
-/* 26 */
+/* 26 */,
+/* 27 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 27 */,
-/* 28 */
+/* 28 */,
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -432,7 +476,7 @@
 	exports.default = ModalGoodsToAdd;
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -447,15 +491,15 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _add_or_delete_action = __webpack_require__(28);
+	var _add_or_delete_action = __webpack_require__(29);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _privat_change_status_order = __webpack_require__(33);
+	var _privat_change_status_order = __webpack_require__(31);
 
 	var _privat_change_status_order2 = _interopRequireDefault(_privat_change_status_order);
 
-	var _templates = __webpack_require__(30);
+	var _templates = __webpack_require__(32);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -610,7 +654,88 @@
 	exports.default = AsyncLoadFromAnouterResourse;
 
 /***/ },
-/* 30 */
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ChangeStatus = function (_Helper) {
+		_inherits(ChangeStatus, _Helper);
+
+		function ChangeStatus(elem) {
+			_classCallCheck(this, ChangeStatus);
+
+			var _this = _possibleConstructorReturn(this, (ChangeStatus.__proto__ || Object.getPrototypeOf(ChangeStatus)).call(this));
+
+			if (!elem) return _possibleConstructorReturn(_this);
+
+			_this.view = elem;
+
+			_this.flyEvent('add', ['click'], [_this.view], _this.checkedSelect.bind(_this));
+
+			return _this;
+		}
+
+		_createClass(ChangeStatus, [{
+			key: 'findSelected',
+			value: function findSelected(number) {
+				var status = {
+					0: "Не оплачен",
+					1: "Оплачен",
+					2: "Отменен"
+				};
+
+				return status[number];
+			}
+		}, {
+			key: 'checkedSelect',
+			value: function checkedSelect(event) {
+
+				var target = event && event.target && event.target.classList.contains('a-privat-table__submit') ? event.target : null;
+
+				if (!target) return;
+
+				var selected = target.previousElementSibling,
+				    value = selected.value,
+				    fieldToReplace = selected.previousElementSibling,
+				    orderNumber = target.getAttribute('data-value');
+
+				fieldToReplace.firstElementChild.innerHTML = this.findSelected(value);
+
+				this.xhrRequest('POST', '/orderAdminLoads', 'application/x-www-form-urlencoded', 'status=' + value + '&orderNumber=' + orderNumber, this.responseChange.bind(this));
+			}
+		}, {
+			key: 'responseChange',
+			value: function responseChange(obj) {
+				console.log(obj);
+			}
+		}]);
+
+		return ChangeStatus;
+	}(_helper2.default);
+
+	exports.default = ChangeStatus;
+
+/***/ },
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -723,7 +848,7 @@
 	exports.default = new Templates();
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -738,15 +863,15 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _flatpickr = __webpack_require__(32);
+	var _flatpickr = __webpack_require__(34);
 
 	var _flatpickr2 = _interopRequireDefault(_flatpickr);
 
-	var _templates = __webpack_require__(30);
+	var _templates = __webpack_require__(32);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
-	var _error = __webpack_require__(34);
+	var _error = __webpack_require__(18);
 
 	var _error2 = _interopRequireDefault(_error);
 
@@ -895,7 +1020,7 @@
 	exports.default = Config;
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -2369,131 +2494,6 @@
 	}
 
 	if (true) module.exports = Flatpickr;
-
-/***/ },
-/* 33 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _helper = __webpack_require__(16);
-
-	var _helper2 = _interopRequireDefault(_helper);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ChangeStatus = function (_Helper) {
-		_inherits(ChangeStatus, _Helper);
-
-		function ChangeStatus(elem) {
-			_classCallCheck(this, ChangeStatus);
-
-			var _this = _possibleConstructorReturn(this, (ChangeStatus.__proto__ || Object.getPrototypeOf(ChangeStatus)).call(this));
-
-			if (!elem) return _possibleConstructorReturn(_this);
-
-			_this.view = elem;
-
-			_this.flyEvent('add', ['click'], [_this.view], _this.checkedSelect.bind(_this));
-
-			return _this;
-		}
-
-		_createClass(ChangeStatus, [{
-			key: 'findSelected',
-			value: function findSelected(number) {
-				var status = {
-					0: "Не оплачен",
-					1: "Оплачен",
-					2: "Отменен"
-				};
-
-				return status[number];
-			}
-		}, {
-			key: 'checkedSelect',
-			value: function checkedSelect(event) {
-
-				var target = event && event.target && event.target.classList.contains('a-privat-table__submit') ? event.target : null;
-
-				if (!target) return;
-
-				var selected = target.previousElementSibling,
-				    value = selected.value,
-				    fieldToReplace = selected.previousElementSibling,
-				    orderNumber = target.getAttribute('data-value');
-
-				fieldToReplace.firstElementChild.innerHTML = this.findSelected(value);
-
-				this.xhrRequest('POST', '/orderAdminLoads', 'application/x-www-form-urlencoded', 'status=' + value + '&orderNumber=' + orderNumber, this.responseChange.bind(this));
-			}
-		}, {
-			key: 'responseChange',
-			value: function responseChange(obj) {
-				console.log(obj);
-			}
-		}]);
-
-		return ChangeStatus;
-	}(_helper2.default);
-
-	exports.default = ChangeStatus;
-
-/***/ },
-/* 34 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var ErrorCode = function () {
-		function ErrorCode() {
-			_classCallCheck(this, ErrorCode);
-
-			window.addEventListener('click', function () {
-				var errorPlaceholders = document.querySelectorAll('.a-notify');
-
-				for (var i = 0; i < errorPlaceholders.length; i++) {
-					errorPlaceholders[i].parentNode.removeChild(errorPlaceholders[i]);
-				}
-			});
-		}
-
-		_createClass(ErrorCode, [{
-			key: 'errorCodes',
-			value: function errorCodes(code) {
-				var codesState = {
-					11000: 'Такой пользователь уже есть в системе',
-					401: 'Не правильно введен логин или пароль'
-				};
-
-				return codesState[code];
-			}
-		}]);
-
-		return ErrorCode;
-	}();
-
-	exports.default = new ErrorCode();
 
 /***/ }
 /******/ ]);
