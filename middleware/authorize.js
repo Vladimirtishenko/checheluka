@@ -1,9 +1,10 @@
-module.exports = function(req, res, next, user){
-	if(req.session && req.session.user.role == 'admin'){
+module.exports = function(req, res, next){
+
+	if(req.session && req.session.user && req.session.user.role == 'admin'){
 		next();
 	} else {
 		res.render('login', {
-			user: user
+			user: arguments[3] || null
 		});
 	}
 }

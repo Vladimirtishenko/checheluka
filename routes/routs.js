@@ -1,4 +1,4 @@
-var CheckAuth = require("../middleware/authorize.js");
+var CheckAuth = require("../middleware/authorize");
 
 module.exports = function(app){
 

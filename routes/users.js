@@ -10,12 +10,15 @@ module.exports.get = function(req, res, next) {
 module.exports.post = function(req, res, next) {
 
   var user =  new moduleUser();
-
-  user.autoryze(req.body.email, req.body.pass, function(user){
-    if(user && user.role == "admin"){
+  user.autoryze(req.body.email, req.body.pass, function(userData){
+    if(userData && userData.role == "admin"){
+      req.session.user = userData;
+      req.session.save(function(err, data) {
+        //TODO:: error handling
+      });
       res.redirect('/page_auction');
     } else {
-      CheckAuth(req, res, next, 'Такого пользователя нет либо не верный пароль!');
+      CheckAuth.call(this, req, res, next, 'Такого пользователя нет либо не верный пароль!')
     }
   })
 

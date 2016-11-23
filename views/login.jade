@@ -6,7 +6,7 @@ head
 	title Document
 body.a-login-form
 	.a-modal__item
-		form(action="/users" method="POST").a-form-submit.a-form-modal.-enter-placeholder(data-action="login")
+		form(action="/users" method="POST" data-action="login" class="a-form-submit a-form-modal -enter-placeholder")
 			h2.a-modal__item_title Войти
 			input(type="email" id="a-name" name="email" required)
 			label(for="#a-name") Email
