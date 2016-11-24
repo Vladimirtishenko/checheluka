@@ -112,12 +112,9 @@ class AsyncLoad extends Helper {
 
 
 	auctionFinished(response){
-
-		console.log(response);
-
 		this.buyAction = true;
 		this.buttonToBuy.classList.remove('a-inactive');
-		$app.modalOpen({attr: 'a-modal-goods-winner', winner: response.data && response.data.winner && response.data.winner.email || 'Победителей нет'});
+		$app.chat.addWinner(response.data.winner, response.data.price);
 	}
 
 	auctionUpdated(response){

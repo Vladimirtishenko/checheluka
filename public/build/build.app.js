@@ -718,6 +718,7 @@
 
 			$app.chat = {
 				add: _this.addChat.bind(_this),
+				addWinner: _this.addWinner.bind(_this),
 				clearTemplate: _this.clearTemplate.bind(_this),
 				clear: _this.clearChat.bind(_this)
 			};
@@ -741,6 +742,12 @@
 				this.beforeEl.insertAdjacentHTML('afterend', this.chatTemplate(pretendents, price));
 			}
 		}, {
+			key: 'addWinner',
+			value: function addWinner(winner, price) {
+
+				this.beforeEl.insertAdjacentHTML('afterend', this.chatTemplateWinner(winner, price));
+			}
+		}, {
 			key: 'clearChat',
 			value: function clearChat() {
 				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Аукционы пока не начались! </p>' + '</div>';
@@ -754,6 +761,15 @@
 				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Торги по аукциону <span>№' + id + '</span></p>' + '</div>';
 
 				this.beforeEl.insertAdjacentHTML('afterend', template);
+			}
+		}, {
+			key: 'chatTemplateWinner',
+			value: function chatTemplateWinner(pretendents, price) {
+				var win = Object.keys(pretendents).length;
+
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Купили товар за <span>' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : this.chatTemplateUsers(pretendents)) + '</p>' + '</div>';
+
+				return template;
 			}
 		}, {
 			key: 'chatTemplate',
@@ -1094,12 +1110,9 @@
 		}, {
 			key: 'auctionFinished',
 			value: function auctionFinished(response) {
-
-				console.log(response);
-
 				this.buyAction = true;
 				this.buttonToBuy.classList.remove('a-inactive');
-				$app.modalOpen({ attr: 'a-modal-goods-winner', winner: response.data && response.data.winner && response.data.winner.email || 'Победителей нет' });
+				$app.chat.addWinner(response.data.winner, response.data.price);
 			}
 		}, {
 			key: 'auctionUpdated',

@@ -13,6 +13,7 @@ class Chat extends Helper {
 
 		$app.chat = {
 			add: this.addChat.bind(this),
+			addWinner: this.addWinner.bind(this),
 			clearTemplate: this.clearTemplate.bind(this),
 			clear: this.clearChat.bind(this)
 		}
@@ -34,6 +35,15 @@ class Chat extends Helper {
 
 
 	}
+
+
+	addWinner(winner, price){
+
+		this.beforeEl.insertAdjacentHTML('afterend', this.chatTemplateWinner(winner, price));
+
+	}
+
+
 	clearChat(){
 		let template =  '<div class="a-block-with-proposal">' + 
 									    '<p class="a-block-with-proposal__buy_now">Аукционы пока не начались! </p>' + 
@@ -50,6 +60,19 @@ class Chat extends Helper {
 						'</div>';
 
 		this.beforeEl.insertAdjacentHTML('afterend', template);
+	}
+
+	chatTemplateWinner(pretendents, price){
+		let win = Object.keys(pretendents).length;
+
+		let template = '<div class="a-block-with-proposal">' + 
+						    '<p class="a-block-with-proposal__buy_now">Купили товар за <span>'+price+' руб.</span></p>' + 
+						   ' <p class="a-block-with-proposal__user">'+
+						   		((win == 0) ? "Нет победителей" : this.chatTemplateUsers(pretendents)) +
+						   '</p>' + 
+						'</div>';
+
+		return template;
 	}
 
 	chatTemplate(pretendents, price){

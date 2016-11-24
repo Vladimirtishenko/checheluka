@@ -41,9 +41,13 @@ html
 			.a-modal__item.rules
 				span.a-modal-close
 				h2.a-modal__item_title Правила аукциона
-				p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint excepturi vitae dolores maiores quam delectus in adipisci reiciendis ea sapiente neque, aliquam alias natus corporis esse facere saepe! Voluptatum, iste? block content  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis, eius fugit ipsa tenetur ipsum quis saepe unde a-modal__item
-				p perferendis quaerat error, odio cupiditate doloremque, quasi temporibus rem sapiente magnam officia modi!  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla nisi doloremque incidunt obcaecati, debitis accusantium a at ratione ut. Corporis amet adipisci perspiciatis quam deleniti, sit? 
-				p Animi incidunt vero et!  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quae dolorum aut, quod repellendus eligendi eius inventore illum odio tempora vero voluptas natus, in, maxime id voluptates facilis. Dolore, nesciunt
+				ol
+					li Торги по аукционам начинаются в определенное время которое можно увидеть в таймере обратного отчета, если аукцион начался вместо таймера будет надпись 'Аукцион начался'
+					li При нажатии кнопки покупаю вы попадаете в пул участников аукциона по товару с указаной ценой.
+					li Таймер отсчитывает 30 секунд и в чате выводится колличество претендентов которые готовы купить товар за указанную сумму.
+					li Cистема сама поднимает ставку на 50 рублей
+					li Если вы согласны на данную сумму и претендентов больше чем колличество товара то вы должны снова нажать кнопку покупаю либо повысить ставку либо повысить число желаемого товара. 
+					li Победителей в аукционе может быть несколько, если к примеру колличество товара на складе 4 и 4 человека нажали на кнопку покупаю. При окончании таймера победителей будет 4 и каждому будет отправлен товар.
 			.a-modal__item.order
 				span.a-modal-close
 				form.a-form-submit-order.a-form-modal.-enter-placeholder(data-action="order")
