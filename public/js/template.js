@@ -9,7 +9,7 @@ class Template {
 				  '</div>' +
 				  '<div class="a-general-goods__description">' +
 				    '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>'+decodeURIComponent(obj.countInWarehouse)+' штук</span></p>' +
-				    '<h2 class="a-general-goods__description_title">'+decodeURIComponent(obj.title)+'</h2>' +
+				    '<h2 class="a-general-goods__description_title">'+decodeURIComponent(obj.title).replace(/'/g , '')+'</h2>' +
 				    '<p class="a-general-goods__description_description">'+decodeURIComponent(obj.description)+'</p>' +
 				    '<div class="a-general-goods__description_info">' +
 				      '<div class="a-general-goods__description_info_part">' +
@@ -25,11 +25,11 @@ class Template {
 				      '<div class="a-general-goods__description_info_part">' +
 				      	'<a href="" class="a-general-goods__description_info_part-link">' +
 				      		'<i>Состав:</i>' +
-				      		'<span>'+decodeURIComponent(obj.consistOf)+'</span>' +
+				      		'<span>'+( obj.consistOf != 'undefined' ? decodeURIComponent(obj.consistOf) : "Нет данных")+'</span>' +
 				      	'</a>' +
 				      	'<a href="" class="a-general-goods__description_info_part-link">'  +
 				      		'<i>Материал: </i>' +
-				      		'<span>'+decodeURIComponent(obj.material)+'</span>' +
+				      		'<span>'+( obj.material != 'undefined' ? decodeURIComponent(obj.material) : "Нет данных")+'</span>' +
 				      	'</a>' +
 				      '</div>' +
 				    '</div>' +
@@ -64,14 +64,14 @@ class Template {
 						  '<p class="a-number-goods"> №'+id +
 						    '<span></span>' +
 						  '</p>' +
-						  '<p class="a-else-goods-descroption">Шапка писец</p>' +
+						  '<p class="a-else-goods-descroption">'+decodeURIComponent(obj.title).replace(/'/g , '')+'</p>' +
 						  '<div class="a-else-goods__description_info">' +
 						  	'<span class="a-else-goods__description_info-link">'  +
 						  		'<i>Состав<span>'+decodeURIComponent(obj.consistOf)+'</span></i>' +
 						  	'</span>' +
 						  	'<span class="a-else-goods__description_info-link"> ' +
 						  		'<i>Размер<span>'+decodeURIComponent(obj.size)+'</span></i>' +
-						  '</span>' +
+						    '</span>' +
 						  	'<span class="a-else-goods__description_info-link"> ' +
 						  		'<i>Цвет<span>'+decodeURIComponent(obj.color)+'</span></i>' +
 						  	'</span>' +

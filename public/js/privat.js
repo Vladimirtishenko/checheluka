@@ -78,7 +78,9 @@ class Privat extends Helper {
 				price: elems[i].getAttribute('data-price'),
 				title: elems[i].getAttribute('data-title'),
 				size: elems[i].getAttribute('data-size'),
-				image: elems[i].getAttribute('data-image')
+				image: elems[i].getAttribute('data-image'),
+				color: elems[i].getAttribute('data-color'),
+				art: elems[i].getAttribute('data-art')
 			}
 		}
 

@@ -3,6 +3,7 @@
  */
 var mongoose = require('../../../../lib/mongoose');
 var schema = mongoose.Schema({
+    art: {type: String, default: "Нет артикла"},
     title:String,
     description: String,
     src: String,

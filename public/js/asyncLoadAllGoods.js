@@ -16,7 +16,7 @@ class AsyncLoadAllGoods extends Helper {
 
 	initAsyncLoad(){
 
-		if((document.body.clientHeight - document.body.scrollTop) < 800 && this.status){
+		if((this.el.clientHeight - document.body.scrollTop) < 800 && this.status){
 			this.requestModule();
 			
 		}
@@ -57,33 +57,44 @@ class AsyncLoadAllGoods extends Helper {
 						  '<img src="'+decodeURIComponent(goods.src)+'" alt=""/>' + 
 						  '<div class="a-all-goods-table__description">' + 
 						    '<p class="a-all-goods-table__description_number">№ '+this.Number+'</p>' + 
-						    '<p class="a-all-goods-table__description_info">Шубка писец</p>' + 
+						    '<span class="a-hidden-block__description-link"> ' + 
+				      			'<span><i>Размер: </i> '+decodeURIComponent(goods.size)+'</span>' + 
+				      		'</span>' + 
+				      		'<span class="a-hidden-block__description-link"> ' + 
+				      			'<span><i>Колличество: </i> '+decodeURIComponent(goods.countInWarehouse)+' шт.</span>' + 
+				      		'</span>' +  
+				      		'<p class="a-all-goods-table__description_info">'+(decodeURIComponent(goods.title)).replace(/'/g, "")+'</p>' +
 						  '</div>' + 
 						  '<div class="a-hidden-block">' + 
 						    '<div class="a-hidden-block__img-outer">' + 
-						    	'<img src="'+decodeURIComponent(goods.src)+'" alt="" class="a-image-to-zoom"/>' + 
+						    	'<img src="'+decodeURIComponent(goods.src)+'" alt="" data-number="'+this.Number+'" class="a-image-to-zoom"/>' + 
 						    '</div>' + 
 						    '<div class="a-hidden-block__description">' + 
-						      '<div class="a-hidden-block__description__outer">' + 
+						      '<div class="a-hidden-block__description__outer a-table-all-goods-hidden">' + 
+						      		'<span class="a-hidden-block__description-link"> ' + 
+						      			'<i>Артикул: </i>' + 
+						      			'<span>'+decodeURIComponent(goods.art)+'</span>' + 
+						      		'</span>' +
 						      		'<span class="a-hidden-block__description-link"> ' + 
 						      			'<i>Размер </i>' + 
 						      			'<span>'+decodeURIComponent(goods.size)+'</span>' + 
 						      		'</span>' + 
 						      		'<span class="a-hidden-block__description-link"> ' + 
-						      			'<i>Состав</i>' + 
-						      			'<span>'+decodeURIComponent(goods.consistOf)+'</span>' + 
-						      		'</span>' + 
-						      		'<span class="a-hidden-block__description-link"> ' + 
-						      			'<i>Цвет</i>' + 
-						      			'<span>'+decodeURIComponent(goods.color)+'</span>' + 
-						      		'</span>' + 
-						      		'<span class="a-hidden-block__description-link"> ' + 
-						      			'<i>Ткань</i>' + 
-						      			'<span>'+(decodeURIComponent(goods.material)).replace(/,|;/g , '<br />')+'</span>' + 
-						      		'</span>' + 
+						      			'<i>Колличество: </i>' + 
+						      			'<span>'+decodeURIComponent(goods.countInWarehouse)+'</span>' + 
+						      		'</span>' +  
+						      		'<span class="a-else-goods__description_info-link">'  +
+								  		'<i>Состав<span>'+( goods.consistOf != 'undefined' ? decodeURIComponent(goods.consistOf) : "Нет данных")+'</span></i>' +
+								  	'</span>' +
+						      		'<span class="a-else-goods__description_info-link">'  +
+								  		'<i>Цвет<span>'+decodeURIComponent(goods.color)+'</span></i>' +
+								  	'</span>' +
+								  	'<span class="a-else-goods__description_info-link">'  +
+								  		'<i>Материал<span>'+(decodeURIComponent(goods.material)).replace(/,|;/g , '<br />')+'</span></i>' +
+								  	'</span>' +
 						      	'</div>' + 
-						      '<p class="a-old-price">Розничная цена<span>3000 руб.</span></p>' + 
-						      '<p class="a-new-price">Начальная ставка<span>1000 руб.</span></p>' + 
+						      '<p class="a-old-price">Розничная цена на сайте<span>'+decodeURIComponent(goods.price)+' руб.</span></p>' + 
+						      '<p class="a-new-price a-reds-color">Начальная ставка<span>'+decodeURIComponent(goods.auctionPrice)+' руб.</span></p>' + 
 						   ' </div>' + 
 						  '</div>' + 
 						'</div>';

@@ -29,7 +29,7 @@ class AsyncLoadFromAnouterResourse extends Helper {
 	}
 
 	handlerScroll(){
-		if((document.body.clientHeight - document.body.scrollTop) < 1000 && this.status){
+		if((this.viewElement.clientHeight - document.body.scrollTop) < 1000 && this.status){
 			this.tryXHR();
 		}
 	}
@@ -40,6 +40,8 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		let search = urls || '';
 		let url = this.url+"?start="+this.offsetStart+"&end="+this.offsetEnd+search;
 
+		console.log(url);
+
 		this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this, clear), this)
 
 	}
@@ -47,7 +49,7 @@ class AsyncLoadFromAnouterResourse extends Helper {
 	handlerToSearch(){
 		if(event && event.keyCode == 13){
 			this.offsetStart = 0;
-			this.offsetEnd = 5;
+			this.offsetEnd = 30;
 			this.tryXHR('&searhByTitle='+encodeURIComponent(event.target.value), 'clear');
 		}
 	}
@@ -66,7 +68,6 @@ class AsyncLoadFromAnouterResourse extends Helper {
 			this.flyEvent('remove', ['scroll'], [window], this.scrollEvent);
 			return;
 		}
-
 
 		if(this.action == 'orders'){
 			for (var i of obj) {
@@ -88,7 +89,8 @@ class AsyncLoadFromAnouterResourse extends Helper {
 						i.countInWarehouse,
 						i.priority,
 						i.PriceRoz || i.price,
-						i.auctionPrice
+						i.auctionPrice,
+						i.artikul || i.art
 						);
 			}
 		}

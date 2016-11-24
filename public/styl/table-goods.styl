@@ -16,8 +16,8 @@
 		height 180px
 		background-image url('../img/triangle.jpg')
 		z-index -1
-		left -150px
-		top -20px
+		left -143px
+		top -14px
 	&:nth-child(10n+10):after
 		content ""
 		position absolute
@@ -45,6 +45,8 @@
 		animation-fill-mode both
 		animation-timing-function ease-out
 
+.a-table-all-goods-hidden .a-else-goods__description_info-link
+	display block
 
 @keyframes fades {
 	0% {
@@ -137,6 +139,9 @@
 	.a-all-goods-table
 		width 100%
 		padding 5px
+	
+	.a-all-goods-table__item
+		width 25%
 
 	.a-head-font-left-side
 		width 100%

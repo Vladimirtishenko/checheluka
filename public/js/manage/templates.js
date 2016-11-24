@@ -2,7 +2,7 @@ class Templates {
 
     allGoods() {
 
-        function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice) {
+        function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice, art) {
 
             let sizeEach = (sizes) => {
                 let sizesToArray = sizes.split(',');
@@ -21,6 +21,7 @@ class Templates {
                 '<img src="' + img + '" alt=""/>' +
                 '<div class="a-all-goods-table__description">' +
                 '<p class="a-all-goods-table__description_info">' + title + '</p>' +
+                '<p class="a-all-goods-table__description_info_article">Артикл: <span>' + (art || "Нет артикла") + '</span></p>' +
                 '</div>' +
                 '<div class="a-hidden-block">' +
                 '<div class="a-hidden-block__description">' +
@@ -45,11 +46,15 @@ class Templates {
                 '<input type="hidden" name="material" value="' + material + '"/>' +
                 '<input type="hidden" name="price" value="' + price + '"/>' +
                 '<input type="hidden" name="countInWarehouse" value="' + (count || 1) + '"/>' +
+                '<input type="hidden" name="art" value="' + (art || "Нет артикла") + '"/>' +
                 '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' +
                 '<div class="a-hidden-form_description">' +
                 '<div class="a-containet-flex-to-start-description">' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__title">' + title + '</p>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Артикл</p><span>' + (art || "Нет артикла") + '</span>' +
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' +
@@ -83,13 +88,14 @@ class Templates {
 
     allGoodsAuction() {
 
-        function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice) {
+        function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice, art) {
 
             let tmp = '<div class="a-all-goods-table__item">' +
                 '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' +
                 '<img src="' + decodeURIComponent(img) + '" alt=""/>' +
                 '<div class="a-all-goods-table__description">' +
                 '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' +
+                '<p class="a-all-goods-table__description_info_article">Артикл: <span>' + (decodeURIComponent(art) || "Нет артикла") + '</span></p>' +
                 '</div>' +
                 '<div class="a-hidden-block">' +
                 '<div class="a-hidden-block__description">' +
@@ -115,6 +121,7 @@ class Templates {
                 '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' +
                 '<input type="hidden" name="price" value="' + decodeURIComponent(price) + '"/>' +
                 '<input type="hidden" name="auctionPrice" value="' + decodeURIComponent(auctionPrice) + '"/>' +
+                '<input type="hidden" name="art" value="' + decodeURIComponent(art) + '"/>' +
                 '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' +
                 '<div class="a-hidden-form_description">' +
                 '<div class="a-containet-flex-to-start-description">' +

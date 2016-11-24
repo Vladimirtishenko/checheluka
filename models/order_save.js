@@ -12,7 +12,10 @@ var schema = mongoose.Schema({
     warehouse: String,
     number: String,
     goods: Object,
-    email: String
+    email: String,
+    color: String,
+    size: String,
+    art: String
 }, { collection: 'order_save' });
 // Model
 module.exports = mongoose.model('order_save', schema);

@@ -18,8 +18,23 @@ block content
 										- var img = decodeURIComponent(item.product.src)
 										img(src=img, alt="")
 										- var title = decodeURIComponent(item.product.title)
-										p 
-											| #{title}
+										- var color = decodeURIComponent(item.product.color)
+										- var size = decodeURIComponent(item.product.size)
+										- var art = decodeURIComponent(item.product.art)
+										.a-goods-description
+											p
+												| #{title}
+											p
+												span.a-hidden-block__description-link
+													i Артикл: 
+														span=art
+												span.a-hidden-block__description-link
+													i Размер: 
+														span=size
+												span.a-hidden-block__description-link
+													i Цвет: 
+														span=color
+												
 									.a-privat-table__count_and_price
 										p Колличество
 											span #{item.count} 
@@ -27,7 +42,7 @@ block content
 										p Стоимость
 											span #{item.finalePrice * item.count}
 												| руб.
-									input(type="hidden" data-id=item.productId data-count=item.count 	data-price=item.finalePrice * item.count data-title=title data-size=item.size data-image=img)
+									input(type="hidden" data-id=item.productId data-count=item.count 	data-price=item.finalePrice * item.count data-title=title data-size=size data-image=img data-color=color data-art=art)
 						.a-privat-price-to-change
 							.a-privat-table__all-price
 								p.a-privat-table__all-price_text Общая стоимость:
@@ -58,11 +73,19 @@ block content
 							.a-privat-table.a-privat-table__bought
 								.a-privat-table__image_block
 									img(src=ob[prop].image, alt="")
-									p 
-										span 
-											| размер:
-											| #{ob[prop].size} 
-										| #{ob[prop].title}
+									.a-goods-description
+										p 
+											| #{ob[prop].title}
+										p
+											span.a-hidden-block__description-link
+												i Артикл: 
+													span=ob[prop].art
+											span.a-hidden-block__description-link
+												i Размер: 
+													span=ob[prop].size
+											span.a-hidden-block__description-link
+												i Цвет: 
+													span=ob[prop].color
 								.a-privat-table__count_and_price
 									p Колличество
 										span #{ob[prop].count}
@@ -92,11 +115,19 @@ block content
 							.a-privat-table.a-privat-table__bought
 								.a-privat-table__image_block
 									img(src=ob[prop].image, alt="")
-									p 
-										span 
-											| размер:
-											| #{ob[prop].size} 
-										| #{ob[prop].title}
+									.a-goods-description
+										p 
+											| #{ob[prop].title}
+										p
+												span.a-hidden-block__description-link
+													i Артикл: 
+														span=ob[prop].art
+												span.a-hidden-block__description-link
+													i Размер: 
+														span=ob[prop].size
+												span.a-hidden-block__description-link
+													i Цвет: 
+														span=ob[prop].color
 								.a-privat-table__count_and_price
 									p Колличество
 										span #{ob[prop].count}
@@ -125,11 +156,19 @@ block content
 							.a-privat-table.a-privat-table__bought
 								.a-privat-table__image_block
 									img(src=ob[prop].image, alt="")
-									p 
-										span 
-											| размер:
-											| #{ob[prop].size} 
-										| #{ob[prop].title}
+									.a-goods-description
+										p
+											| #{ob[prop].title}
+										p
+											span.a-hidden-block__description-link
+												i Артикл: 
+													span=ob[prop].art
+											span.a-hidden-block__description-link
+												i Размер: 
+													span=ob[prop].size
+											span.a-hidden-block__description-link
+												i Цвет: 
+													span=ob[prop].color
 								.a-privat-table__count_and_price
 									p Колличество
 										span #{ob[prop].count}

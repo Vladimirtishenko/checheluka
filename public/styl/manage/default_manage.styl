@@ -64,9 +64,9 @@ time, mark, audio, video
 
 html, body 
   line-height 1 
-  background backGrey
   font-family Arial
   height 100%
+  min-height 100%
 
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section
@@ -274,7 +274,17 @@ td
 .a-all-goods-table__description_info
   font-size 16px
   font-family HelveticaRoman
-  
+
+.a-all-goods-table__description_info_article
+  margin-top 10px
+  font-size 16px
+  font-family HelveticaThin
+  color fontg
+
+.a-all-goods-table__description_info_article span 
+  color #000
+  font-size 16px
+
 .a-hidden-block
   display flex
   align-items flex-start
@@ -413,6 +423,7 @@ td
 .container-description-form__title 
   font-family HelveticaThin
   font-size 25px
+  
 
 .container-description-form__else_params
   font-family HelveticaThin
@@ -644,3 +655,6 @@ td
   align-items center 
   justify-content center
   background #000
+  
+.a-container-for-img img 
+  width 355px
