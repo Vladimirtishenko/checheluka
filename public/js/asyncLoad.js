@@ -1,5 +1,6 @@
 import Helper from './helper.js';
 import Template from './template.js';
+import Bucket from './bucket.js';
 
 class AsyncLoad extends Helper {
 	constructor(el) {
@@ -8,7 +9,6 @@ class AsyncLoad extends Helper {
 		this.mainItem = el;
 		this.goodsAfter = document.querySelector('.a-else-goods');
 		this.buyAction = true;
-
 		this.init();
 	}
 
@@ -114,6 +114,7 @@ class AsyncLoad extends Helper {
 	auctionFinished(response){
 		this.buyAction = true;
 		this.buttonToBuy.classList.remove('a-inactive');
+		Bucket.getBucket();
 		$app.chat.addWinner(response.data.winner, response.data.price);
 	}
 

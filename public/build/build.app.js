@@ -986,6 +986,10 @@
 
 	var _template2 = _interopRequireDefault(_template);
 
+	var _bucket = __webpack_require__(35);
+
+	var _bucket2 = _interopRequireDefault(_bucket);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1006,7 +1010,6 @@
 			_this.mainItem = el;
 			_this.goodsAfter = document.querySelector('.a-else-goods');
 			_this.buyAction = true;
-
 			_this.init();
 			return _this;
 		}
@@ -1112,6 +1115,7 @@
 			value: function auctionFinished(response) {
 				this.buyAction = true;
 				this.buttonToBuy.classList.remove('a-inactive');
+				_bucket2.default.getBucket();
 				$app.chat.addWinner(response.data.winner, response.data.price);
 			}
 		}, {
@@ -1671,6 +1675,72 @@
 	}(_helper2.default);
 
 	exports.default = LocalBase;
+
+/***/ },
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Bucket = function (_Helper) {
+		_inherits(Bucket, _Helper);
+
+		function Bucket() {
+			_classCallCheck(this, Bucket);
+
+			return _possibleConstructorReturn(this, (Bucket.__proto__ || Object.getPrototypeOf(Bucket)).call(this));
+		}
+
+		_createClass(Bucket, [{
+			key: 'getBucket',
+			value: function getBucket() {
+				var url = '/bucket';
+				this.xhrRequest('POST', url, null, null, this.responseBucket.bind(this));
+			}
+		}, {
+			key: 'responseBucket',
+			value: function responseBucket(obj) {
+				var count = document.querySelector('.a-side-backet__count'),
+				    price = document.querySelector('.a-side-backet__price');
+
+				try {
+					var bucket = JSON.parse(obj);
+					count.innerHTML = bucket.bucketCount ? bucket.bucketCount + " шт" : 0 + " шт";
+					price.innerHTML = bucket.bucketPrice ? bucket.bucketPrice + " руб" : "Корзина <br /> пуста";
+				} catch (e) {}
+			}
+		}]);
+
+		return Bucket;
+	}(_helper2.default);
+
+	exports.default = new Bucket();
 
 /***/ }
 /******/ ]);

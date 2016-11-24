@@ -24,6 +24,8 @@ module.exports = function(app){
 	app.post("/users", require("./users").post);
 	app.get("/users", require("./users").get);
 	app.put("/users", require("./users").put);
+	// Get bucket
+	app.post("/bucket", require("./bucket").post);
 
 
 	// Manage Routes
