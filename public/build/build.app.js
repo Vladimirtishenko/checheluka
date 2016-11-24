@@ -823,10 +823,13 @@
 			_this.modalOuter = document.querySelector('.a-modal');
 			_this.modalContainerForImg = _this.modalOuter.querySelector('.a-outer-for-image');
 			_this.modalInnerContainer = _this.modalOuter.querySelector('.a-inner-background');
+			_this.controls = _this.modalOuter.querySelector('.a-image-slide-controls');
 			_this.allGoodsDelegate = el;
+			_this.auctionActive = document.querySelector('.__index-auction');;
 			_this.cloneContainer = null;
 			_this.staticZoomWidth = 1000;
-			_this.flyEvent('add', ['click'], [_this.allGoodsDelegate], [_this.handlerToShowModalZoom.bind(_this)]);
+
+			_this.flyEvent('add', ['click'], [_this.allGoodsDelegate, _this.controls, _this.auctionActive], [_this.handlerToShowModalZoom.bind(_this), _this.handlerToClick.bind(_this), _this.handlerToShowModalZoom.bind(_this)]);
 
 			return _this;
 		}
@@ -845,6 +848,9 @@
 
 				if (!target || !target.classList.contains('a-image-to-zoom')) return;
 
+				this.allImageToZoom = document.querySelectorAll('.a-image-to-zoom');
+				this.active = target.getAttribute('data-number');
+
 				this.cssHelper([this.modalInnerContainer], ["display: flex"]);
 
 				this.modalContainerForImg.innerHTML = "<img src='" + target.src + "' />";
@@ -854,6 +860,28 @@
 				this.flyEvent('add', ['mouseenter', 'mouseleave', 'mousemove'], [this.modalContainerForImg], [this.allListeners]);
 
 				this.classChange(['-animate-modal-in'], 'add', [this.modalOuter]);
+			}
+		}, {
+			key: 'handlerToClick',
+			value: function handlerToClick(event) {
+				var target = event && event.target,
+				    attr = target.getAttribute('data-controls');
+
+				if (!attr) return;
+
+				var direction = attr == 'next' ? '+' : '-',
+				    elem = document.querySelector('[data-number="' + (parseInt(this.active) + parseInt(direction + 1)));
+
+				if (!elem) {
+					if (direction == '+') {
+						elem = document.querySelector('[data-number="1"]');
+					} else {
+						elem = document.querySelector('[data-number="' + this.allImageToZoom.length + '"]');
+					}
+				}
+
+				this.active = elem.getAttribute('data-number');
+				this.modalContainerForImg.innerHTML = "<img src='" + elem.src + "' />";
 			}
 		}, {
 			key: 'handlerToZoomImg',
@@ -1066,6 +1094,9 @@
 		}, {
 			key: 'auctionFinished',
 			value: function auctionFinished(response) {
+
+				console.log(response);
+
 				this.buyAction = true;
 				this.buttonToBuy.classList.remove('a-inactive');
 				$app.modalOpen({ attr: 'a-modal-goods-winner', winner: response.data && response.data.winner && response.data.winner.email || 'Победителей нет' });
@@ -1224,13 +1255,13 @@
 		_createClass(Template, [{
 			key: 'getCurrentAuction',
 			value: function getCurrentAuction(id, obj, price, timer, pretendents, count, difference) {
-				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№' + id + '</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt=""/>' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title).replace(/'/g, '') + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + (obj.consistOf != 'undefined' ? decodeURIComponent(obj.consistOf) : "Нет данных") + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + (obj.material != 'undefined' ? decodeURIComponent(obj.material) : "Нет данных") + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now"><i class="a-general-goods__description_price_now_upgraded">' + price + '</i> <span>руб.</span></p>' + '<span class="a-add-rate">' + (difference ? 'Вы сделали ставку' : '') + '</span>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black ' + (difference ? "a-inactive" : "") + '">Покупаю</button>' + '<label class="a-type-to"> <input class="a-type-to-count" value="' + count + '" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' + '</div>' + '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:' + (timer < 10 ? '0' + timer : timer) + '</span></p>' + '<p class="a-info-about-rates">Система повышает ставки автоматически на 50 руб. если хотете повысит ставку стразу нажмите на одну из кнопок ниже!</p>' + '<div class="a-general-goods__description_rates_button ' + (pretendents && !difference ? "" : "a-rates-inactive") + '">' + '<button class="a-button-white">+ 101 руб.</button>' + '<button class="a-button-white">+ 251 руб.</button>' + '<button class="a-button-white">+ 501 руб.</button>' + '<button class="a-button-white">+ 751 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
+				return '<div class="a-general-goods a-animates-top-goods">' + '<div class="a-general-goods__image">' + '<span class="a-general-number__this_main">№' + id + '</span>' + '<div class="a-img-scale">' + '<img src="' + decodeURIComponent(obj.src) + '" alt="" class="a-image-to-zoom" data-number="' + id + '" />' + '</div>' + '</div>' + '<div class="a-general-goods__description">' + '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>' + decodeURIComponent(obj.countInWarehouse) + ' штук</span></p>' + '<h2 class="a-general-goods__description_title">' + decodeURIComponent(obj.title).replace(/'/g, '') + '</h2>' + '<p class="a-general-goods__description_description">' + decodeURIComponent(obj.description) + '</p>' + '<div class="a-general-goods__description_info">' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Размер:</i>' + '<span>' + decodeURIComponent(obj.size) + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Цвет:</i>' + '<span>' + decodeURIComponent(obj.color) + '</span>' + '</a>' + '</div>' + '<div class="a-general-goods__description_info_part">' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Состав:</i>' + '<span>' + (obj.consistOf != 'undefined' ? decodeURIComponent(obj.consistOf) : "Нет данных") + '</span>' + '</a>' + '<a href="" class="a-general-goods__description_info_part-link">' + '<i>Материал: </i>' + '<span>' + (obj.material != 'undefined' ? decodeURIComponent(obj.material) : "Нет данных") + '</span>' + '</a>' + '</div>' + '</div>' + '<p class="a-general-goods__description_price_retail">Розничная цена: <span>' + decodeURIComponent(obj.price) + ' рублей</span></p>' + '<p class="a-general-goods__description_price_now"><i class="a-general-goods__description_price_now_upgraded">' + price + '</i> <span>руб.</span></p>' + '<span class="a-add-rate">' + (difference ? 'Вы сделали ставку' : '') + '</span>' + '<div class="a-for-mobile-absolute">' + '<div class="a-general-goods__time_to_end">' + '<button class="a-general-goods__description_buy a-button-black ' + (difference ? "a-inactive" : "") + '">Покупаю</button>' + '<label class="a-type-to"> <input class="a-type-to-count" value="' + count + '" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' + '</div>' + '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:' + (timer < 10 ? '0' + timer : timer) + '</span></p>' + '<p class="a-info-about-rates">Система повышает ставки автоматически на 50 руб. если хотете повысит ставку стразу нажмите на одну из кнопок ниже!</p>' + '<div class="a-general-goods__description_rates_button ' + (pretendents && !difference ? "" : "a-rates-inactive") + '">' + '<button class="a-button-white">+ 101 руб.</button>' + '<button class="a-button-white">+ 251 руб.</button>' + '<button class="a-button-white">+ 501 руб.</button>' + '<button class="a-button-white">+ 751 руб.</button>' + '</div>' + '</div>' + '</div>' + '</div>';
 			}
 		}, {
 			key: 'getAuctions',
 			value: function getAuctions(id, obj, className) {
 
-				return '<div class="a-else-goods__item ' + className + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(obj.src) + '" class="a-image-to-zoom"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + id + '<span></span>' + '</p>' + '<p class="a-else-goods-descroption">' + decodeURIComponent(obj.title).replace(/'/g, '') + '</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(obj.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(obj.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(obj.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(obj.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(obj.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(obj.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
+				return '<div class="a-else-goods__item ' + className + '" >' + '<div class="a-resizer-masonry">' + '<img src="' + decodeURIComponent(obj.src) + '" class="a-image-to-zoom" data-number="' + id + '"/>' + '</div>' + '<div class="a-else-goods__description">' + '<p class="a-number-goods"> №' + id + '<span></span>' + '</p>' + '<p class="a-else-goods-descroption">' + decodeURIComponent(obj.title).replace(/'/g, '') + '</p>' + '<div class="a-else-goods__description_info">' + '<span class="a-else-goods__description_info-link">' + '<i>Состав<span>' + decodeURIComponent(obj.consistOf) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Размер<span>' + decodeURIComponent(obj.size) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Цвет<span>' + decodeURIComponent(obj.color) + '</span></i>' + '</span>' + '<span class="a-else-goods__description_info-link"> ' + '<i>Ткань<span>' + decodeURIComponent(obj.material).replace(/,|;/g, '<br />') + '</span></i>' + '</span>' + '</div>' + '<p class="a-old-price">Розничная цена<span>' + decodeURIComponent(obj.price) + ' руб.</span></p>' + ' <p class="a-new-price">Начальная ставка<span>' + decodeURIComponent(obj.auctionPrice) + ' руб.</span></p>' + '</div>' + '</div>';
 			}
 		}]);
 

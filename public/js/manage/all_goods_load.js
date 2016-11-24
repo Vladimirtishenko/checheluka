@@ -39,9 +39,6 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		this.status = false;
 		let search = urls || '';
 		let url = this.url+"?start="+this.offsetStart+"&end="+this.offsetEnd+search;
-
-		console.log(url);
-
 		this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this, clear), this)
 
 	}

@@ -552,9 +552,6 @@
 				this.status = false;
 				var search = urls || '';
 				var url = this.url + "?start=" + this.offsetStart + "&end=" + this.offsetEnd + search;
-
-				console.log(url);
-
 				this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this, clear), this);
 			}
 		}, {
@@ -690,6 +687,7 @@
 			if (!elem) return _possibleConstructorReturn(_this);
 
 			_this.view = elem;
+			_this.searchButton = document.querySelector('#a-search-admin');
 
 			_this.flyEvent('add', ['click'], [_this.view], _this.checkedSelect.bind(_this));
 

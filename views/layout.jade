@@ -76,12 +76,56 @@ html
 						button.a-button-white.__uppercase.a-data-order-send Купить
 			.a-inner-background
 				span.a-modal-close
+				.a-image-slide-controls
+					span(class="a-prev" data-controls="prev")
+					span(class="a-next" data-controls="next")
 				.a-outer-for-image
 			.a-modal__item.a-modal-goods-winner
 				span.a-modal-close
 				h2.a-modal__item_title Аукцион по товару завершен:
 				p Выиграл: 
 					span.a-winner-block
+			.a-modal__item.a-modal-size-chart
+				span.a-modal-close
+				h2.a-modal__item_title Размерная сетка:
+				table
+					tr
+						td Маркировка размеров
+						td Отечественные размеры
+						td Обхват груди,см
+						td Обхват талии,см
+						td Обхват бедер,см
+					tr
+						td S
+						td 42-44
+						td 82-86
+						td 62-64
+						td 88-92
+					tr
+						td M
+						td 44-46
+						td 86-90
+						td 66-68
+						td 92-96
+					tr
+						td L
+						td 46-48
+						td 90-94
+						td 68-72
+						td 96-100
+					tr
+						td XL
+						td 48-50
+						td 94-98
+						td 72-76
+						td 100-104
+					tr
+						td XXL
+						td 50-52
+						td 98-102
+						td 76-80
+						td 104-108
+
 		block content
 		script(src="https://cdn.socket.io/socket.io-1.4.5.js")
 		script(src="/build/build.app.js")

@@ -6,6 +6,7 @@ class ChangeStatus extends Helper {
 		if(!elem) return;
 
 		this.view = elem;
+		this.searchButton = document.querySelector('#a-search-admin');
 
 		this.flyEvent('add', ['click'], [this.view], this.checkedSelect.bind(this));
 

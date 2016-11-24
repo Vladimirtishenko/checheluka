@@ -8,10 +8,13 @@ class Zoom extends Helper {
 		this.modalOuter = document.querySelector('.a-modal');
 		this.modalContainerForImg = this.modalOuter.querySelector('.a-outer-for-image');
 		this.modalInnerContainer = this.modalOuter.querySelector('.a-inner-background');
+		this.controls = this.modalOuter.querySelector('.a-image-slide-controls');	
 		this.allGoodsDelegate = el;
+		this.auctionActive = document.querySelector('.__index-auction');;
 		this.cloneContainer = null;
 		this.staticZoomWidth = 1000;
-		this.flyEvent('add', ['click'], [this.allGoodsDelegate], [this.handlerToShowModalZoom.bind(this)]);
+
+		this.flyEvent('add', ['click'], [this.allGoodsDelegate, this.controls, this.auctionActive], [this.handlerToShowModalZoom.bind(this), this.handlerToClick.bind(this), this.handlerToShowModalZoom.bind(this)]);
 
 	}
 
@@ -27,6 +30,9 @@ class Zoom extends Helper {
 
 		if(!target || !target.classList.contains('a-image-to-zoom')) return;
 
+		this.allImageToZoom = document.querySelectorAll('.a-image-to-zoom');
+		this.active = target.getAttribute('data-number');
+
 		this.cssHelper([this.modalInnerContainer], ["display: flex"]);
 
 		this.modalContainerForImg.innerHTML = "<img src='"+target.src+"' />"
@@ -38,6 +44,28 @@ class Zoom extends Helper {
 		this.classChange(['-animate-modal-in'], 'add', [this.modalOuter]);
 
 
+	}
+
+	handlerToClick(event){
+		let target = event && event.target,
+			attr = target.getAttribute('data-controls');
+
+		if(!attr) return;
+
+		let direction = attr == 'next' ? '+' : '-',
+			elem = document.querySelector('[data-number="'+(parseInt(this.active) + parseInt(direction + 1)));
+
+			if(!elem){
+				if(direction == '+'){
+					elem = document.querySelector('[data-number="1"]');
+				} else {
+					elem = document.querySelector('[data-number="'+this.allImageToZoom.length+'"]');
+				}
+			}
+
+			this.active = elem.getAttribute('data-number');
+			this.modalContainerForImg.innerHTML = "<img src='"+elem.src+"' />"
+	
 	}
 
 	handlerToZoomImg(event){

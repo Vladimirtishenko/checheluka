@@ -4,7 +4,7 @@ class Template {
 				  '<div class="a-general-goods__image">' +
 				  	'<span class="a-general-number__this_main">№'+id+'</span>' +
 				   	'<div class="a-img-scale">' +
-				    	'<img src="'+decodeURIComponent(obj.src)+'" alt=""/>' +
+				    	'<img src="'+decodeURIComponent(obj.src)+'" alt="" class="a-image-to-zoom" data-number="'+id+'" />' +
 				    '</div>' +
 				  '</div>' +
 				  '<div class="a-general-goods__description">' +
@@ -58,7 +58,7 @@ class Template {
 
 		return '<div class="a-else-goods__item '+ className +'" >' +
 						'<div class="a-resizer-masonry">' +
-							'<img src="'+decodeURIComponent(obj.src)+'" class="a-image-to-zoom"/>' +
+							'<img src="'+decodeURIComponent(obj.src)+'" class="a-image-to-zoom" data-number="'+id+'"/>' +
 						'</div>' +
 						'<div class="a-else-goods__description">' +
 						  '<p class="a-number-goods"> №'+id +

@@ -7,8 +7,13 @@ module.exports.get = function(req, res, next) {
         limit: req.query.limit || 20,
     };
 
+    searchString = {};
 
-    Order.find({}, function(err, doc) {
+    if(req.query.searhByTitle){
+        searchString = {"orderNumber": req.query.searhByTitle}
+    }
+
+    Order.find(searchString, function(err, doc) {
 
         if (err) {
             next(err);

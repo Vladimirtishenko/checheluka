@@ -5,10 +5,15 @@ module.exports.get = function(req, res, next) {
     var params = {
         start: req.query.start || 0,
         limit: req.query.limit || 20,
-    };
+    },
+    searchString = {};
 
 
-    Goods.find({}, function(err, doc) {
+    if(req.query.searhByTitle){
+        searchString = { $or: [ {"title": {'$regex': encodeURIComponent(req.query.searhByTitle)}}, {"art": {'$regex': encodeURIComponent(req.query.searhByTitle)}} ] };
+    }
+
+    Goods.find(searchString, function(err, doc) {
 
         if (err) {
             next(err);
