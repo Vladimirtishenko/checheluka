@@ -106,7 +106,7 @@ socketFrontController.prototype.register_user = function(client, data){
 }
 
 socketFrontController.prototype.getAuctionsAll = function(client, data){
-    client.socket.emit('serverMessage', this.createMessage('getAuctions', this.auctionsPull));
+    //client.socket.emit('serverMessage', this.createMessage('getAuctions', this.auctionsPull));
 }
 
 socketFrontController.prototype.getAuctions = function(client, data){
@@ -235,7 +235,7 @@ socketFrontController.prototype.setProductList = function(event, products){
         {
             this.productsPull[products[i]._id] = products[i];
         }
-        this.setAuctionList(products);
+        this.setAuctionList(products);                
     }
     else
     {
@@ -259,9 +259,9 @@ socketFrontController.prototype.setAuctionList = function(products){
         this.curAuction = this.auctionsPull[keys[0]]._uid;
         this.initStart();
     }
-    var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
-    delete auctions[this.curAuction];
-    this.sendToAll(this.createMessage('getAuctions', auctions));
+    //var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
+    //delete auctions[this.curAuction];
+    //this.sendToAll(this.createMessage('getAuctions', auctions));
 }
 
 socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, data){
@@ -287,16 +287,17 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
         });
         productsModule.updateProduct(updata);
     }
-    //wait 3 sec besore start new auction
-    sleep(3000);
+    delete this.productsPull[data.lot._id];
     delete this.auctionsPull[data._uid];
+    //wait 3 sec besore start new auction
+    sleep(3000);    
     var keys = Object.keys(this.auctionsPull);
     if (typeof keys[0] !== 'undefined')
     {
         this.curAuction = this.auctionsPull[keys[0]]._uid;
         this.initStart();
     }
-    delete this.productsPull[data.lot._id];
+   
     var keys = Object.keys(this.productsPull);
     if (keys.length < this.limit)
     {
@@ -308,7 +309,7 @@ socketFrontController.prototype.notifyAuctionUpdated = function(event, data){
     this.sendToAll(this.createMessage('auctionUpdated', data));
 }
 
-socketFrontController.prototype.notifyAuctionStarted = function(event, data){
+socketFrontController.prototype.notifyAuctionStarted = function(event, data){    
     this.sendToAll(this.createMessage('actionStarted', data));
 }
 

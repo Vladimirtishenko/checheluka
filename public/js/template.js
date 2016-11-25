@@ -35,15 +35,15 @@ class Template {
 				    '</div>' +
 				    '<p class="a-general-goods__description_price_retail">Розничная цена: <span>'+decodeURIComponent(obj.price)+' рублей</span></p>' +
 				    '<p class="a-general-goods__description_price_now"><i class="a-general-goods__description_price_now_upgraded">'+price+'</i> <span>руб.</span></p>' +
-				    '<span class="a-add-rate">'+(difference ? 'Вы сделали ставку' : '')+'</span>' +
+				    '<span class="a-add-rate">'+(difference ? 'Ставка сделана! Невозможно сделать еще ставку, ождидайте завершения торгов!' : '')+'</span>' +
 				    '<div class="a-for-mobile-absolute">' +
 				      '<div class="a-general-goods__time_to_end">' +
-				        '<button class="a-general-goods__description_buy a-button-black '+(difference ? "a-inactive" : "")+'">Покупаю</button>' +
+				        '<button class="a-general-goods__description_buy a-button-black">Покупаю</button>' +
 				        '<label class="a-type-to"> <input class="a-type-to-count" value="'+count+'" type="text" name="countOnBuy" /> <span class="a-type-to-count-name">шт.</span></label>' +
 				      '</div>' +
 				      '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:'+(timer < 10 ? '0' + timer : timer)+'</span></p>' +
-				      '<p class="a-info-about-rates">Система повышает ставки автоматически на 50 руб. если хотете повысит ставку стразу нажмите на одну из кнопок ниже!</p>' +
-				      '<div class="a-general-goods__description_rates_button '+ (pretendents && !difference ? "" : "a-rates-inactive") +'">' +
+				      '<p class="a-info-about-rates">Система повышает ставки автоматически на 50 руб. если хотите повысит ставку сразу нажмите на одну из кнопок ниже!</p>' +
+				      '<div class="a-general-goods__description_rates_button">' +
 				        '<button class="a-button-white">+ 101 руб.</button>' +
 				        '<button class="a-button-white">+ 251 руб.</button>' +
 				        '<button class="a-button-white">+ 501 руб.</button>' +

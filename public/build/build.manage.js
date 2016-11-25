@@ -40,23 +40,24 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	__webpack_require__(27);
+	__webpack_require__(75);
 
-	var _add_or_delete_action = __webpack_require__(29);
+	var _add_or_delete_action = __webpack_require__(77);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _all_goods_load = __webpack_require__(30);
+	var _all_goods_load = __webpack_require__(78);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
 
-	var _config = __webpack_require__(33);
+	var _config = __webpack_require__(81);
 
 	var _config2 = _interopRequireDefault(_config);
 
@@ -70,22 +71,8 @@
 	});
 
 /***/ },
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */
+
+/***/ 16:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -259,8 +246,8 @@
 	exports.default = Helper;
 
 /***/ },
-/* 17 */,
-/* 18 */
+
+/***/ 65:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -304,22 +291,15 @@
 	exports.default = new ErrorCode();
 
 /***/ },
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */
+
+/***/ 75:
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 28 */,
-/* 29 */
+
+/***/ 77:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -476,7 +456,8 @@
 	exports.default = ModalGoodsToAdd;
 
 /***/ },
-/* 30 */
+
+/***/ 78:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -491,15 +472,15 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _add_or_delete_action = __webpack_require__(29);
+	var _add_or_delete_action = __webpack_require__(77);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _privat_change_status_order = __webpack_require__(31);
+	var _privat_change_status_order = __webpack_require__(79);
 
 	var _privat_change_status_order2 = _interopRequireDefault(_privat_change_status_order);
 
-	var _templates = __webpack_require__(32);
+	var _templates = __webpack_require__(80);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -653,7 +634,8 @@
 	exports.default = AsyncLoadFromAnouterResourse;
 
 /***/ },
-/* 31 */
+
+/***/ 79:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -735,7 +717,8 @@
 	exports.default = ChangeStatus;
 
 /***/ },
-/* 32 */
+
+/***/ 80:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -848,7 +831,8 @@
 	exports.default = new Templates();
 
 /***/ },
-/* 33 */
+
+/***/ 81:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -863,15 +847,15 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _flatpickr = __webpack_require__(34);
+	var _flatpickr = __webpack_require__(82);
 
 	var _flatpickr2 = _interopRequireDefault(_flatpickr);
 
-	var _templates = __webpack_require__(32);
+	var _templates = __webpack_require__(80);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
-	var _error = __webpack_require__(18);
+	var _error = __webpack_require__(65);
 
 	var _error2 = _interopRequireDefault(_error);
 
@@ -1020,7 +1004,8 @@
 	exports.default = Config;
 
 /***/ },
-/* 34 */
+
+/***/ 82:
 /***/ function(module, exports, __webpack_require__) {
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -2496,4 +2481,5 @@
 	if (true) module.exports = Flatpickr;
 
 /***/ }
-/******/ ]);
+
+/******/ });

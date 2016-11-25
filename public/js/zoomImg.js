@@ -57,7 +57,7 @@ class Zoom extends Helper {
 
 			if(!elem){
 				if(direction == '+'){
-					elem = document.querySelector('[data-number="1"]');
+					elem = this.allImageToZoom[0];
 				} else {
 					elem = document.querySelector('[data-number="'+this.allImageToZoom.length+'"]');
 				}

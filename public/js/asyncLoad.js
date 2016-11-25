@@ -8,7 +8,7 @@ class AsyncLoad extends Helper {
 		if(!el) return;
 		this.mainItem = el;
 		this.goodsAfter = document.querySelector('.a-else-goods');
-		this.buyAction = true;
+		//this.buyAction = true;
 		this.init();
 	}
 
@@ -29,11 +29,11 @@ class AsyncLoad extends Helper {
 		this.auctionId = response.data._uid;
 		this.currentPrice = response.data.currentPrice;
 		this.previousPrice = response.data.price;
-		this.butonsDefferent = ($app.local.gets('id') == this.auctionId) && (this.currentPrice == $app.local.gets('price')) ? true : false;
+		//this.butonsDefferent = ($app.local.gets('id') == this.auctionId) && (this.currentPrice == $app.local.gets('price')) ? true : false;
 
-		if(this.butonsDefferent){
+		/*if(this.butonsDefferent){
 			this.buyAction = false;
-		}
+		}*/
 
 		this.pretendentsAuction = response.data.pretendents;
 		this.pretendents = Object.keys(response.data.pretendents).length <= 10 ? true : false;
@@ -73,7 +73,11 @@ class AsyncLoad extends Helper {
 	getAuctions(response){
 
 		if(!response.data || Object.keys(response.data).length == 0) return;
-	 
+	 	
+		this.goodsAfter.innerHTML = "";
+
+		console.log(response);
+
 		let template = '<div class="a-goods__item__reisizers">',
 			i = 0,
 			classArray = ['__with-triangle-left-medium', '__with-waves-rigth-high __to_left-no-margin', '__without-triangle-left-min'];
@@ -83,8 +87,7 @@ class AsyncLoad extends Helper {
 		}
 
 		template += '</div>';
-
-		this.goodsAfter.innerHTML = "";
+		
 		this.goodsAfter.insertAdjacentHTML('beforeend' ,template);
 
 	}
@@ -112,8 +115,8 @@ class AsyncLoad extends Helper {
 
 
 	auctionFinished(response){
-		this.buyAction = true;
-		this.buttonToBuy.classList.remove('a-inactive');
+		//this.buyAction = true;
+		//this.buttonToBuy.classList.remove('a-inactive');
 		Bucket.getBucket();
 		$app.chat.addWinner(response.data.winner, response.data.price);
 	}
@@ -143,20 +146,24 @@ class AsyncLoad extends Helper {
 		
 	}
 
-
 	actionStarted(response){
 		this.getCurrentAuction(response);
 	}
 
 	baseBuyInitial(event){
 
+		event.stopPropagation();
+
 		let countAttr = document.querySelector('.a-type-to-count').value,
 			count = isNaN(parseInt(countAttr)) ? 1 : parseInt(countAttr);
 
-		if(!event || !event.target || !this.buyAction) return;
+		if(!event || !event.target) return;
+
+		console.log(this);
+
 
 		this.auctionDisabled();
-		$app.local.sets(['id', 'price'], [this.auctionId, this.currentPrice]);
+		//$app.local.sets(['id', 'price'], [this.auctionId, this.currentPrice]);
 
 		if(count > this.itemCount){
 			$app.socket.upCount('upCount', {auction_id: this.auctionId, count: count}, this.upCount.bind(this));
@@ -168,11 +175,11 @@ class AsyncLoad extends Helper {
 
 	baseBuyInitialToUpPrice(event){
 
+		event.stopPropagation();
+
 		let target = event && event.target || null;
 
-		if(!this.buyAction || (!target.matches('button') && !this.pretendents)) return;
-
-		console.log(this.buyAction);
+		if((!target.matches('button') && !this.pretendents)) return;
 
 		this.auctionDisabled();
 
@@ -185,18 +192,18 @@ class AsyncLoad extends Helper {
 	}
 
 	auctionDisabled(){
-		this.buyAction = false;
+		/*this.buyAction = false;
 		this.buttonToBuy.classList.add('a-inactive');
-		this.buttonToBuyUpPrice.classList.add('a-rates-inactive');
-		this.notification.innerHTML = "Ставка сделана!";
+		this.buttonToBuyUpPrice.classList.add('a-rates-inactive');*/
+		this.notification.innerHTML = "Ставка сделана! Oждидайте завершения торгов!";
 	}
 
 	auctionEnabled(){
-		$app.local.remove(['id', 'price']);
-		this.buyAction = true;
+		/*$app.local.remove(['id', 'price']);
+		this.buyAction = true;*/
 		this.notification.innerHTML = "";
-		this.buttonToBuy.classList.remove('a-inactive');
-		this.buttonToBuyUpPrice.classList.remove('a-rates-inactive');
+		//this.buttonToBuy.classList.remove('a-inactive');
+		//this.buttonToBuyUpPrice.classList.remove('a-rates-inactive');
 	}
 
 	upPrice(response){

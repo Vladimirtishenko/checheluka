@@ -1,4 +1,5 @@
 import Helper from './helper.js';
+let io = require('socket.io-client');
 
 class Sockets extends Helper {
 	constructor() {
@@ -8,6 +9,7 @@ class Sockets extends Helper {
 	
 		this.socket.on('serverMessage',(mess) =>
 		{
+			console.log(mess);
 			try{
 				this.registeredCallback[mess.action](mess);
 			} catch(e){}
