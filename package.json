@@ -45,7 +45,8 @@
     "stylus-loader": "^2.3.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2",
-    "webpack-stream": "^3.2.0"
+    "webpack-stream": "^3.2.0",
+    "socket.io-client": "~1.6.0"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",

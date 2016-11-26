@@ -63,7 +63,8 @@ module.exports.get = function(req, res, next) {
 
         dateToStart.getOption('date', function(err, result) {
             if (err) next(err);
-            callback(null, result.params);
+            var params = result && result.params ? result.params : {};
+            callback(null, params);
         });
 
     }

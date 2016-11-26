@@ -9,7 +9,7 @@ var schema = mongoose.Schema({
     size:String,
     finalePrice: {type: Number, default: 1},
     status:String,
-    winnerUserId:{type: String, default: null},
+    winnersUserId:[{type: String}],
     stDateTime: Date,
     finDateTime: Date,
     count: {type: Number, default: 1},

@@ -77,9 +77,14 @@ AuctionModule.prototype.setPretendent = function(uid, user){
 
 AuctionModule.prototype.setCount = function(uid, count, user){
     var auction = auctionModel.getEntity(uid);
-    if (!auction || auction.count == count)
+    if (!auction || auction.count > count)
     {
         return false;
+    }
+    else if (auction.count == count)
+    {
+        this.setPretendent(uid, user);
+        return true;
     }
     auction.count = count;
     auction.newPretendentInit = true;
@@ -112,8 +117,16 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
 AuctionModule.prototype.getWinner = function(uid){
     var auction = auctionModel.getEntity(uid);
     var keys = Object.keys(auction.pretendents);
-    var ind = keys[Math.floor(Math.random()*keys.length)];
-    return auction.pretendents[ind] || null;
+    var winners = (keys.length > 0) ? {} : null;
+    shuffle(keys);
+    var winnerCounts = Math.floor(auction.lot.countInWarehouse / auction.count);
+    console.log(winnerCounts);
+    keys = keys.slice(0, winnerCounts);
+    for (var i = 0; i < keys.length; i++)
+    {
+        winners[keys[i]] = auction.pretendents[keys[i]]
+    }
+    return winners || null;
 };
 
 AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMessage){
@@ -159,3 +172,16 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
 AuctionModule.prototype._base_dispatchEvent = parent.prototype.dispatchEvent;
 
 module.exports = AuctionModule;
+
+/**
+ * Shuffles array in place.
+ */
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length; i; i--) {
+        j = Math.floor(Math.random() * i);
+        x = a[i - 1];
+        a[i - 1] = a[j];
+        a[j] = x;
+    }
+}

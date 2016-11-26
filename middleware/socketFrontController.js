@@ -8,7 +8,7 @@ var usersModule = new usersClass();
 var ordersModule = new orderClass();
 var configOptions = require('./services/configOptions');
 var socketClient = require('./services/socketClient');
-var loadProductSleepTime = 120; // if product did not loaded server slepp for $ sec
+var loadProductSleepTime = 2; // if product did not loaded server slepp for $ sec
 
 function socketFrontController(io){
     this.io = io;
@@ -18,7 +18,8 @@ function socketFrontController(io){
     this.productsPull = {};
     this.auctionsPull = {};
     this.curAuction = null;
-    this.isTimeToStart = false;
+    this.lastAuction = null;
+    this.isTimerForLoadSet = false;
     productsModule.setListenere("productsLoaded",this.setProductList.bind(this));
     auctionModule.setListenere("finishAuction",this.sendNotifyThatAuctionFinished.bind(this));
     auctionModule.setListenere("auctionUpdated",this.notifyAuctionUpdated.bind(this));
@@ -56,6 +57,7 @@ socketFrontController.prototype.initStart = function(){
                 configOptions.updateOption('date', null, function(err, data){
                     if (!err && data)
                     {
+                        this.lastAuction = null;
                         auctionModule.startAuction(self.curAuction);
                     }
                 });
@@ -66,6 +68,17 @@ socketFrontController.prototype.initStart = function(){
             }
         }
         else{
+            if (self.curAuction == self.lastAuction)
+            {
+                var now = new Date();
+                now.setDate(now.getDate()+14);
+                configOptions.updateOption('date', now.getTime(), function(err, res){
+                    if (!err)
+                    {
+                        this.sendToAll(this.createMessage('AuctionFinishedDataChanged', {"nextStartTime" : now.getTime()}));
+                    }
+                }.bind(self));
+            }
             auctionModule.startAuction(self.curAuction);
         }
     });
@@ -215,11 +228,16 @@ socketFrontController.prototype.createError = function(code, message){
 
 socketFrontController.prototype.productLoad = function(){
     console.log('product load');
-    var limit = this.limit;
     var keys = Object.keys(this.productsPull);
-    if (keys.length)
+    var keysAuc = Object.keys(this.auctionsPull);
+    if (keysAuc.length >= this.limit )
     {
-        limit = this.limit - keys.length;
+        return;
+    }
+    var limit = this.limit;
+    if (keysAuc.length)
+    {
+        limit = this.limit - keysAuc.length;
     }
     limit = (limit <= 0) ? 1 : limit;
     productsModule.loadProducts(this.offset, limit);
@@ -227,20 +245,22 @@ socketFrontController.prototype.productLoad = function(){
 
 socketFrontController.prototype.setProductList = function(event, products){
     //productsModule.createProduct(this.pro);
-    //console.log(products.length);
     if (products && products.length > 0)
     {
+        this.isTimerForLoadSet = false;
         this.offset += products.length;
         for(var i = 0; i < products.length; i++)
         {
             this.productsPull[products[i]._id] = products[i];
         }
-        this.setAuctionList(products);                
+        this.setAuctionList(products);
     }
     else
     {
         this.offset = 0;
-        setTimeout(this.productLoad.bind(this),1000*loadProductSleepTime);
+        var aucKeys = Object.keys(this.auctionsPull);
+        this.lastAuction = aucKeys[aucKeys.length - 1];
+        this.isTimerForLoadSet = setTimeout(this.productLoad.bind(this),1000*loadProductSleepTime);
     }
 }
 
@@ -259,31 +279,35 @@ socketFrontController.prototype.setAuctionList = function(products){
         this.curAuction = this.auctionsPull[keys[0]]._uid;
         this.initStart();
     }
-    //var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
-    //delete auctions[this.curAuction];
-    //this.sendToAll(this.createMessage('getAuctions', auctions));
+    var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
+    delete auctions[this.curAuction];
+    this.sendToAll(this.createMessage('getAuctions', auctions));
 }
 
 socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, data){
     this.sendToAll(this.createMessage('auctionFinished', data));
-    if (data.winner && data.winner._id)
+    if (data.winner && Object.keys(data.winner).length > 0)
     {
+        var winKeys = Object.keys(data.winner);
         var prod = this.productsPull[data.lot._id];
         prod = JSON.parse(JSON.stringify(prod));
         var updata = {
             _id: data.lot._id,
-            countInWarehouse: data.lot.countInWarehouse - data.count
+            countInWarehouse: data.lot.countInWarehouse - (data.count * winKeys.length)
         };
         productsModule.setListenere("productUpdated",function(event, product)
         {
             console.log('Product updated');
-            ordersModule.createOrder(
-                data.winner._id, 
-                data._id,
-                prod,
-                data.count,
-                data.price
-            );
+            for (var i = 0; i < winKeys.length; i++)
+            {
+                ordersModule.createOrder(
+                    data.winner[winKeys[i]]._id,
+                    data._id,
+                    prod,
+                    data.count,
+                    data.price
+                );
+            }
         });
         productsModule.updateProduct(updata);
     }
@@ -299,7 +323,7 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     }
    
     var keys = Object.keys(this.productsPull);
-    if (keys.length < this.limit)
+    if (keys.length < this.limit && this.isTimerForLoadSet === false)
     {
         this.productLoad();
     }

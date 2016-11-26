@@ -32,7 +32,8 @@ Product.prototype.getEntity = function(id, callback)
 Product.prototype.getEntityCollection = function(ofsset, lim, callback)
 {
     ofsset = ofsset || 0;
-    var query = this.dataProvider.find().where('countInWarehouse').gt(0).skip(ofsset);
+    var query = this.dataProvider.find()
+        .where('countInWarehouse').gt(0).sort({"priority": -1, "date" : -1}).skip(ofsset);
     if (lim && lim > 0)
     {
         query.limit(lim);

@@ -22,7 +22,8 @@ module.exports.get = function(req, res, next) {
 	 function dataTry(callback){
 	 	configOptions.getOption('date', function(err, result) {
 	        if (err) next(err);
-	        callback(null, result.params)
+			var params = result && result.params ? result.params : {};
+			callback(null, params);
 	    })
 	 }
 

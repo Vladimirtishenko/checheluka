@@ -52,12 +52,20 @@ Auction.prototype.saveToStorage = function(entity, callback)
         title: entity.lot.title,
         finalePrice: entity.price,
         status: entity.status,
-        winnerUserId: (entity.winner && entity.winner._id) ? entity.winner._id : null,
+        winnersUserId: (Object.keys(entity.winner).length > 0 ) ? [] : null,
         stDateTime: entity.stDateTime,
         finDateTime: entity.finDateTime,
         history: entity.history,
         count: entity.count
     };
+    for(var key in entity.winner)
+    {
+        if (entity.winner.hasOwnProperty(key) )
+        {
+            data.winnersUserId.push(entity.winner[key]._id);
+        }
+    }
+
     this.dataProvider.create(data,function(err, result){
         if(err) return callback(false);
         return callback(result);
