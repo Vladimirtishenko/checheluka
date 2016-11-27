@@ -1,6 +1,7 @@
 import Helper from '../helper.js';
 
 import Flatpickr from 'flatpickr';
+import RussianFlatpickr from 'flatpickr/src/flatpickr.l10n.ru.js';
 import Templates from './templates.js';
 import ErrorCode from '../error.js';
 
@@ -43,6 +44,8 @@ class Config extends Helper {
     }
 
     setInputCalendar(obj) {
+
+        Flatpickr.localize(RussianFlatpickr);
 
         new Flatpickr(this.calendarInput, {
             minDate: new Date(),

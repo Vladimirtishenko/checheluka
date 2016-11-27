@@ -8,6 +8,7 @@ class AsyncLoad extends Helper {
 		if(!el) return;
 		this.mainItem = el;
 		this.goodsAfter = document.querySelector('.a-else-goods');
+		this.timeToFinished = false;
 		//this.buyAction = true;
 		this.init();
 	}
@@ -18,13 +19,14 @@ class AsyncLoad extends Helper {
 		$app.socket.auctionFinished('auctionFinished', this.auctionFinished.bind(this));
 		$app.socket.actionStarted('actionStarted', this.actionStarted.bind(this));
 		$app.socket.auctionUpdated('auctionUpdated', this.auctionUpdated.bind(this));
+		$app.socket.AuctionFinishedDataChanged('AuctionFinishedDataChanged', this.AuctionFinishedDataChanged.bind(this));
 	}
 
 
 	getCurrentAuction(response){
 
 		if(!response.data || !response.data.lot) return;
-
+		
 		this.itemCount = response.data.count;
 		this.auctionId = response.data._uid;
 		this.currentPrice = response.data.currentPrice;
@@ -109,6 +111,12 @@ class AsyncLoad extends Helper {
 
 	}
 
+	AuctionFinishedDataChanged(response){
+		if(response && response.data && response.data.nextStartTime){
+			this.timeToFinished = {nextStartTime: response.data.nextStartTime};
+		}
+	}
+
 	clearTimerAndRequest(){
 		clearTimeout(this.globalTimer);
 	}
@@ -117,8 +125,14 @@ class AsyncLoad extends Helper {
 	auctionFinished(response){
 		//this.buyAction = true;
 		//this.buttonToBuy.classList.remove('a-inactive');
+		if(this.timeToFinished){
+			$app.synteticTime(this.timeToFinished.nextStartTime);
+			$app.chat.clear();
+		}
 		Bucket.getBucket();
 		$app.chat.addWinner(response.data.winner, response.data.price);
+		
+		
 	}
 
 	auctionUpdated(response){
@@ -158,9 +172,6 @@ class AsyncLoad extends Helper {
 			count = isNaN(parseInt(countAttr)) ? 1 : parseInt(countAttr);
 
 		if(!event || !event.target) return;
-
-		console.log(this);
-
 
 		this.auctionDisabled();
 		//$app.local.sets(['id', 'price'], [this.auctionId, this.currentPrice]);

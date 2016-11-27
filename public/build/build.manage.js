@@ -851,6 +851,10 @@
 
 	var _flatpickr2 = _interopRequireDefault(_flatpickr);
 
+	var _flatpickrL10nRu = __webpack_require__(83);
+
+	var _flatpickrL10nRu2 = _interopRequireDefault(_flatpickrL10nRu);
+
 	var _templates = __webpack_require__(80);
 
 	var _templates2 = _interopRequireDefault(_templates);
@@ -914,6 +918,8 @@
 	    }, {
 	        key: 'setInputCalendar',
 	        value: function setInputCalendar(obj) {
+
+	            _flatpickr2.default.localize(_flatpickrL10nRu2.default);
 
 	            new _flatpickr2.default(this.calendarInput, {
 	                minDate: new Date(),
@@ -1011,6 +1017,8 @@
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+
 
 	/*! flatpickr v2.0.8, @license MIT */
 	function Flatpickr(element, config) {
@@ -2479,6 +2487,28 @@
 	}
 
 	if (true) module.exports = Flatpickr;
+
+/***/ },
+
+/***/ 83:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Russian locals for flatpickr */
+	var Flatpickr = Flatpickr||{l10n: {}};
+
+	Flatpickr.l10n.weekdays = {
+		shorthand: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+		longhand: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
+	};
+
+	Flatpickr.l10n.months = {
+		shorthand: ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+		longhand: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
+	};
+	if (true) {
+		module.exports = Flatpickr.l10n;
+	}
+
 
 /***/ }
 

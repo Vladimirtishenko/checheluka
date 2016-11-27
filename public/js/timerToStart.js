@@ -8,12 +8,15 @@ class Timer extends Helper {
 		this.attr = this.el.getAttribute('data-time');
 		this.removed = el.querySelector('.a-replaced-time-container');
 
+		$app.synteticTime = this.synteticEventTimer.bind(this);
+
 		this.createTimer();
 
 	}
 
 	createTimer(){
-		if(!this.attr || this.attr == null){
+
+		if(!this.attr || this.attr == 'null'){
 			this.removed.innerHTML = "Аукцион начался..."
 		} else {
 			this.estimate = new Date(+this.attr);
@@ -23,12 +26,19 @@ class Timer extends Helper {
 		}
 	}
 
+	synteticEventTimer(time){
+		this.estimate = new Date(+time);
+		this.tryTime();
+	}
+
 	tryTime(){
 
 		if(Date.parse(new Date()) >= Date.parse(this.estimate)){
-			
+
 			this.el.innerHTML = '<p> До начала аукциона осталось: </p>' +
 								'<i class="a-replaced-time-container"> Аукцион начался</i>';
+
+			this.removed = this.el.querySelector('.a-replaced-time-container');
 
 			try {
 				clearInterval(this.timerGlobal);
@@ -61,7 +71,6 @@ class Timer extends Helper {
 		} else {
 			this.createTime(dateString);
 		}
-
 
 		this.timerGlobal = setTimeout(() => {
 			this.tryTime();

@@ -76,6 +76,11 @@ class Sockets extends Helper {
 		this.socket.emit(action, data);
 	}
 
+	AuctionFinishedDataChanged(action, callback){
+		this.setRegisteredCallback(action, callback);
+		this.socket.emit(action, {});
+	}
+
 
 }
 
