@@ -18,14 +18,13 @@ module.exports.post = function(req, res, next) {
             file.priority = 1;
         } 
 
+         console.log('====================');
+        console.log(id);
+        console.log('---------------');
+
         Goods.findOneAndUpdate({
             _id: id
         }, file, { upsert: true, new: true }, function(err, doc) {
-
-
-            console.log('-------');
-            console.log(doc);
-            console.log('-------');
 
             if (err) {
                 callback(err);
