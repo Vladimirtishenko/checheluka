@@ -7,7 +7,7 @@ module.exports.post = function(req, res, next) {
 
     each(req.body, function(file, callback) {
 
-        var _id = file._id || new mongoose.mongo.ObjectID(),
+        var id = file._id || new mongoose.mongo.ObjectID(),
             date = new Date();
 
         file.date = date; 
@@ -19,8 +19,14 @@ module.exports.post = function(req, res, next) {
         } 
 
         Goods.findOneAndUpdate({
-            _id: _id
+            _id: id
         }, file, { upsert: true, new: true }, function(err, doc) {
+
+
+            console.log('-------');
+            console.log(doc);
+            console.log('-------');
+
             if (err) {
                 callback(err);
             } else {
