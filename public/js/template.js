@@ -44,10 +44,10 @@ class Template {
 				      '<p class="a-general-goods__time_to_end__timer">До завершения -  <span class="a-times-frontend">00:'+(timer < 10 ? '0' + timer : timer)+'</span></p>' +
 				      '<p class="a-info-about-rates">Система повышает ставки автоматически на 50 рублей, если хотите повысит ставку сразу нажмите на одну из кнопок ниже!</p>' +
 				      '<div class="a-general-goods__description_rates_button">' +
+				        '<button class="a-button-white">+ 51 руб.</button>' +
 				        '<button class="a-button-white">+ 101 руб.</button>' +
 				        '<button class="a-button-white">+ 251 руб.</button>' +
 				        '<button class="a-button-white">+ 501 руб.</button>' +
-				        '<button class="a-button-white">+ 751 руб.</button>' +
 				      '</div>' +
 				    '</div>' +
 				  '</div>' +

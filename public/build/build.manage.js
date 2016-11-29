@@ -61,6 +61,10 @@
 
 	var _config2 = _interopRequireDefault(_config);
 
+	var _rules = __webpack_require__(84);
+
+	var _rules2 = _interopRequireDefault(_rules);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	window.globalRegistredModules = {};
@@ -68,6 +72,7 @@
 	window.addEventListener('DOMContentLoaded', function () {
 		new _all_goods_load2.default(document.querySelector('.a-table-admin.__a-for-goods') || document.querySelector('.a-table-admin.__a-for-auction') || document.querySelector('.a-table-admin.__a-for-orders'));
 		new _config2.default(document.querySelector('.a-table-admin.__a-for-config'));
+		new _rules2.default(document.querySelector('.a-rules-block'));
 	});
 
 /***/ },
@@ -2509,6 +2514,83 @@
 		module.exports = Flatpickr.l10n;
 	}
 
+
+/***/ },
+
+/***/ 84:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	var _error = __webpack_require__(65);
+
+	var _error2 = _interopRequireDefault(_error);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Rules = function (_Helper) {
+		_inherits(Rules, _Helper);
+
+		function Rules(elem) {
+			_classCallCheck(this, Rules);
+
+			var _this = _possibleConstructorReturn(this, (Rules.__proto__ || Object.getPrototypeOf(Rules)).call(this));
+
+			if (!elem) return _possibleConstructorReturn(_this);
+
+			_this.form = elem.querySelector('.a-forms-rules-update');
+
+			_this.flyEvent('add', ['submit'], [_this.form], [_this.sendFormRules.bind(_this)]);
+
+			return _this;
+		}
+
+		_createClass(Rules, [{
+			key: 'sendFormRules',
+			value: function sendFormRules(event) {
+				event.preventDefault();
+				var form = event && event.target || null;
+				if (!form) return;
+
+				var id = form.text.getAttribute('data-id'),
+				    content = tinymce.activeEditor.getContent();
+
+				this.xhrRequest('POST', '/page_rules', 'application/json', JSON.stringify({ fieldId: id || 0, text: content }), this.responseFromServer.bind(this, form));
+			}
+		}, {
+			key: 'responseFromServer',
+			value: function responseFromServer(form, obj) {
+
+				try {
+					var json = JSON.parse(obj);
+
+					if (json.status == 200) {
+						form.insertAdjacentHTML('beforeend', '<p class="a-notify">Изменения сохранены</p>');
+					}
+				} catch (e) {}
+			}
+		}]);
+
+		return Rules;
+	}(_helper2.default);
+
+	exports.default = Rules;
 
 /***/ }
 
