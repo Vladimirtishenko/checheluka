@@ -6,7 +6,7 @@ function AuctionModule() {
     this.started = null;
     this.events = ['startAuction','finishAuction', 'auctionUpdated', 'pretendentAdded'];
     this.auctionTimer = 15;
-    this.upPrice = 50;
+    this.upPrice = 30;
 }
 
 AuctionModule.prototype = Object.create(parent.prototype);

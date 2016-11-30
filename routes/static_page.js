@@ -52,11 +52,16 @@ module.exports.get = function(req, res, next) {
 
         dataTry(function(err, data) {
             if (err) next(err);
-            res.render(view, {
-                title: "Hello Express",
-                date: data || "",
-                sessionUser: null
-            });
+            getRules(data, function(err, rules){
+                console.log(rules)
+                res.render(view, {
+                    title: "Hello Express",
+                    date: rules.data || "",
+                    rules: rules.rules,
+                    sessionUser: null
+                });
+            })
+            
         })
 
     }

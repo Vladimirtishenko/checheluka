@@ -87,7 +87,8 @@ class AsyncLoadFromAnouterResourse extends Helper {
 						i.priority,
 						i.PriceRoz || i.price,
 						i.auctionPrice,
-						i.artikul || i.art
+						i.artikul || i.art,
+						i.unsoldCount || 0
 						);
 			}
 		}

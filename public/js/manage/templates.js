@@ -88,7 +88,7 @@ class Templates {
 
     allGoodsAuction() {
 
-        function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice, art) {
+        function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice, art, unsold) {
 
             let tmp = '<div class="a-all-goods-table__item">' +
                 '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' +
@@ -134,6 +134,10 @@ class Templates {
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Размеры</p>' +
                 '<span>' + decodeURIComponent(size) + '</span>' +
+                '</div>' +
+                '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Не продано</p>' +
+                '<input type="text" name="unsoldCount" value="' + (unsold || 0) + '"/>' +
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Колличество на складе</p>' +

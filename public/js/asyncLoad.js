@@ -64,6 +64,7 @@ class AsyncLoad extends Helper {
 		this.buttonToBuyUpPrice = document.querySelector('.a-general-goods__description_rates_button');
 		this.priceNow = document.querySelector('.a-general-goods__description_price_now_upgraded');
 		this.countNow = document.querySelector('.a-type-to-count');
+		this.countInWarehouse = document.querySelector('.a-general-goods__description_in-warehouse span');
 		this.notification = document.querySelector('.a-add-rate');
 
 		this.flyEvent('add', ['click'], [this.buttonToBuy, this.buttonToBuyUpPrice], [this.baseBuyInitial.bind(this), this.baseBuyInitialToUpPrice.bind(this)]);
@@ -144,6 +145,7 @@ class AsyncLoad extends Helper {
 			this.priceNow.innerHTML = response.data.currentPrice;
 			this.countNow.value = response.data.count;
 			this.currentPrice = response.data.currentPrice;
+			this.countInWarehouse.innerHTML = response.data.lot.countInWarehouse + 'ед.';
 			this.pretendentsAuction = response.data.pretendents;
 			this.notification.innerHTML = "";
 			this.auctionEnabled();

@@ -43,7 +43,7 @@ html
 				span.a-modal-close
 				h2.a-modal__item_title Правила аукциона
 				:verbatim
-					!{rules.text}
+					!{rules && rules.text}
 			.a-modal__item.order
 				span.a-modal-close
 				form.a-form-submit-order.a-form-modal.-enter-placeholder(data-action="order")

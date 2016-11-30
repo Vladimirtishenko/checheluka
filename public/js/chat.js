@@ -32,8 +32,6 @@ class Chat extends Helper {
 
 		this.beforeEl.insertAdjacentHTML('afterend', this.chatTemplate(pretendents, price));
 
-
-
 	}
 
 
@@ -77,10 +75,12 @@ class Chat extends Helper {
 
 	chatTemplate(pretendents, price){
 
+		let win = Object.keys(pretendents).length;
+
 		let template = '<div class="a-block-with-proposal">' + 
 						    '<p class="a-block-with-proposal__buy_now">Готовы купить за<span>'+price+' руб.</span></p>' + 
 						   ' <p class="a-block-with-proposal__user">'+
-						   		this.chatTemplateUsers(pretendents) +
+						   		((win == 0) ? "Нет победителей" : this.chatTemplateUsers(pretendents)) +
 						   '</p>' + 
 						'</div>';
 
@@ -96,7 +96,7 @@ class Chat extends Helper {
 			template = Object.keys(pretendents).length + 'чел.'
 		} else {
 			for(var user in pretendents){
-				template += '<i>'+pretendents[user].email+'</i>';
+				template += '<i>'+(pretendents[user].login || pretendents[user].email.split('@')[0])+' (г.'+ (pretendents[user].city || "Белгород") +')</i>';
 			}
 		}
 
