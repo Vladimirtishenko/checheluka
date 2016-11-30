@@ -5,7 +5,7 @@ function AuctionModule() {
     parent.apply(this, arguments);
     this.started = null;
     this.events = ['startAuction','finishAuction', 'auctionUpdated', 'pretendentAdded'];
-    this.auctionTimer = 30;
+    this.auctionTimer = 15;
     this.upPrice = 50;
 }
 
@@ -49,6 +49,15 @@ AuctionModule.prototype.removeAuction = function(uid){
 };
 AuctionModule.prototype.startAuction = function(uid){
     var auction = auctionModel.getEntity(uid);
+    //set default data
+    auction.price = auction.basePrice;
+    auction.count = 1;
+    auction.currentPrice = auction.basePrice;
+    auction.nextPrice =  auction.basePrice + this.upPrice;
+    auction.winner = null;
+    auction.pretendents = {};
+    auction.newPretendentInit = false;
+    //
     auctionModel.setTimer(auction, this.auctionTimer, this.setToExpired.bind(this));
     this.started = auction;
     var mess = "Auction for lot - "+auction.lot._id+" was started. currentPrice - "+auction.currentPrice;
@@ -155,11 +164,11 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
                     sended._id = result._id;
                     this._base_dispatchEvent(eventName, sended);
                 }
-                auctionModel.removeEntity(auction._uid);
+                //auctionModel.removeEntity(auction._uid);
             }.bind(this))
         }
         else{
-            auctionModel.removeEntity(auction._uid);
+            //auctionModel.removeEntity(auction._uid);
             this._base_dispatchEvent(eventName, sended);
         }
         return;
@@ -167,9 +176,12 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
     else{
         return this._base_dispatchEvent(eventName, sended);
     }
-
 };
 AuctionModule.prototype._base_dispatchEvent = parent.prototype.dispatchEvent;
+
+AuctionModule.prototype.removeAuctionFrom = function(uid){
+    auctionModel.removeEntity(uid);
+};
 
 module.exports = AuctionModule;
 

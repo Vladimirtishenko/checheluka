@@ -10,6 +10,10 @@ Module.prototype.setListenere = function(event, callback)
             {
                 this.eventListeners[event] = [];
             }
+            if (this.eventListeners[event].indexOf(callback)>=0)
+            {
+                return;
+            }
             this.eventListeners[event].push(callback);
         }
     };

@@ -46,6 +46,7 @@ function socketFrontController(io){
 
 socketFrontController.prototype.initStart = function(){
     var self = this;
+
     configOptions.getOption('date', function(err, conf){
         console.log('get options');
         console.log(err, conf);
@@ -64,11 +65,15 @@ socketFrontController.prototype.initStart = function(){
                 return;
             }
             else{
-                setTimeout(self.initStart.bind(self),1000*loadProductSleepTime);
+                var keys = Object.keys(self.productsPull);
+                if (keys.length < this.limit && self.isTimerForLoadSet === false)
+                {
+                    self.isTimerForLoadSet = setTimeout(self.productLoad.bind(self),1000*30);
+                }
             }
         }
         else{
-            if (self.curAuction == self.lastAuction)
+            if ((self.curAuction == self.lastAuction))
             {
                 var now = new Date();
                 now.setDate(now.getDate()+14);
@@ -247,13 +252,19 @@ socketFrontController.prototype.setProductList = function(event, products){
     //productsModule.createProduct(this.pro);
     if (products && products.length > 0)
     {
-        this.isTimerForLoadSet = false;
-        this.offset += products.length;
+        var newProducts = [];
+
         for(var i = 0; i < products.length; i++)
         {
-            this.productsPull[products[i]._id] = products[i];
+            if (!this.productsPull[products[i]._id])
+            {
+                this.productsPull[products[i]._id] = products[i];
+                newProducts.push(products[i]);
+            }
         }
-        this.setAuctionList(products);
+        this.isTimerForLoadSet = false;
+        this.offset += newProducts.length;
+        this.setAuctionList(newProducts);
     }
     else
     {
@@ -286,17 +297,32 @@ socketFrontController.prototype.setAuctionList = function(products){
 
 socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, data){
     this.sendToAll(this.createMessage('auctionFinished', data));
+    productsModule.setListenere("productUpdated",function(event, product)
+    {
+        var keys = Object.keys(this.productsPull);
+        if (keys.length < this.limit && this.isTimerForLoadSet === false)
+        {
+            this.productLoad();
+        }
+    }.bind(this));
+    var auction = this.auctionsPull[data._uid];
+    var countIwWarehouse = auction.lot.countInWarehouse - auction.count;
     if (data.winner && Object.keys(data.winner).length > 0)
     {
         var winKeys = Object.keys(data.winner);
         var prod = this.productsPull[data.lot._id];
         prod = JSON.parse(JSON.stringify(prod));
+        auction.lot.countInWarehouse = data.lot.countInWarehouse - (data.count * winKeys.length);
         var updata = {
             _id: data.lot._id,
-            countInWarehouse: data.lot.countInWarehouse - (data.count * winKeys.length)
+            countInWarehouse: auction.lot.countInWarehouse
         };
         productsModule.setListenere("productUpdated",function(event, product)
         {
+            if (product && product._id != data.lot._id)
+            {
+                return;
+            }
             console.log('Product updated');
             for (var i = 0; i < winKeys.length; i++)
             {
@@ -311,21 +337,41 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
         });
         productsModule.updateProduct(updata);
     }
+
+    if (countIwWarehouse >= 0)
+    {
+        if (!data.winner || Object.keys(data.winner).length == 0)
+        {
+            auction.lot.countInWarehouse = countIwWarehouse;
+            var updata = {
+                _id: data.lot._id,
+                countInWarehouse: auction.lot.countInWarehouse,
+                unsoldCount: auction.lot.unsoldCount + auction.count
+            };
+            productsModule.updateProduct(updata);
+        }
+        if (countIwWarehouse > 0)
+        {
+            sleep(3000);
+            return this.initStart();
+        }
+    }
     delete this.productsPull[data.lot._id];
     delete this.auctionsPull[data._uid];
+    auctionModule.removeAuctionFrom(data._uid);
     //wait 3 sec besore start new auction
-    sleep(3000);    
+    sleep(3000);
+
     var keys = Object.keys(this.auctionsPull);
     if (typeof keys[0] !== 'undefined')
     {
         this.curAuction = this.auctionsPull[keys[0]]._uid;
         this.initStart();
     }
-   
-    var keys = Object.keys(this.productsPull);
-    if (keys.length < this.limit && this.isTimerForLoadSet === false)
+    else
     {
-        this.productLoad();
+        this.curAuction = null;
+        this.initStart();
     }
 }
 

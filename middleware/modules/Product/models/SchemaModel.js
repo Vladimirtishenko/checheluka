@@ -15,6 +15,7 @@ var schema = mongoose.Schema({
     auctionPrice: {type: Number, default: 30},
     price: {type: Number, default: 0},
     priority: {type: Number, default: 0},
+    unsoldCount: {type: Number, default: 0},
     date: Date
 }, { collection: 'goods' });
 // Model
