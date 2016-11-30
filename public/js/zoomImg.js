@@ -8,13 +8,14 @@ class Zoom extends Helper {
 		this.modalOuter = document.querySelector('.a-modal');
 		this.modalContainerForImg = this.modalOuter.querySelector('.a-outer-for-image');
 		this.modalInnerContainer = this.modalOuter.querySelector('.a-inner-background');
-		this.controls = this.modalOuter.querySelector('.a-image-slide-controls');	
+		this.controls = this.modalOuter.querySelectorAll('.a-data-controls-sider');	
 		this.allGoodsDelegate = el;
 		this.auctionActive = document.querySelector('.__index-auction');;
 		this.cloneContainer = null;
 		this.staticZoomWidth = 1000;
 
 		this.flyEvent('add', ['click'], [this.allGoodsDelegate, this.controls, this.auctionActive], [this.handlerToShowModalZoom.bind(this), this.handlerToClick.bind(this), this.handlerToShowModalZoom.bind(this)]);
+		
 
 	}
 
@@ -22,6 +23,7 @@ class Zoom extends Helper {
 
 		try {
 			this.flyEvent('remove', ['mouseenter', 'mouseleave', 'mousemove'], [this.modalContainerForImg], this.allListeners);
+			this.flyEvent('remove', ['keyup'], [document.body], this.keyEventsArrow.bind(this));
         } catch (e) {
             console.log(e);
         }
@@ -41,16 +43,29 @@ class Zoom extends Helper {
 
 		this.flyEvent('add', ['mouseenter', 'mouseleave', 'mousemove'], [this.modalContainerForImg], [this.allListeners]);
 
+		this.flyEvent('add', ['keyup'], [document.body], this.keyEventsArrow.bind(this));
+
 		this.classChange(['-animate-modal-in'], 'add', [this.modalOuter]);
 
 
 	}
 
-	handlerToClick(event){
-		let target = event && event.target,
-			attr = target.getAttribute('data-controls');
+	keyEventsArrow(event){
+
+		if(event.keyCode == 39) {
+			this.handlerToClick(null, 'next');
+		} else if(event.keyCode == 37) {
+			this.handlerToClick(null, 'prev');
+		}
+	}
+
+	handlerToClick(event, keyDescription){
+		let target = event && event.target ? event.target : null,
+			attr = target ? target.getAttribute('data-controls') : keyDescription;
 
 		if(!attr) return;
+
+		this.handlerMouseleave();
 
 		let direction = attr == 'next' ? '+' : '-',
 			elem = document.querySelector('[data-number="'+(parseInt(this.active) + parseInt(direction + 1)));
@@ -86,7 +101,7 @@ class Zoom extends Helper {
 	}
 
 	handlerMousemove (event){
-		
+
 		this.cssHelper(
 			[this.cloneContainer.firstElementChild],
 			["left: " + (-(event.offsetX * this.offsetPosition.left)) + "px; top: " + (-(event.offsetY * this.offsetPosition.top)) + "px"]
@@ -100,8 +115,11 @@ class Zoom extends Helper {
 
 		if(target != this.modalContainerForImg) return;
 
+		let staticWidth = target.clientWidth;
+
 		this.cloneContainer = target.cloneNode(true);
 		this.cloneContainer.id = "viewport";
+		this.cloneContainer.classList.remove('a-images-to-height');
 
 		this.modalInnerContainer.appendChild(this.cloneContainer);
 
@@ -115,8 +133,11 @@ class Zoom extends Helper {
 	}
 
 	handlerMouseleave (event){
-		this.cloneContainer.parentNode.removeChild(this.cloneContainer);
-		this.modalContainerForImg.removeAttribute('style');
+		try{
+			this.cloneContainer.parentNode.removeChild(this.cloneContainer);
+			this.modalContainerForImg.removeAttribute('style');
+		} catch(e){}
+		
 	}
 
 	calculateWidthAndHeight(){
@@ -126,8 +147,8 @@ class Zoom extends Helper {
 			sw = this.staticZoomWidth,
 			dh = this.cloneContainer.firstElementChild.clientHeight;
 
-		params.left = sw / (sw - w);
-		params.top = dh / (dh -h);
+		params.left = (sw - w) / w;
+		params.top = (dh - h) / h;
 
 		return params;
 

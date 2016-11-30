@@ -42,13 +42,8 @@ html
 			.a-modal__item.rules
 				span.a-modal-close
 				h2.a-modal__item_title Правила аукциона
-				ol
-					li Торги по аукционам начинаются в определенное время которое можно увидеть в таймере обратного отчета, если аукцион начался вместо таймера будет надпись 'Аукцион начался'
-					li При нажатии кнопки покупаю вы попадаете в пул участников аукциона по товару с указаной ценой.
-					li Таймер отсчитывает 30 секунд и в чате выводится колличество претендентов которые готовы купить товар за указанную сумму.
-					li Cистема сама поднимает ставку на 50 рублей
-					li Если вы согласны на данную сумму и претендентов больше чем колличество товара то вы должны снова нажать кнопку покупаю либо повысить ставку либо повысить число желаемого товара. 
-					li Победителей в аукционе может быть несколько, если к примеру колличество товара на складе 4 и 4 человека нажали на кнопку покупаю. При окончании таймера победителей будет 4 и каждому будет отправлен товар.
+				:verbatim
+					!{rules.text}
 			.a-modal__item.order
 				span.a-modal-close
 				form.a-form-submit-order.a-form-modal.-enter-placeholder(data-action="order")
@@ -78,18 +73,12 @@ html
 					input(type="text" id="a-number" name="number" placeholder="Пример: 79225551234" required)
 					label(for="#a-number") Номер телефона
 					.a-button-area-modal
-						button.a-button-white.__uppercase.a-data-order-send Купить
+						button.a-button-white.__uppercase.a-data-order-send Отправить
 			.a-inner-background
-				span.a-modal-close
-				.a-image-slide-controls
-					span(class="a-prev" data-controls="prev")
-					span(class="a-next" data-controls="next")
-				.a-outer-for-image
-			.a-modal__item.a-modal-goods-winner
-				span.a-modal-close
-				h2.a-modal__item_title Аукцион по товару завершен:
-				p Выиграл: 
-					span.a-winner-block
+				span.a-modal-close.a-yellow-close
+				span(class="a-prev a-data-controls-sider" data-controls="prev")
+				span(class="a-next a-data-controls-sider" data-controls="next")
+				.a-outer-for-image.a-images-to-height
 			.a-modal__item.a-modal-size-chart
 				span.a-modal-close
 				h2.a-modal__item_title Размерная сетка:

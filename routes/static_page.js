@@ -2,7 +2,8 @@ var dateToStart = require('../middleware/services/configOptions'),
     mongoose = require('../lib/mongoose'),
     ordersBucket = require('../middleware/modules/Orders/models/SchemaModel'),
     async = require("async"),
-    orders = require('../models/order_save');
+    orders = require('../models/order_save'),
+    Rules = require('../models/rules');
 
 module.exports.get = function(req, res, next) {
 
@@ -13,35 +14,37 @@ module.exports.get = function(req, res, next) {
         async.waterfall([
             dataTry,
             dataOrders,
-            AuctionTry
+            AuctionTry,
+            getRules
         ], function(err, result) {
 
-            if(view == 'privat' && typeof result.orders == 'object'){
+            if (view == 'privat' && typeof result.data.orders == 'object') {
                 var paid = [],
                     unpaid = [],
                     cancel = [];
 
-                for (var i = 0; i < result.orders.length; i++) {
-                    if(result.orders[i].status == 0){
-                        unpaid.push(result.orders[i]);
-                    } else if (result.orders[i].status == 1) {
-                        paid.push(result.orders[i]);
+                for (var i = 0; i < result.data.orders.length; i++) {
+                    if (result.data.orders[i].status == 0) {
+                        unpaid.push(result.data.orders[i]);
+                    } else if (result.data.orders[i].status == 1) {
+                        paid.push(result.data.orders[i]);
                     } else {
-                        cancel.push(result.orders[i]);
+                        cancel.push(result.data.orders[i]);
                     }
                 }
             }
 
             res.render(view, {
                 title: "Hello Express",
-                bucketPrice: result.priseSum,
-                bucketCount: result.count,
-                date: result.date || "",
-                data: result.data,
+                bucketPrice: result.data.priseSum,
+                bucketCount: result.data.count,
+                date: result.data.date || "",
+                data: result.data.data,
                 ordersPaid: (paid && paid.length != 0) ? paid : null,
                 ordersUnpaid: (unpaid && unpaid.length != 0) ? unpaid : null,
                 ordersCancel: (cancel && cancel.length != 0) ? cancel : null,
-                sessionUser: req.session.user
+                sessionUser: req.session.user,
+                rules: result.rules
             });
         });
 
@@ -70,11 +73,11 @@ module.exports.get = function(req, res, next) {
     }
 
     function dataOrders(date, callback) {
-        orders.find({"userId": req.session.user}, function(err, orders){
+        orders.find({ "userId": req.session.user }, function(err, orders) {
             if (err) next(err);
             callback(null, date, orders);
         })
-       
+
     }
 
     function AuctionTry(date, orders, callback) {
@@ -86,13 +89,20 @@ module.exports.get = function(req, res, next) {
             for (var i = 0; i < data.length; i++) {
                 count += data[i].count;
                 priseSum += parseInt(data[i].finalePrice) * data[i].count;
-            } 
+            }
 
             callback(null, { date: date, orders: orders, priseSum: priseSum, count: count, data: view == 'privat' ? data : null });
 
 
         })
 
+    }
+
+    function getRules(data, callback) {
+        Rules.find({}, function(err, rules) {
+            if (err) next(err);
+            callback(null, { data: data, rules: rules[0] || {} });
+        })
     }
 
 

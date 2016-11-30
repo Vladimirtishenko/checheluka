@@ -37,4 +37,8 @@ module.exports = function(app){
 
 	app.get("/page_to_manage_goods", CheckAuth, require("./manage/page_goods").get);
 
+	app.get("/page_comments", CheckAuth, require("./manage/page_comments").get)
+	app.get("/page_rules", CheckAuth, require("./manage/page_rules").get)
+	app.post("/page_rules", CheckAuth, require("./manage/page_rules").post)
+
 }
