@@ -139,6 +139,7 @@ AuctionModule.prototype.getWinner = function(uid){
 };
 
 AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMessage){
+    auction = auctionModel.getEntity(auction._uid);
     auction.history.push({action:eventName, data:historyMessage});
     var sended = JSON.parse(JSON.stringify(auction));
     delete sended.history;

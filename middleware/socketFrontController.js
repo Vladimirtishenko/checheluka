@@ -319,10 +319,7 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
         };
         productsModule.setListenere("productUpdated",function(event, product)
         {
-            if (product && product._id != data.lot._id)
-            {
-                return;
-            }
+            productsModule.unsetListener(event);
             console.log('Product updated');
             for (var i = 0; i < winKeys.length; i++)
             {
@@ -342,11 +339,12 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     {
         if (!data.winner || Object.keys(data.winner).length == 0)
         {
+            auction.lot.unsoldCount += auction.count;
             auction.lot.countInWarehouse = countIwWarehouse;
             var updata = {
                 _id: data.lot._id,
                 countInWarehouse: auction.lot.countInWarehouse,
-                unsoldCount: auction.lot.unsoldCount + auction.count
+                unsoldCount: auction.lot.unsoldCount
             };
             productsModule.updateProduct(updata);
         }

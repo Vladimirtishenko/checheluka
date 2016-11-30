@@ -20,9 +20,10 @@ Module.prototype.setListenere = function(event, callback)
 
 Module.prototype.unsetListener = function(eventData)
     {
-        if (typeof this.eventListeners[eventData.event] === 'undefined')
+        if (typeof this.eventListeners[eventData.event] !== 'undefined')
         {
-            delete this.eventListeners[eventData][eventData.index];
+            delete this.eventListeners[eventData.event][eventData.index];
+            //this.eventListeners[eventData.event] = this.eventListeners[eventData.event].splice(eventData.index, 1);
         }
     };
 
@@ -30,9 +31,12 @@ Module.prototype.dispatchEvent = function(event,data)
     {
         if (typeof this.eventListeners[event] !== 'undefined')
         {
-            for (var i = 0; i < this.eventListeners[event].length; i++)
+            for (var i in this.eventListeners[event])
             {
-                this.eventListeners[event][i]({index:i, event:event}, data);
+                if (this.eventListeners[event].hasOwnProperty(i) && this.eventListeners[event][i])
+                {
+                    this.eventListeners[event][i]({index: i, event: event}, data);
+                }
             }
         }
     };
