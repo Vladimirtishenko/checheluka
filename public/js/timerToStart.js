@@ -9,9 +9,14 @@ class Timer extends Helper {
 		this.removed = el.querySelector('.a-replaced-time-container');
 
 		$app.synteticTime = this.synteticEventTimer.bind(this);
+		$app.getTime = this.getTime.bind(this);
 
 		this.createTimer();
 
+	}
+
+	getTime(){
+		return this.timeStatus;
 	}
 
 	createTimer(){
@@ -35,6 +40,8 @@ class Timer extends Helper {
 
 		if(Date.parse(new Date()) >= Date.parse(this.estimate)){
 
+			this.timeStatus = true;
+
 			this.el.innerHTML = '<p> До начала аукциона осталось: </p>' +
 								'<i class="a-replaced-time-container"> Аукцион начался</i>';
 
@@ -47,6 +54,7 @@ class Timer extends Helper {
 			return false;
 
 		} else {
+			this.timeStatus = false;
 			this.startTimer();
 		}
 

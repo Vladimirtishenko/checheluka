@@ -8689,7 +8689,8 @@
 				/*this.buyAction = false;
 	   this.buttonToBuy.classList.add('a-inactive');
 	   this.buttonToBuyUpPrice.classList.add('a-rates-inactive');*/
-				this.notification.innerHTML = "Ставка сделана! Oждидайте завершения торгов!";
+				console.log();
+				this.notification.innerHTML = $app.getTime() ? "Ставка сделана! Oждидайте завершения торгов!" : "Аукцион не начался вы не можете делать ставки!";
 			}
 		}, {
 			key: 'auctionEnabled',
@@ -8975,6 +8976,7 @@
 			_this.removed = el.querySelector('.a-replaced-time-container');
 
 			$app.synteticTime = _this.synteticEventTimer.bind(_this);
+			$app.getTime = _this.getTime.bind(_this);
 
 			_this.createTimer();
 
@@ -8982,6 +8984,11 @@
 		}
 
 		_createClass(Timer, [{
+			key: 'getTime',
+			value: function getTime() {
+				return this.timeStatus;
+			}
+		}, {
 			key: 'createTimer',
 			value: function createTimer() {
 
@@ -9005,6 +9012,8 @@
 
 				if (Date.parse(new Date()) >= Date.parse(this.estimate)) {
 
+					this.timeStatus = true;
+
 					this.el.innerHTML = '<p> До начала аукциона осталось: </p>' + '<i class="a-replaced-time-container"> Аукцион начался</i>';
 
 					this.removed = this.el.querySelector('.a-replaced-time-container');
@@ -9015,6 +9024,7 @@
 
 					return false;
 				} else {
+					this.timeStatus = false;
 					this.startTimer();
 				}
 			}

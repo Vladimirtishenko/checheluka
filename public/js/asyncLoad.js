@@ -208,7 +208,8 @@ class AsyncLoad extends Helper {
 		/*this.buyAction = false;
 		this.buttonToBuy.classList.add('a-inactive');
 		this.buttonToBuyUpPrice.classList.add('a-rates-inactive');*/
-		this.notification.innerHTML = "Ставка сделана! Oждидайте завершения торгов!";
+		console.log();
+		this.notification.innerHTML = $app.getTime() ? "Ставка сделана! Oждидайте завершения торгов!" : "Аукцион не начался вы не можете делать ставки!";
 	}
 
 	auctionEnabled(){
