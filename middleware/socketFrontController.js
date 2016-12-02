@@ -64,9 +64,9 @@ socketFrontController.prototype.initStart = function(){
             }
             else{
                 var keys = Object.keys(self.productsPull);
-                if (keys.length < this.limit && self.isTimerForLoadSet === false)
+                if (keys.length < self.limit && self.isTimerForLoadSet === false)
                 {
-                    self.isTimerForLoadSet = setTimeout(self.productLoad.bind(self),1000*30);
+                    self.isTimerForLoadSet = setTimeout(self.productLoad.bind(self),1000*10);
                 }
                 setTimeout(self.initStart.bind(self),1000*loadProductSleepTime);
             }
@@ -252,6 +252,7 @@ socketFrontController.prototype.productLoad = function(){
 
 socketFrontController.prototype.setProductList = function(event, products){
     //productsModule.createProduct(this.pro);
+    this.isTimerForLoadSet = false;
     var newProducts = [];
     if (products && products.length > 0)
     {
@@ -263,7 +264,6 @@ socketFrontController.prototype.setProductList = function(event, products){
                 newProducts.push(products[i]);
             }
         }
-        this.isTimerForLoadSet = false;
     }
 
     if (newProducts.length > 0)
