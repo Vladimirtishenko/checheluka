@@ -235,6 +235,7 @@ socketFrontController.prototype.createError = function(code, message){
 
 socketFrontController.prototype.productLoad = function(){
     console.log('product load');
+    this.isTimerForLoadSet = false;
     var keys = Object.keys(this.productsPull);
     var keysAuc = Object.keys(this.auctionsPull);
     if (keysAuc.length >= this.limit )

@@ -8490,7 +8490,6 @@
 			if (!el) return _possibleConstructorReturn(_this);
 			_this.mainItem = el;
 			_this.goodsAfter = document.querySelector('.a-else-goods');
-			_this.timeToFinished = false;
 			//this.buyAction = true;
 			_this.init();
 			return _this;
@@ -8596,7 +8595,9 @@
 			key: 'AuctionFinishedDataChanged',
 			value: function AuctionFinishedDataChanged(response) {
 				if (response && response.data && response.data.nextStartTime) {
-					this.timeToFinished = { nextStartTime: response.data.nextStartTime };
+					$app.synteticTime(response.data.nextStartTime);
+					$app.chat.clear();
+					location = "/privat";
 				}
 			}
 		}, {
@@ -8609,10 +8610,6 @@
 			value: function auctionFinished(response) {
 				//this.buyAction = true;
 				//this.buttonToBuy.classList.remove('a-inactive');
-				if (this.timeToFinished) {
-					$app.synteticTime(this.timeToFinished.nextStartTime);
-					$app.chat.clear();
-				}
 				_bucket2.default.getBucket();
 				$app.chat.addWinner(response.data.winner, response.data.price);
 			}
