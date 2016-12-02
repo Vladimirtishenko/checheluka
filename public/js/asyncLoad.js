@@ -8,7 +8,6 @@ class AsyncLoad extends Helper {
 		if(!el) return;
 		this.mainItem = el;
 		this.goodsAfter = document.querySelector('.a-else-goods');
-		this.timeToFinished = false;
 		//this.buyAction = true;
 		this.init();
 	}
@@ -114,7 +113,8 @@ class AsyncLoad extends Helper {
 
 	AuctionFinishedDataChanged(response){
 		if(response && response.data && response.data.nextStartTime){
-			this.timeToFinished = {nextStartTime: response.data.nextStartTime};
+			$app.synteticTime(response.data.nextStartTime);
+			$app.chat.clear();
 		}
 	}
 
@@ -126,10 +126,6 @@ class AsyncLoad extends Helper {
 	auctionFinished(response){
 		//this.buyAction = true;
 		//this.buttonToBuy.classList.remove('a-inactive');
-		if(this.timeToFinished){
-			$app.synteticTime(this.timeToFinished.nextStartTime);
-			$app.chat.clear();
-		}
 		Bucket.getBucket();
 		$app.chat.addWinner(response.data.winner, response.data.price);
 		

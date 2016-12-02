@@ -18,7 +18,6 @@ function socketFrontController(io){
     this.productsPull = {};
     this.auctionsPull = {};
     this.curAuction = null;
-    this.lastAuction = null;
     this.isTimerForLoadSet = false;
     productsModule.setListenere("productsLoaded",this.setProductList.bind(this));
     auctionModule.setListenere("finishAuction",this.sendNotifyThatAuctionFinished.bind(this));
@@ -58,7 +57,6 @@ socketFrontController.prototype.initStart = function(){
                 configOptions.updateOption('date', null, function(err, data){
                     if (!err && data)
                     {
-                        this.lastAuction = null;
                         auctionModule.startAuction(self.curAuction);
                     }
                 });
@@ -70,10 +68,11 @@ socketFrontController.prototype.initStart = function(){
                 {
                     self.isTimerForLoadSet = setTimeout(self.productLoad.bind(self),1000*30);
                 }
+                setTimeout(self.initStart.bind(self),1000*loadProductSleepTime);
             }
         }
         else{
-            if ((self.curAuction == self.lastAuction))
+            if (!self.curAuction)
             {
                 var now = new Date();
                 now.setDate(now.getDate()+14);
@@ -84,7 +83,10 @@ socketFrontController.prototype.initStart = function(){
                     }
                 }.bind(self));
             }
-            auctionModule.startAuction(self.curAuction);
+            else
+            {
+                auctionModule.startAuction(self.curAuction);
+            }
         }
     });
 }
@@ -250,10 +252,9 @@ socketFrontController.prototype.productLoad = function(){
 
 socketFrontController.prototype.setProductList = function(event, products){
     //productsModule.createProduct(this.pro);
+    var newProducts = [];
     if (products && products.length > 0)
     {
-        var newProducts = [];
-
         for(var i = 0; i < products.length; i++)
         {
             if (!this.productsPull[products[i]._id])
@@ -263,6 +264,10 @@ socketFrontController.prototype.setProductList = function(event, products){
             }
         }
         this.isTimerForLoadSet = false;
+    }
+
+    if (newProducts.length > 0)
+    {
         this.offset += newProducts.length;
         this.setAuctionList(newProducts);
     }
@@ -270,7 +275,6 @@ socketFrontController.prototype.setProductList = function(event, products){
     {
         this.offset = 0;
         var aucKeys = Object.keys(this.auctionsPull);
-        this.lastAuction = aucKeys[aucKeys.length - 1];
         this.isTimerForLoadSet = setTimeout(this.productLoad.bind(this),1000*loadProductSleepTime);
     }
 }
@@ -290,6 +294,10 @@ socketFrontController.prototype.setAuctionList = function(products){
         this.curAuction = this.auctionsPull[keys[0]]._uid;
         this.initStart();
     }
+    this.sendToAllGeAuctions();
+}
+
+socketFrontController.prototype.sendToAllGeAuctions = function(){
     var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
     delete auctions[this.curAuction];
     this.sendToAll(this.createMessage('getAuctions', auctions));
@@ -371,6 +379,7 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
         this.curAuction = null;
         this.initStart();
     }
+    this.sendToAllGeAuctions();
 }
 
 socketFrontController.prototype.notifyAuctionUpdated = function(event, data){
