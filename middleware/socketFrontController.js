@@ -235,6 +235,7 @@ socketFrontController.prototype.createError = function(code, message){
 
 socketFrontController.prototype.productLoad = function(){
     console.log('product load');
+    this.isTimerForLoadSet = false;
     var keys = Object.keys(this.productsPull);
     var keysAuc = Object.keys(this.auctionsPull);
     if (keysAuc.length >= this.limit )
@@ -263,7 +264,6 @@ socketFrontController.prototype.setProductList = function(event, products){
                 newProducts.push(products[i]);
             }
         }
-        this.isTimerForLoadSet = false;
     }
 
     if (newProducts.length > 0)

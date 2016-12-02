@@ -115,6 +115,7 @@ class AsyncLoad extends Helper {
 		if(response && response.data && response.data.nextStartTime){
 			$app.synteticTime(response.data.nextStartTime);
 			$app.chat.clear();
+			location = "/privat";
 		}
 	}
 
