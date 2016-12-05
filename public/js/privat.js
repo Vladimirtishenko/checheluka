@@ -45,7 +45,6 @@ class Privat extends Helper {
 		data.date = new Date();
 		data.status = 0;
 
-
 		this.xhrRequest('POST', '/orderCreate', 'application/json', JSON.stringify(data), this.afterResponse.bind(this, parentForm));
 
 
