@@ -1,7 +1,8 @@
 extends layout
 
 block content
-	section.a-main.a-flexed-block-main
+	- var classie = (!agent.ie) ? "a-flexed-block-main" : "";
+	section.a-main(class=classie)
 		.a-flexed-block-main__item
 			include header.jade
 			h1.a-head-font-left-side Все товары

@@ -3,11 +3,13 @@ var dateToStart = require('../middleware/services/configOptions'),
     ordersBucket = require('../middleware/modules/Orders/models/SchemaModel'),
     async = require("async"),
     orders = require('../models/order_save'),
-    Rules = require('../models/rules');
+    Rules = require('../models/rules'),
+    useragent = require('useragent');
 
 module.exports.get = function(req, res, next) {
 
     var view = req.originalUrl.slice(1);
+    var agent = useragent.parse(req.headers['user-agent']);
 
     if (req.session.user) {
 
@@ -44,7 +46,8 @@ module.exports.get = function(req, res, next) {
                 ordersUnpaid: (unpaid && unpaid.length != 0) ? unpaid : null,
                 ordersCancel: (cancel && cancel.length != 0) ? cancel : null,
                 sessionUser: req.session.user,
-                rules: result.rules
+                rules: result.rules,
+                agent: agent
             });
         });
 
