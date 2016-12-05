@@ -1,6 +1,7 @@
 'use strict';
 import '../styl/general.styl';
 
+import 'babel-polyfill';
 import Sockets from './socket.js';
 import Modal from './modal.js';
 import Chat from './chat.js';

@@ -30,6 +30,7 @@ class AsyncLoad extends Helper {
 		this.auctionId = response.data._uid;
 		this.currentPrice = response.data.currentPrice;
 		this.previousPrice = response.data.price;
+		this.countInWarehouseValue = response.data.lot.countInWarehouse;
 		//this.butonsDefferent = ($app.local.gets('id') == this.auctionId) && (this.currentPrice == $app.local.gets('price')) ? true : false;
 
 		/*if(this.butonsDefferent){
@@ -173,9 +174,12 @@ class AsyncLoad extends Helper {
 		if(!event || !event.target) return;
 
 		this.auctionDisabled();
-		//$app.local.sets(['id', 'price'], [this.auctionId, this.currentPrice]);
 
 		if(count > this.itemCount){
+			if(count > parseInt(this.countInWarehouseValue)){
+				this.notification.innerHTML = "На складе всего " + this.countInWarehouseValue + "ед. Вы не можете купить " + count + "ед.";
+				return;
+			}
 			$app.socket.upCount('upCount', {auction_id: this.auctionId, count: count}, this.upCount.bind(this));
 		} else {
 			$app.socket.baseBuy('baseBuy', {auction_id: this.auctionId}, this.baseBuy.bind(this));
@@ -205,7 +209,6 @@ class AsyncLoad extends Helper {
 		/*this.buyAction = false;
 		this.buttonToBuy.classList.add('a-inactive');
 		this.buttonToBuyUpPrice.classList.add('a-rates-inactive');*/
-		console.log();
 		this.notification.innerHTML = $app.getTime() ? "Ставка сделана! Oждидайте завершения торгов!" : "Аукцион не начался вы не можете делать ставки!";
 	}
 
