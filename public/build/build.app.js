@@ -16390,6 +16390,8 @@
 				this.flyEvent('add', ['keyup'], [document.body], this.keyEventsArrow.bind(this));
 
 				this.classChange(['-animate-modal-in'], 'add', [this.modalOuter]);
+
+				this.cssHelper([this.modalInnerContainer], ["width:" + this.modalInnerContainer.clientWidth + "px; left:0; right: 0;"]);
 			}
 		}, {
 			key: 'keyEventsArrow',

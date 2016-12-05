@@ -36,7 +36,7 @@ class Zoom extends Helper {
 		this.active = target.getAttribute('data-number');
 
 		this.cssHelper([this.modalInnerContainer], ["display: flex"]);
-
+		
 		this.modalContainerForImg.innerHTML = "<img src='"+target.src+"' />"
 
 		this.allListeners = this.handlerToZoomImg.bind(this);
@@ -46,6 +46,8 @@ class Zoom extends Helper {
 		this.flyEvent('add', ['keyup'], [document.body], this.keyEventsArrow.bind(this));
 
 		this.classChange(['-animate-modal-in'], 'add', [this.modalOuter]);
+
+		this.cssHelper([this.modalInnerContainer], ["width:"+this.modalInnerContainer.clientWidth + "px; left:0; right: 0;"]);
 
 
 	}
