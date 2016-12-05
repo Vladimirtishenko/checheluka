@@ -2,8 +2,7 @@ extends layout
 
 block content
 	- var classie = (agent && !agent.ie) ? "a-flexed-block-main" : "";
-	- var ua = JSON.stringify(agent);
-	section.a-main(class=ua)
+	section.a-main(class=classie)
 		.a-flexed-block-main__item
 			include header.jade
 			h1.a-head-font-left-side Все товары
