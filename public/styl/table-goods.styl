@@ -38,25 +38,9 @@
 		z-index 10
 	&:hover .a-hidden-block
 		display flex
-		animation-name fades
-		animation-delay .1s
-		animation-duration .2s
-		animation-direction alternate
-		animation-fill-mode both
-		animation-timing-function ease-out
 
 .a-table-all-goods-hidden .a-else-goods__description_info-link
 	display block
-
-@keyframes fades {
-	0% {
-		opacity 0
-	}
-	100% {
-		opacity 1
-	}
-}
-
 
 .a-all-goods-table__item > img
 	width 100%
@@ -74,7 +58,6 @@
 	
 .a-hidden-block
 	display none
-	opacity 0
 	position absolute
 	align-items flex-start
 	justify-content space-between
