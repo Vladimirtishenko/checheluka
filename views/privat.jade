@@ -1,8 +1,7 @@
 extends layout
 
 block content
-	- var classie = (!agent.ie) ? "a-flexed-block-main" : "";
-	section.a-main.a-privat-main(class=classie)
+	section.a-main.a-privat-main.a-flexed-block-main
 		.a-flexed-block-main__item
 			include header.jade
 			.a-privat-block-top

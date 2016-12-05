@@ -9,7 +9,7 @@ var dateToStart = require('../middleware/services/configOptions'),
 module.exports.get = function(req, res, next) {
 
     var view = req.originalUrl.slice(1);
-    var agent = useragent.parse(req.headers['user-agent']);
+    var agent = useragent.is(req.headers['user-agent'])
 
     if (req.session.user) {
 
