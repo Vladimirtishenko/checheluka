@@ -50,6 +50,8 @@
 
 	__webpack_require__(15);
 
+	__webpack_require__(382);
+
 	var _socket = __webpack_require__(312);
 
 	var _socket2 = _interopRequireDefault(_socket);
@@ -17303,6 +17305,32 @@
 	}(_helper2.default);
 
 	exports.default = LocalBase;
+
+/***/ },
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */,
+/* 380 */,
+/* 381 */,
+/* 382 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	if (!("firstElementChild" in document.documentElement)) {
+	    Object.defineProperty(Element.prototype, "firstElementChild", {
+	        get: function get() {
+	            for (var nodes = this.children, n, i = 0, l = nodes.length; i < l; ++i) {
+	                if (n = nodes[i], 1 === n.nodeType) return n;
+	            }return null;
+	        }
+	    });
+	}
 
 /***/ }
 /******/ ]);
