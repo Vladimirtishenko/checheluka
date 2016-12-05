@@ -19,6 +19,8 @@ class Modal extends Helper {
 
     modalHandlerIn(event) {
 
+        console.log(event);
+
         let attr = event && event.attr ? event.attr : event && event.target ? event.target.getAttribute('data-attr') : null;
 
         if (!attr) return;
@@ -71,11 +73,11 @@ class Modal extends Helper {
         
         let forms = this.parentWraper.querySelectorAll('.a-form-modal');
 
-        for(var form of forms){
-            if(form.classList.contains(attr)){
-                form.style.display = "flex";
+        for(var i = 0; i < forms.length - 1; i++){
+            if(forms[i].classList.contains(attr)){
+                forms[i].style.display = "flex";
             } else {
-                form.style.display = "none";
+                forms[i].style.display = "none";
             }
         }
 
@@ -90,11 +92,11 @@ class Modal extends Helper {
              action = target.getAttribute('data-action'),
              formData = {};
 
-        for(let el of elems){
-            if(el.type == "email" || el.type == "password" || el.type == "text"){
-                if(!this.validate(el, target)) return;
+        for(var i = 0; i < elems.length - 1; i++){
+            if(elems[i].type == "email" || elems[i].type == "password" || elems[i].type == "text"){
+                if(!this.validate(elems[i], target)) return;
                     
-                formData[el.name] = el.value;
+                formData[elems[i].name] = elems[i].value;
             }
         }
 

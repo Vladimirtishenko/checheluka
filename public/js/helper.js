@@ -44,13 +44,17 @@ export default class Helper {
 
     classChange(what, events, el) {
 
-        for (var classie of what) {
-            for (var elem of el) {
+
+        for (var i = 0; i < what.length; i++) {
+
+            for (var j = 0; j < el.length; j++) {
+
                 try {
-                    elem.classList[events](classie);
+                    el[j].classList[events](what[i]);
                 } catch (e) {
                     console.log(e);
                 }
+
             }
         }
 
