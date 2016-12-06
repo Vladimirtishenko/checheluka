@@ -131,6 +131,7 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
         auction.currentPrice = auction.price - price;
         auction.nextPrice = auction.currentPrice + this.upPrice;
         auction.newPretendentInit = false;
+        return false;
     }
 };
 
