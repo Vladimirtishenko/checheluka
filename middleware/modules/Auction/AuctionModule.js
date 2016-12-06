@@ -69,18 +69,20 @@ AuctionModule.prototype.getCurrent = function(){
 
 AuctionModule.prototype.setPretendent = function(uid, user){
     var auction = auctionModel.getEntity(uid);
+    if (auction.newPretendentInit)
+    {
+        auction.pretendents = {};
+    }
     if (!auction.pretendents[auction.currentPrice])
     {
         auction.pretendents[auction.currentPrice] = {};
     }
     if (typeof auction.pretendents[auction.currentPrice][user._id] !== 'undefined')
     {
+        console.log(111111);
         return false;
     }
-    if (auction.newPretendentInit)
-    {
-        auction.pretendents = {};
-    }
+
     auction.newPretendentInit = false;
     auction.pretendents[auction.currentPrice][user._id] = user;
     var mess = "New pretendent - "+user._id+". Price - "+auction.currentPrice;
@@ -110,12 +112,12 @@ AuctionModule.prototype.setCount = function(uid, count, user){
 
 AuctionModule.prototype.setPrice = function(uid, price, user){
     var auction = auctionModel.getEntity(uid);
-    if (!auction || auction.nextPrice > price)
+    if (!auction)
     {
         return false;
     }
-    auction.price = price;
-    auction.currentPrice = price;
+    auction.price = auction.price + price;
+    auction.currentPrice = auction.price + price;
     auction.nextPrice = auction.currentPrice + this.upPrice;
     auction.newPretendentInit = true;
     auctionModel.updateTimer(auction, this.auctionTimer);
@@ -137,7 +139,7 @@ AuctionModule.prototype.getWinner = function(uid){
     var winners = (keys.length > 0) ? {} : null;
     shuffle(keys);
     var winnerCounts = Math.floor(auction.lot.countInWarehouse / auction.count);
-    console.log(winnerCounts);
+
     keys = keys.slice(0, winnerCounts);
     for (var i = 0; i < keys.length; i++)
     {
@@ -151,7 +153,7 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
     auction.history.push({action:eventName, data:historyMessage});
     var sended = JSON.parse(JSON.stringify(auction));
     delete sended.history;
-    sended.pretendents = sended.pretendents[sended.price];
+    sended.pretendents = sended.pretendents[sended.price] || {};
     if (eventName == 'startAuction')
     {
         auction.status = 'started';
