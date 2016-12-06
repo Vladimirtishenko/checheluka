@@ -79,7 +79,6 @@ AuctionModule.prototype.setPretendent = function(uid, user){
     }
     if (typeof auction.pretendents[auction.currentPrice][user._id] !== 'undefined')
     {
-        console.log(111111);
         return false;
     }
 
@@ -120,12 +119,18 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
     auction.currentPrice = auction.price + price;
     auction.nextPrice = auction.currentPrice + this.upPrice;
     auction.newPretendentInit = true;
-    auctionModel.updateTimer(auction, this.auctionTimer);
     if ( this.setPretendent(uid, user))
     {
+        auctionModel.updateTimer(auction, this.auctionTimer);
         var mess = "Pretendent updated auction - "+auction.lot._id+" price";
         this.dispatchEvent('auctionUpdated', auction, mess);
         return true;
+    }
+    else{
+        auction.price = auction.price - price;
+        auction.currentPrice = auction.price - price;
+        auction.nextPrice = auction.currentPrice + this.upPrice;
+        auction.newPretendentInit = false;
     }
 };
 
