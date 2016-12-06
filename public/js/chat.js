@@ -8,7 +8,7 @@ class Chat extends Helper {
 		this.beforeEl = document.querySelector('.a-chat-title');
 		this.button = document.querySelector('.a-chat-container__button');
 		this.flyEvent('add', ['click'], [this.button], this.chatHandler.bind(this));
-		this.arrayPosition = ['-631px 0', '-684px 0'];
+		this.arrayPosition = ['-684px 0', '-631px 0'];
 
 
 		$app.chat = {
@@ -28,7 +28,7 @@ class Chat extends Helper {
 
 	addChat(pretendents, price){
 
-		if(Object.keys(pretendents).length == 0) return;
+		if(!pretendents || Object.keys(pretendents).length == 0) return;
 
 		this.beforeEl.insertAdjacentHTML('afterend', this.chatTemplate(pretendents, price));
 
@@ -36,6 +36,8 @@ class Chat extends Helper {
 
 
 	addWinner(winner, price){
+
+		if(!winner) return;
 
 		this.beforeEl.insertAdjacentHTML('afterend', this.chatTemplateWinner(winner, price));
 
@@ -74,6 +76,8 @@ class Chat extends Helper {
 	}
 
 	chatTemplate(pretendents, price){
+
+		if(!pretendents) return;
 
 		let win = Object.keys(pretendents).length;
 

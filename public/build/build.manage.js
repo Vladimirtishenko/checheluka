@@ -47,21 +47,21 @@
 
 	'use strict';
 
-	__webpack_require__(372);
+	__webpack_require__(75);
 
-	var _add_or_delete_action = __webpack_require__(374);
+	var _add_or_delete_action = __webpack_require__(77);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _all_goods_load = __webpack_require__(375);
+	var _all_goods_load = __webpack_require__(78);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
 
-	var _config = __webpack_require__(378);
+	var _config = __webpack_require__(81);
 
 	var _config2 = _interopRequireDefault(_config);
 
-	var _rules = __webpack_require__(381);
+	var _rules = __webpack_require__(84);
 
 	var _rules2 = _interopRequireDefault(_rules);
 
@@ -77,7 +77,7 @@
 
 /***/ },
 
-/***/ 313:
+/***/ 16:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -213,7 +213,7 @@
 
 /***/ },
 
-/***/ 362:
+/***/ 65:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -258,14 +258,14 @@
 
 /***/ },
 
-/***/ 372:
+/***/ 75:
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
 
-/***/ 374:
+/***/ 77:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -276,7 +276,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(313);
+	var _helper = __webpack_require__(16);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -423,7 +423,7 @@
 
 /***/ },
 
-/***/ 375:
+/***/ 78:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -434,19 +434,19 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(313);
+	var _helper = __webpack_require__(16);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _add_or_delete_action = __webpack_require__(374);
+	var _add_or_delete_action = __webpack_require__(77);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _privat_change_status_order = __webpack_require__(376);
+	var _privat_change_status_order = __webpack_require__(79);
 
 	var _privat_change_status_order2 = _interopRequireDefault(_privat_change_status_order);
 
-	var _templates = __webpack_require__(377);
+	var _templates = __webpack_require__(80);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -601,7 +601,7 @@
 
 /***/ },
 
-/***/ 376:
+/***/ 79:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -612,7 +612,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(313);
+	var _helper = __webpack_require__(16);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
@@ -684,7 +684,7 @@
 
 /***/ },
 
-/***/ 377:
+/***/ 80:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -719,7 +719,7 @@
 	                    return sizesTmp;
 	                };
 
-	                var tmp = '<div class="a-all-goods-table__item">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '<p class="a-all-goods-table__description_info_article">Артикл: <span>' + (art || "Нет артикла") + '</span></p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="title" value="' + title + '"/>' + '<input type="hidden" name="description" value="' + description + '"/>' + '<input type="hidden" name="color" value="' + color + '"/>' + '<input type="hidden" name="src" value="' + img + '"/>' + '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' + '<input type="hidden" name="material" value="' + material + '"/>' + '<input type="hidden" name="price" value="' + price + '"/>' + '<input type="hidden" name="countInWarehouse" value="' + (count || 1) + '"/>' + '<input type="hidden" name="art" value="' + (art || "Нет артикла") + '"/>' + '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + title + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Артикл</p><span>' + (art || "Нет артикла") + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + sizeEach(size) + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цена розничная</p><span>' + price + ' руб.</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<span><input type="text" name="auctionPrice" value="30"><i> руб.</i></span>' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
+	                var tmp = '<div class="a-all-goods-table__item">' + '<img src="' + img + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + title + '</p>' + '<p class="a-all-goods-table__description_info_article">Артикл: <span>' + (art || "Нет артикла") + '</span></p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + size + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + color + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="title" value="' + title + '"/>' + '<input type="hidden" name="description" value="' + description + '"/>' + '<input type="hidden" name="color" value="' + color + '"/>' + '<input type="hidden" name="src" value="' + img + '"/>' + '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' + '<input type="hidden" name="material" value="' + material + '"/>' + '<input type="hidden" name="price" value="' + price + '"/>' + '<input type="hidden" name="countInWarehouse" value="' + (count || 0) + '"/>' + '<input type="hidden" name="art" value="' + (art || "Нет артикла") + '"/>' + '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + title + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Артикл</p><span>' + (art || "Нет артикла") + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + sizeEach(size) + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цена розничная</p><span>' + price + ' руб.</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<span><input type="text" name="auctionPrice" value="30"><i> руб.</i></span>' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
 
 	                return tmp;
 	            }
@@ -732,7 +732,7 @@
 
 	            function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice, art, unsold) {
 
-	                var tmp = '<div class="a-all-goods-table__item">' + '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' + '<img src="' + decodeURIComponent(img) + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' + '<p class="a-all-goods-table__description_info_article">Артикл: <span>' + (decodeURIComponent(art) || "Нет артикла") + '</span></p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + decodeURIComponent(size) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + decodeURIComponent(color) + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="_id" value="' + id + '"/>' + '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' + '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' + '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' + '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' + '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' + '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' + '<input type="hidden" name="price" value="' + decodeURIComponent(price) + '"/>' + '<input type="hidden" name="auctionPrice" value="' + decodeURIComponent(auctionPrice) + '"/>' + '<input type="hidden" name="art" value="' + decodeURIComponent(art) + '"/>' + '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + '<span>' + decodeURIComponent(size) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Не продано</p>' + '<input type="text" name="unsoldCount" value="' + (unsold || 0) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Колличество на складе</p>' + '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Розничная цена</p>' + '<span>' + decodeURIComponent(price) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<input type="text" name="auctionPrice" value="' + auctionPrice + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Приоритет</p>' + '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
+	                var tmp = '<div class="a-all-goods-table__item">' + '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' + '<img src="' + decodeURIComponent(img) + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' + '<p class="a-all-goods-table__description_info_article">Артикл: <span>' + (decodeURIComponent(art) || "Нет артикла") + '</span></p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + decodeURIComponent(size) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + decodeURIComponent(color) + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="_id" value="' + id + '"/>' + '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' + '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' + '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' + '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' + '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' + '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' + '<input type="hidden" name="price" value="' + decodeURIComponent(price) + '"/>' + '<input type="hidden" name="auctionPrice" value="' + decodeURIComponent(auctionPrice) + '"/>' + '<input type="hidden" name="art" value="' + decodeURIComponent(art) + '"/>' + '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + '<span>' + decodeURIComponent(size) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Не продано</p>' + '<input type="text" name="unsoldCount" value="' + (unsold || 0) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Колличество на складе</p>' + '<input type="text" name="countInWarehouse" value="' + (count || 0) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Розничная цена</p>' + '<span>' + decodeURIComponent(price) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<input type="text" name="auctionPrice" value="' + auctionPrice + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Приоритет</p>' + '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
 
 	                return tmp;
 	            }
@@ -798,7 +798,7 @@
 
 /***/ },
 
-/***/ 378:
+/***/ 81:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -809,23 +809,23 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(313);
+	var _helper = __webpack_require__(16);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _flatpickr = __webpack_require__(379);
+	var _flatpickr = __webpack_require__(82);
 
 	var _flatpickr2 = _interopRequireDefault(_flatpickr);
 
-	var _flatpickrL10nRu = __webpack_require__(380);
+	var _flatpickrL10nRu = __webpack_require__(83);
 
 	var _flatpickrL10nRu2 = _interopRequireDefault(_flatpickrL10nRu);
 
-	var _templates = __webpack_require__(377);
+	var _templates = __webpack_require__(80);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
-	var _error = __webpack_require__(362);
+	var _error = __webpack_require__(65);
 
 	var _error2 = _interopRequireDefault(_error);
 
@@ -977,7 +977,7 @@
 
 /***/ },
 
-/***/ 379:
+/***/ 82:
 /***/ function(module, exports, __webpack_require__) {
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -2456,7 +2456,7 @@
 
 /***/ },
 
-/***/ 380:
+/***/ 83:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Russian locals for flatpickr */
@@ -2478,7 +2478,7 @@
 
 /***/ },
 
-/***/ 381:
+/***/ 84:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2489,11 +2489,11 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _helper = __webpack_require__(313);
+	var _helper = __webpack_require__(16);
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _error = __webpack_require__(362);
+	var _error = __webpack_require__(65);
 
 	var _error2 = _interopRequireDefault(_error);
 

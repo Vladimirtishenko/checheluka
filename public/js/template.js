@@ -1,5 +1,5 @@
 class Template {
-	getCurrentAuction(id, obj, price, timer, pretendents, count, difference){
+	getCurrentAuction(id, obj, price, timer, count, difference){
 		return '<div class="a-general-goods a-animates-top-goods">' + 
 				  '<div class="a-general-goods__image">' +
 				  	'<span class="a-general-number__this_main">№'+id+'</span>' +

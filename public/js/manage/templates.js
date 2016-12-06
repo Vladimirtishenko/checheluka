@@ -45,7 +45,7 @@ class Templates {
                 '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' +
                 '<input type="hidden" name="material" value="' + material + '"/>' +
                 '<input type="hidden" name="price" value="' + price + '"/>' +
-                '<input type="hidden" name="countInWarehouse" value="' + (count || 1) + '"/>' +
+                '<input type="hidden" name="countInWarehouse" value="' + (count || 0) + '"/>' +
                 '<input type="hidden" name="art" value="' + (art || "Нет артикла") + '"/>' +
                 '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' +
                 '<div class="a-hidden-form_description">' +
@@ -141,7 +141,7 @@ class Templates {
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Колличество на складе</p>' +
-                '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' +
+                '<input type="text" name="countInWarehouse" value="' + (count || 0) + '"/>' +
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Розничная цена</p>' +

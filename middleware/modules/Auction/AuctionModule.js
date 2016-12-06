@@ -5,7 +5,7 @@ function AuctionModule() {
     parent.apply(this, arguments);
     this.started = null;
     this.events = ['startAuction','finishAuction', 'auctionUpdated', 'pretendentAdded'];
-    this.auctionTimer = 15;
+    this.auctionTimer = 30;
     this.upPrice = 30;
 }
 
@@ -69,7 +69,11 @@ AuctionModule.prototype.getCurrent = function(){
 
 AuctionModule.prototype.setPretendent = function(uid, user){
     var auction = auctionModel.getEntity(uid);
-    if (typeof auction.pretendents[user._id] !== 'undefined')
+    if (!auction.pretendents[auction.currentPrice])
+    {
+        auction.pretendents[auction.currentPrice] = {};
+    }
+    if (typeof auction.pretendents[auction.currentPrice][user._id] !== 'undefined')
     {
         return false;
     }
@@ -78,7 +82,7 @@ AuctionModule.prototype.setPretendent = function(uid, user){
         auction.pretendents = {};
     }
     auction.newPretendentInit = false;
-    auction.pretendents[user._id] = user;
+    auction.pretendents[auction.currentPrice][user._id] = user;
     var mess = "New pretendent - "+user._id+". Price - "+auction.currentPrice;
     this.dispatchEvent('pretendentAdded', auction, mess);
     return true;
@@ -125,7 +129,11 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
 
 AuctionModule.prototype.getWinner = function(uid){
     var auction = auctionModel.getEntity(uid);
-    var keys = Object.keys(auction.pretendents);
+    if (!auction.pretendents[auction.price])
+    {
+        return null;
+    }
+    var keys = Object.keys(auction.pretendents[auction.price]);
     var winners = (keys.length > 0) ? {} : null;
     shuffle(keys);
     var winnerCounts = Math.floor(auction.lot.countInWarehouse / auction.count);
@@ -133,7 +141,7 @@ AuctionModule.prototype.getWinner = function(uid){
     keys = keys.slice(0, winnerCounts);
     for (var i = 0; i < keys.length; i++)
     {
-        winners[keys[i]] = auction.pretendents[keys[i]]
+        winners[keys[i]] = auction.pretendents[auction.price][keys[i]]
     }
     return winners || null;
 };
@@ -143,6 +151,7 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
     auction.history.push({action:eventName, data:historyMessage});
     var sended = JSON.parse(JSON.stringify(auction));
     delete sended.history;
+    sended.pretendents = sended.pretendents[sended.price];
     if (eventName == 'startAuction')
     {
         auction.status = 'started';

@@ -35,6 +35,7 @@ function socketFrontController(io){
         newClient.setEvent('getAuctions', this.getAuctions.bind(this));
         newClient.setEvent('upCount', this.upCount.bind(this));
         newClient.setEvent('upPrice', this.upPrice.bind(this));
+        newClient.setEvent('getCurrentTime', this.getCurrentTime.bind(this));
     }.bind(this));
     io.on('error', function(err) {
         //here i change options
@@ -407,6 +408,12 @@ socketFrontController.prototype.onError = function(client, action, errors){
     var mes = this.createError(500, "server error");
     client.socket.emit('serverMessage', this.createMessage(action, null, mes));
 }
+
+socketFrontController.prototype.getCurrentTime = function(client, action){
+    var t = new Date().getTime();
+    client.socket.emit('serverMessage', this.createMessage(action, {time:t}));
+}
+
 function sleep(milliseconds) {
     var start = new Date().getTime();
     for (var i = 0; i < 1e7; i++) {

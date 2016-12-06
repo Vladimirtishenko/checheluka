@@ -24,21 +24,19 @@ class AsyncLoad extends Helper {
 
 	getCurrentAuction(response){
 
-		if(!response.data || !response.data.lot) return;
+
+		if(!response.data || !response.data.lot){
+			$app.chat.clear();
+			return;
+		} 
 		
 		this.itemCount = response.data.count;
 		this.auctionId = response.data._uid;
 		this.currentPrice = response.data.currentPrice;
 		this.previousPrice = response.data.price;
 		this.countInWarehouseValue = response.data.lot.countInWarehouse;
-		//this.butonsDefferent = ($app.local.gets('id') == this.auctionId) && (this.currentPrice == $app.local.gets('price')) ? true : false;
 
-		/*if(this.butonsDefferent){
-			this.buyAction = false;
-		}*/
-
-		this.pretendentsAuction = response.data.pretendents;
-		this.pretendents = Object.keys(response.data.pretendents).length <= 10 ? true : false;
+		this.pretendentsAuction = response.data.pretendents || null;
 
 
 		if(response.data.status != 'started'){
@@ -49,7 +47,7 @@ class AsyncLoad extends Helper {
 		}
 
 
-		let template = Template['getCurrentAuction'](this.auctionId, response.data.lot, this.currentPrice, response.data.timer, this.pretendents, this.itemCount, this.butonsDefferent);
+		let template = Template['getCurrentAuction'](this.auctionId, response.data.lot, this.currentPrice, response.data.timer, this.itemCount, this.butonsDefferent);
 
 		this.mainItem.innerHTML = "";
 		this.mainItem.insertAdjacentHTML('beforeend' ,template);
@@ -78,8 +76,6 @@ class AsyncLoad extends Helper {
 		if(!response.data || Object.keys(response.data).length == 0) return;
 	 	
 		this.goodsAfter.innerHTML = "";
-
-		console.log(response);
 
 		let template = '<div class="a-goods__item__reisizers">',
 			i = 0,
@@ -130,13 +126,9 @@ class AsyncLoad extends Helper {
 		//this.buttonToBuy.classList.remove('a-inactive');
 		Bucket.getBucket();
 		$app.chat.addWinner(response.data.winner, response.data.price);
-		
-		
 	}
 
 	auctionUpdated(response){
-
-		console.log(response);
 
 		if(response && response.data){
 
@@ -152,7 +144,9 @@ class AsyncLoad extends Helper {
 
 			try{
 				clearTimeout(this.globalTimer);
-			} catch(e){}
+			} catch(e){
+				console.log(e);
+			}
 			this.timerStarted(response.data.timer);
 
 		}
@@ -176,12 +170,14 @@ class AsyncLoad extends Helper {
 		this.auctionDisabled();
 
 		if(count > this.itemCount){
+			console.log('this');
 			if(count > parseInt(this.countInWarehouseValue)){
 				this.notification.innerHTML = "На складе всего " + this.countInWarehouseValue + "ед. Вы не можете купить " + count + "ед.";
 				return;
 			}
 			$app.socket.upCount('upCount', {auction_id: this.auctionId, count: count}, this.upCount.bind(this));
 		} else {
+			console.log('baseBuy');
 			$app.socket.baseBuy('baseBuy', {auction_id: this.auctionId}, this.baseBuy.bind(this));
 		}
 
@@ -193,7 +189,7 @@ class AsyncLoad extends Helper {
 
 		let target = event && event.target || null;
 
-		if((!target.matches('button') && !this.pretendents)) return;
+		if(!target.matches('button')) return;
 
 		this.auctionDisabled();
 
@@ -221,7 +217,6 @@ class AsyncLoad extends Helper {
 	}
 
 	upPrice(response){
-		console.log(response);
 		if(!this.tryAuthoryze(response)){
 			this.auctionEnabled();
 		}
@@ -229,7 +224,6 @@ class AsyncLoad extends Helper {
 	}
 
 	upCount(response){
-		console.log(response);
 		if(!this.tryAuthoryze(response)){
 			this.auctionEnabled();
 		}
@@ -237,7 +231,6 @@ class AsyncLoad extends Helper {
 
 
 	baseBuy(response){
-		console.log(response);
 		if(!this.tryAuthoryze(response)){
 			this.auctionEnabled();
 		}

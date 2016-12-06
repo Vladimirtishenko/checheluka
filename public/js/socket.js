@@ -12,12 +12,19 @@ class Sockets extends Helper {
 			console.log(mess);
 			try{
 				this.registeredCallback[mess.action](mess);
-			} catch(e){}
+			} catch(e){
+				console.log(e);
+			}
 		});
 	}
 
 	setRegisteredCallback(action, callback){
 		this.registeredCallback[action] = callback;
+	}
+
+	getCurrentTime(action, callback){
+		this.registeredCallback[action] = callback;
+		this.socket.emit(action, action);
 	}
 
 	authorize(action, data, callback){

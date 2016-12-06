@@ -11,7 +11,7 @@ class Timer extends Helper {
 		$app.synteticTime = this.synteticEventTimer.bind(this);
 		$app.getTime = this.getTime.bind(this);
 
-		this.createTimer();
+		$app.socket.getCurrentTime('getCurrentTime', this.createTimer.bind(this));
 
 	}
 
@@ -19,26 +19,29 @@ class Timer extends Helper {
 		return this.timeStatus;
 	}
 
-	createTimer(){
+	createTimer(response){
+
+		if(!response.data.time) return; 
+
+		this.staticServerTime = response.data.time;
 
 		if(!this.attr || this.attr == 'null'){
+			this.timeStatus = true;
 			this.removed.innerHTML = "Аукцион начался..."
 		} else {
-			this.estimate = new Date(+this.attr);
-
+			this.estimate = +new Date(+this.attr);
 			this.tryTime();
-			
 		}
 	}
 
 	synteticEventTimer(time){
-		this.estimate = new Date(+time);
+		this.estimate = +new Date(+time);
 		this.tryTime();
 	}
 
 	tryTime(){
 
-		if(Date.parse(new Date()) >= Date.parse(this.estimate)){
+		if(this.staticServerTime >= this.estimate){
 
 			this.timeStatus = true;
 
@@ -62,7 +65,7 @@ class Timer extends Helper {
 
 	startTimer(){
 
-		let date = Date.parse(this.estimate) - Date.parse(new Date()),
+		let date = this.estimate - this.staticServerTime,
 			dateString = {
 				seconds: Math.floor( (date/1000) % 60 ),
 				minutes: Math.floor( (date/1000/60) % 60 ),
@@ -81,6 +84,7 @@ class Timer extends Helper {
 		}
 
 		this.timerGlobal = setTimeout(() => {
+			this.staticServerTime += 1000;
 			this.tryTime();
 		}, 1000)
 
