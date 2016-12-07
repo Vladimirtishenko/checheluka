@@ -41,4 +41,9 @@ module.exports = function(app){
 	app.get("/page_rules", CheckAuth, require("./manage/page_rules").get)
 	app.post("/page_rules", CheckAuth, require("./manage/page_rules").post)
 
+
+	app.get("/page_hidden_get_date", CheckAuth, require("./manage/page_hidden_get_date").get)
+
+
+
 }
