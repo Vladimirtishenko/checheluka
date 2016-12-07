@@ -21,7 +21,7 @@ class Templates {
                 '<img src="' + img + '" alt=""/>' +
                 '<div class="a-all-goods-table__description">' +
                 '<p class="a-all-goods-table__description_info">' + title + '</p>' +
-                '<p class="a-all-goods-table__description_info_article">Артикл: <span>' + (art || "Нет артикла") + '</span></p>' +
+                '<p class="a-all-goods-table__description_info_article">Артикул: <span>' + (art || "Нет артикула") + '</span></p>' +
                 '</div>' +
                 '<div class="a-hidden-block">' +
                 '<div class="a-hidden-block__description">' +
@@ -46,7 +46,7 @@ class Templates {
                 '<input type="hidden" name="material" value="' + material + '"/>' +
                 '<input type="hidden" name="price" value="' + price + '"/>' +
                 '<input type="hidden" name="countInWarehouse" value="' + (count || 0) + '"/>' +
-                '<input type="hidden" name="art" value="' + (art || "Нет артикла") + '"/>' +
+                '<input type="hidden" name="art" value="' + (art || "Нет артикула") + '"/>' +
                 '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' +
                 '<div class="a-hidden-form_description">' +
                 '<div class="a-containet-flex-to-start-description">' +
@@ -54,7 +54,7 @@ class Templates {
                 '<p class="container-description-form__title">' + title + '</p>' +
                 '</div>' +
                 '<div class="container-description-form">' +
-                '<p class="container-description-form__else_params">Артикл</p><span>' + (art || "Нет артикла") + '</span>' +
+                '<p class="container-description-form__else_params">Артикул</p><span>' + (art || "Нет артикула") + '</span>' +
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Цвет</p><span>' + color + '</span>' +
@@ -95,7 +95,7 @@ class Templates {
                 '<img src="' + decodeURIComponent(img) + '" alt=""/>' +
                 '<div class="a-all-goods-table__description">' +
                 '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' +
-                '<p class="a-all-goods-table__description_info_article">Артикл: <span>' + (decodeURIComponent(art) || "Нет артикла") + '</span></p>' +
+                '<p class="a-all-goods-table__description_info_article">Артикул: <span>' + (decodeURIComponent(art) || "Нет артикула") + '</span></p>' +
                 '</div>' +
                 '<div class="a-hidden-block">' +
                 '<div class="a-hidden-block__description">' +
@@ -140,7 +140,7 @@ class Templates {
                 '<input type="text" name="unsoldCount" value="' + (unsold || 0) + '"/>' +
                 '</div>' +
                 '<div class="container-description-form">' +
-                '<p class="container-description-form__else_params">Колличество на складе</p>' +
+                '<p class="container-description-form__else_params">Количество на складе</p>' +
                 '<input type="text" name="countInWarehouse" value="' + (count || 0) + '"/>' +
                 '</div>' +
                 '<div class="container-description-form">' +
@@ -234,7 +234,7 @@ class Templates {
     					                	'<tr>'+
     					                		'<th>Наименование</th>'+
     					                		'<th>Размер</th>'+
-    					                		'<th>Колличество</th>'+
+    					                		'<th>Количество</th>'+
     					                		'<th>Цена</th>'+
     					                	'</tr>'+
     					                	ordersOne(data.goods) + 

@@ -61,7 +61,7 @@ class AsyncLoadAllGoods extends Helper {
 				      			'<span><i>Размер: </i> '+decodeURIComponent(goods.size)+'</span>' + 
 				      		'</span>' + 
 				      		'<span class="a-hidden-block__description-link"> ' + 
-				      			'<span><i>Колличество: </i> '+decodeURIComponent(goods.countInWarehouse)+' шт.</span>' + 
+				      			'<span><i>Количество: </i> '+decodeURIComponent(goods.countInWarehouse)+' шт.</span>' + 
 				      		'</span>' +  
 				      		'<p class="a-all-goods-table__description_info">'+(decodeURIComponent(goods.title)).replace(/'/g, "")+'</p>' +
 						  '</div>' + 
@@ -80,7 +80,7 @@ class AsyncLoadAllGoods extends Helper {
 						      			'<span>'+decodeURIComponent(goods.size)+'</span>' + 
 						      		'</span>' + 
 						      		'<span class="a-hidden-block__description-link"> ' + 
-						      			'<i>Колличество: </i>' + 
+						      			'<i>Количество: </i>' + 
 						      			'<span>'+decodeURIComponent(goods.countInWarehouse)+'</span>' + 
 						      		'</span>' +  
 						      		'<span class="a-else-goods__description_info-link">'  +
