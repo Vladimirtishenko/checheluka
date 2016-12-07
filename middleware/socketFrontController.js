@@ -8,7 +8,7 @@ var usersModule = new usersClass();
 var ordersModule = new orderClass();
 var configOptions = require('./services/configOptions');
 var socketClient = require('./services/socketClient');
-var loadProductSleepTime = 2; // if product did not loaded server slepp for $ sec
+var loadProductSleepTime = 5; // if product did not loaded server slepp for $ sec
 
 function socketFrontController(io){
     this.io = io;
@@ -254,7 +254,6 @@ socketFrontController.prototype.productLoad = function(){
 
 socketFrontController.prototype.setProductList = function(event, products){
     //productsModule.createProduct(this.pro);
-    this.isTimerForLoadSet = false;
     var newProducts = [];
     if (products && products.length > 0)
     {
@@ -277,7 +276,10 @@ socketFrontController.prototype.setProductList = function(event, products){
     {
         this.offset = 0;
         var aucKeys = Object.keys(this.auctionsPull);
-        this.isTimerForLoadSet = setTimeout(this.productLoad.bind(this),1000*loadProductSleepTime);
+        if (this.isTimerForLoadSet === false)
+        {
+            this.isTimerForLoadSet = setTimeout(this.productLoad.bind(this),1000*loadProductSleepTime);
+        }
     }
 }
 
@@ -312,6 +314,7 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
         var keys = Object.keys(this.productsPull);
         if (keys.length < this.limit && this.isTimerForLoadSet === false)
         {
+            this.isTimerForLoadSet = 1;
             this.productLoad();
         }
     }.bind(this));
