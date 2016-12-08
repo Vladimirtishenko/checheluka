@@ -36,6 +36,7 @@ function socketFrontController(io){
         newClient.setEvent('upCount', this.upCount.bind(this));
         newClient.setEvent('upPrice', this.upPrice.bind(this));
         newClient.setEvent('getCurrentTime', this.getCurrentTime.bind(this));
+        newClient.setEvent('reloadAuction', this.reloadAuction.bind(this));
     }.bind(this));
     io.on('error', function(err) {
         //here i change options
@@ -369,7 +370,7 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     }
     delete this.productsPull[data.lot._id];
     delete this.auctionsPull[data._uid];
-    auctionModule.removeAuctionFrom(data._uid);
+    auctionModule.removeAuction(data._uid);
     //wait 3 sec besore start new auction
     sleep(3000);
 
@@ -412,9 +413,24 @@ socketFrontController.prototype.onError = function(client, action, errors){
     client.socket.emit('serverMessage', this.createMessage(action, null, mes));
 }
 
-socketFrontController.prototype.getCurrentTime = function(client, action){
+socketFrontController.prototype.getCurrentTime = function(client, data){
     var t = new Date().getTime();
-    client.socket.emit('serverMessage', this.createMessage(action, {time:t}));
+    client.socket.emit('serverMessage', this.createMessage('getCurrentTime', {time:t}));
+}
+
+socketFrontController.prototype.reloadAuction = function(client, data){
+    this.productsPull = {};
+    this.current = null;
+    this.offset = 0;
+    this.auctionsPull = {};
+    auctionModule.removeAll();
+    productsModule.removeAll();
+    this.sendToAll(this.createMessage('reloadAuction', {}));
+    setTimeout(function(){
+        var curr = this.auctionsPull[this.curAuction] || auctionModule.getCurrent();
+        var mes = this.createMessage('getCurrentAuction', curr);
+        return this.sendToAll(mes);
+    }.bind(this),1000*(loadProductSleepTime+2));
 }
 
 function sleep(milliseconds) {

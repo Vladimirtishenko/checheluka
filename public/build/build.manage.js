@@ -10067,6 +10067,7 @@
 			_this.status = true;
 
 			_this.socket.on('serverMessage', function (mess) {
+				console.log(mess);
 				if (mess && mess.action == 'reloadAuction') {
 					_this.status = true;
 					_this.button.classList.remove('a-hidden-diabled');

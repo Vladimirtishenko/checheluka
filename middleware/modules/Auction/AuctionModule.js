@@ -45,6 +45,10 @@ AuctionModule.prototype.setToExpired = function(auction){
 };
 //TODO:: set it to model
 AuctionModule.prototype.removeAuction = function(uid){
+    if (this.started && this.started._uid == uid)
+    {
+        this.started = null;
+    }
     auctionModel.removeEntity(uid);
 };
 AuctionModule.prototype.startAuction = function(uid){
@@ -197,9 +201,14 @@ AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMess
 };
 AuctionModule.prototype._base_dispatchEvent = parent.prototype.dispatchEvent;
 
-AuctionModule.prototype.removeAuctionFrom = function(uid){
-    auctionModel.removeEntity(uid);
-};
+AuctionModule.prototype.removeAll = function(){
+    if (this.started && this.started._uid)
+    {
+        this.removeAuction();
+    }
+    auctionModel.clearTable();
+}
+
 
 module.exports = AuctionModule;
 

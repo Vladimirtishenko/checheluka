@@ -13,6 +13,7 @@ class AuctionReload extends Helper {
 
 		this.socket.on('serverMessage',(mess) =>
 		{
+			console.log(mess);
 			if(mess && mess.action == 'reloadAuction'){
 				this.status = true;
 				this.button.classList.remove('a-hidden-diabled');

@@ -87,4 +87,13 @@ Model.prototype.__throwError = function(name,message,level)
     throw new error(name,message,level);
 };
 
+Model.prototype.clearTable = function()
+{
+    if(typeof this.table !== "undefined")
+    {
+        this.table = {};
+        this.id_counter = 1;
+    }
+};
+
 module.exports = Model;

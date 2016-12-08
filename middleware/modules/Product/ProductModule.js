@@ -38,4 +38,8 @@ ProductModule.prototype.getProducts = function(uid, offset, limit){
     return productModel.table;
 };
 
+ProductModule.prototype.removeAll = function(){
+    productModel.clearTable();
+}
+
 module.exports = ProductModule;
