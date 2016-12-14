@@ -88,6 +88,7 @@ AuctionModule.prototype.setPretendent = function(uid, user){
 
     auction.newPretendentInit = false;
     auction.pretendents[auction.currentPrice][user._id] = user;
+    auction.price = auction.currentPrice;
     var mess = "New pretendent - "+user._id+". Price - "+auction.currentPrice;
     this.dispatchEvent('pretendentAdded', auction, mess);
     return true;
@@ -95,22 +96,29 @@ AuctionModule.prototype.setPretendent = function(uid, user){
 
 AuctionModule.prototype.setCount = function(uid, count, user){
     var auction = auctionModel.getEntity(uid);
+    var auc_count = auction.count;
     if (!auction || auction.count > count)
     {
         return false;
     }
     else if (auction.count == count)
     {
-        this.setPretendent(uid, user);
-        return true;
+        return this.setPretendent(uid, user);
     }
     auction.count = count;
     auction.newPretendentInit = true;
-    auctionModel.updateTimer(auction, this.auctionTimer);
-    this.setPretendent(uid, user);
-    var mess = "Pretendent updated auction - "+auction.lot._id+" count";
-    this.dispatchEvent('auctionUpdated', auction, mess);
-    return true;
+    var res = this.setPretendent(uid, user);
+    if (res)
+    {
+        auctionModel.updateTimer(auction, this.auctionTimer);
+        var mess = "Pretendent updated auction - "+auction.lot._id+" count";
+        this.dispatchEvent('auctionUpdated', auction, mess);
+    }
+    else
+    {
+        auction.count = auc_count;
+    }
+    return res;
 };
 
 AuctionModule.prototype.setPrice = function(uid, price, user){
@@ -120,7 +128,7 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
         return false;
     }
     auction.price = auction.price + price;
-    auction.currentPrice = auction.price + price;
+    auction.currentPrice = auction.currentPrice + price;
     auction.nextPrice = auction.currentPrice + this.upPrice;
     auction.newPretendentInit = true;
     if ( this.setPretendent(uid, user))
@@ -132,7 +140,7 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
     }
     else{
         auction.price = auction.price - price;
-        auction.currentPrice = auction.price - price;
+        auction.currentPrice = auction.currentPrice - price;
         auction.nextPrice = auction.currentPrice + this.upPrice;
         auction.newPretendentInit = false;
         return false;

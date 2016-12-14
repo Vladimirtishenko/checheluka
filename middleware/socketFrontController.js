@@ -17,6 +17,7 @@ function socketFrontController(io){
     this.offset = 0;
     this.productsPull = {};
     this.auctionsPull = {};
+    this.locksAuctions = {};
     this.curAuction = null;
     this.isTimerForLoadSet = false;
     productsModule.setListenere("productsLoaded",this.setProductList.bind(this));
@@ -127,10 +128,6 @@ socketFrontController.prototype.register_user = function(client, data){
     usersModule.registerUser(data.email, data.pass, data.city);
 }
 
-socketFrontController.prototype.getAuctionsAll = function(client, data){
-    //client.socket.emit('serverMessage', this.createMessage('getAuctions', this.auctionsPull));
-}
-
 socketFrontController.prototype.getAuctions = function(client, data){
     var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
     delete auctions[this.curAuction];
@@ -149,6 +146,11 @@ socketFrontController.prototype.baseBuy = function(client, data){
     }
     var err;
     var auc = auctionModule.getCurrent();
+    if (this.isLockAuction(auc._uid))
+    {
+        return this.sendLockError(client, action);
+    }
+    this.lockAuction(auc._uid);
     var response = {result: 'success', id: auc._uid, price: auc.currentPrice};
     if (auc._uid != data.auction_id)
     {
@@ -158,11 +160,31 @@ socketFrontController.prototype.baseBuy = function(client, data){
     else if (!auctionModule.setPretendent(auc._uid, client.getUserData()))
     {
         response = null;
-        err = this.createError(403, 'You are already pretendent for this lot');
+        err = this.createError(304, 'You are already pretendent for this lot');
     }
+    this.unlockAuction(auc._uid);
     client.socket.emit('serverMessage', this.createMessage(action, response, err));
 };
-
+//Lock auction section
+//---------------------------------------------------------------
+socketFrontController.prototype.lockAuction = function(uid)
+{
+    this.locksAuctions[uid] = 1;
+};
+socketFrontController.prototype.unlockAuction = function(uid)
+{
+    delete this.locksAuctions[uid];
+};
+socketFrontController.prototype.isLockAuction = function(uid)
+{
+    return this.locksAuctions[uid];
+};
+socketFrontController.prototype.sendLockError = function(client, action)
+{
+    var err = this.createError(405, 'Someone already working with auction');
+    client.socket.emit('serverMessage', this.createMessage(action, null, err));
+};
+//---------------------------------------------------------------
 socketFrontController.prototype.upCount = function(client, data){
     var action = 'upCount';
     if (!client.isAutorize())
@@ -172,6 +194,11 @@ socketFrontController.prototype.upCount = function(client, data){
     var response = true;
     var err;
     var auc = auctionModule.getCurrent();
+    if (this.isLockAuction(auc._uid))
+    {
+        return this.sendLockError(client, action);
+    }
+    this.lockAuction(auc._uid);
     if (auc._uid != data.auction_id)
     {
         response = null;
@@ -186,8 +213,9 @@ socketFrontController.prototype.upCount = function(client, data){
         || !auctionModule.setCount(auc._uid, data.count, client.getUserData()))
     {
         response = null;
-        err = this.createError(400, 'Incorrect request');
+        err = this.createError(304, 'Incorrect request');
     }
+    this.unlockAuction(auc._uid);
     client.socket.emit('serverMessage', this.createMessage(action, response, err));
 };
 
@@ -201,6 +229,11 @@ socketFrontController.prototype.upPrice = function(client, data){
     var response = true;
     var err;
     var auc = auctionModule.getCurrent();
+    if (this.isLockAuction(auc._uid))
+    {
+        return this.sendLockError(client, action);
+    }
+    this.lockAuction(auc._uid);
     if (auc._uid != data.auction_id)
     {
         response = null;
@@ -214,8 +247,9 @@ socketFrontController.prototype.upPrice = function(client, data){
     else if (!auctionModule.setPrice(auc._uid, data.price, client.getUserData()))
     {
         response = null;
-        err = this.createError(400, 'Incorrect request');
+        err = this.createError(304, 'Incorrect request');
     }
+    this.unlockAuction(auc._uid);
     client.socket.emit('serverMessage', this.createMessage(action, response, err));
 };
 

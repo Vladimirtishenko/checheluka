@@ -6,19 +6,6 @@ function Model(data)
     this.entityData = {};
     this.table = {};
 }
-// (function() {
-//     var id_counter = 1;
-//     Object.defineProperty(Model.prototype, "__uniqueId", {
-//         writable: true
-//     });
-//     Object.defineProperty(Model.prototype, "_uid", {
-//         get: function() {
-//             if (this.__uniqueId == undefined)
-//                 this.__uniqueId = id_counter++;
-//             return this.__uniqueId;
-//         }
-//     });
-// }());
 Model.prototype.getEntityFields = function(data){
     return this.entityData;
 };
