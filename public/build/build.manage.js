@@ -9985,6 +9985,7 @@
 			if (!elem) return _possibleConstructorReturn(_this);
 
 			_this.form = elem.querySelector('.a-forms-rules-update');
+			_this.action = _this.form.getAttribute('data-action');
 
 			_this.flyEvent('add', ['submit'], [_this.form], [_this.sendFormRules.bind(_this)]);
 
@@ -10001,7 +10002,7 @@
 				var id = form.text.getAttribute('data-id'),
 				    content = tinymce.activeEditor.getContent();
 
-				this.xhrRequest('POST', '/page_rules', 'application/json', JSON.stringify({ fieldId: id || 0, text: content }), this.responseFromServer.bind(this, form));
+				this.xhrRequest('POST', this.action, 'application/json', JSON.stringify({ fieldId: id || 0, text: content }), this.responseFromServer.bind(this, form));
 			}
 		}, {
 			key: 'responseFromServer',

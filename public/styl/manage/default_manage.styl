@@ -228,11 +228,13 @@ td
   position relative
   align-items center
   
-.a-menu-admin__links a 
+.a-menu-admin__links a, .a-menu-admin__links p
   color #fff
-  font-family HelveticaThin 
-  font-size 20px
-  padding-right 15px
+  font-family HelveticaThin
+  font-size 17px
+  padding 10px
+  display inline-block
+  cursor pointer
   
 .a-container-search
   width w
@@ -689,6 +691,23 @@ td
   opacity 0.5
   color #000
   background greys
+
+.a-menu-list
+  margin 0
+  padding 0
+  
+.a-menu-list li 
+  display inline-block
+  position relative
+  &:hover ul
+    display block
+  
+.a-menu-list li ul 
+  position absolute
+  background #000
+  width 213px
+  padding-top 18px
+  display none
 
 .flatpickr-input
   cursor pointer

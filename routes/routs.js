@@ -41,7 +41,12 @@ module.exports = function(app){
 	app.get("/page_rules", CheckAuth, require("./manage/page_rules").get)
 	app.post("/page_rules", CheckAuth, require("./manage/page_rules").post)
 
+	app.get("/page_auction_info", CheckAuth, require("./manage/page_auction_info").get)
+	app.post("/page_auction_info", CheckAuth, require("./manage/page_auction_info").post)
 
+	app.get("/index_info_delivery", CheckAuth, require("./manage/index_info_delivery").get)
+	app.post("/index_info_delivery", CheckAuth, require("./manage/index_info_delivery").post)
+	
 	app.get("/page_hidden_get_date", CheckAuth, require("./manage/page_hidden_get_date").get)
 
 

@@ -6,10 +6,26 @@ header.a-head
 			p  Здесь вы можете управлять заказами фильтровать их по принципу оплаченные и не оплаченные
 	.a-menu-admin
 		.a-menu-admin__links
-			a(href="/page_to_manage_goods") Все товары
-			a(href="/page_auction") Товары аукциона
-			a(href="/page_orders") Заказы 
-			a(href="/page_comments") Отзывы 
-			a(href="/page_rules") Правила 
-			a(href="/page_config") Настройки
+			ul.a-menu-list
+				li
+					a(href="/page_to_manage_goods") Все товары
+				li
+					a(href="/page_auction") Товары аукциона
+				li
+					a(href="/page_orders") Заказы 
+				li
+					a(href="/page_comments") Отзывы 
+				li
+					p Редактор текстов
+					ul
+						li 
+							a(href="/page_rules") Правила 
+						li 
+							a(href="/index_info_delivery") Информация о доставке
+						li 
+							a(href="/page_auction_info") Информация о аукционе
+
+				li
+					a(href="/page_config") Настройки
+
 			button(class="a-reload-auction") Пересчитать аукционы

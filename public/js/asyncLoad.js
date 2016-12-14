@@ -18,6 +18,7 @@ class AsyncLoad extends Helper {
 		$app.socket.auctionFinished('auctionFinished', this.auctionFinished.bind(this));
 		$app.socket.actionStarted('actionStarted', this.actionStarted.bind(this));
 		$app.socket.auctionUpdated('auctionUpdated', this.auctionUpdated.bind(this));
+		$app.socket.pretendentAdded('pretendentAdded', this.pretendentAdded.bind(this));
 		$app.socket.AuctionFinishedDataChanged('AuctionFinishedDataChanged', this.AuctionFinishedDataChanged.bind(this));
 	}
 
@@ -118,6 +119,12 @@ class AsyncLoad extends Helper {
 
 	clearTimerAndRequest(){
 		clearTimeout(this.globalTimer);
+	}
+
+	pretendentAdded(response){
+		if(response && response.data){
+			$app.chat.addPretendents(response.data.pretendents, response.data.price);
+		}		
 	}
 
 

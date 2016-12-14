@@ -7,6 +7,7 @@ class Rules extends Helper {
 		if(!elem) return;
 
 		this.form = elem.querySelector('.a-forms-rules-update');
+		this.action = this.form.getAttribute('data-action');
 
 		this.flyEvent('add', ['submit'], [this.form], [this.sendFormRules.bind(this)]);
 
@@ -20,7 +21,7 @@ class Rules extends Helper {
 		let id = form.text.getAttribute('data-id'),
 			content = tinymce.activeEditor.getContent();
 
-		this.xhrRequest('POST', '/page_rules', 'application/json', JSON.stringify({fieldId: id || 0, text: content}), this.responseFromServer.bind(this, form));
+		this.xhrRequest('POST', this.action, 'application/json', JSON.stringify({fieldId: id || 0, text: content}), this.responseFromServer.bind(this, form));
 
 	}
 

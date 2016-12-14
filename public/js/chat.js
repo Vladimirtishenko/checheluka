@@ -5,7 +5,7 @@ class Chat extends Helper {
 		super();
 		if(!el) return;
 		this.el = el;
-		this.beforeEl = document.querySelector('.a-chat-title');
+		this.beforeEl = document.querySelector('.a-chat-container__item');
 		this.button = document.querySelector('.a-chat-container__button');
 		this.flyEvent('add', ['click'], [this.button], this.chatHandler.bind(this));
 		this.arrayPosition = ['-684px 0', '-631px 0'];
@@ -13,6 +13,7 @@ class Chat extends Helper {
 
 		$app.chat = {
 			add: this.addChat.bind(this),
+			addPretendents: this.addPretendents.bind(this),
 			addWinner: this.addWinner.bind(this),
 			clearTemplate: this.clearTemplate.bind(this),
 			clear: this.clearChat.bind(this)
@@ -30,8 +31,14 @@ class Chat extends Helper {
 
 		if(!pretendents || Object.keys(pretendents).length == 0) return;
 
-		this.beforeEl.insertAdjacentHTML('afterend', this.chatTemplate(pretendents, price));
+		this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplate(pretendents, price));
 
+	}
+
+	addPretendents(pretendents, price){
+		if(!pretendents || Object.keys(pretendents).length == 0) return;
+
+		this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplatePretendents(pretendents, price));
 	}
 
 
@@ -39,24 +46,24 @@ class Chat extends Helper {
 
 		if(!winner) return;
 
-		this.beforeEl.insertAdjacentHTML('afterend', this.chatTemplateWinner(winner, price));
+		this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplateWinner(winner, price));
 
 	}
 
 
 	clearChat(){
 		let template =  '<div class="a-block-with-proposal">' + 
-									    '<p class="a-block-with-proposal__buy_now">Аукционы пока не начались! </p>' + 
-									'</div>';
+						    '<p class="a-block-with-proposal__buy_now">Аукционы пока не начались! </p>' + 
+						'</div>';
 
-		this.beforeEl.insertAdjacentHTML('afterend', template);
+		this.beforeEl.innerHTML = template;
 
 	}
 
 	clearTemplate(id){
 
 		let template = '<div class="a-block-with-proposal">' + 
-						    '<p class="a-block-with-proposal__buy_now">Торги по аукциону <span>№'+id+'</span></p>' + 
+						    '<p class="a-block-with-proposal__buy_now">Торги по лоту <span>№'+id+'</span></p>' + 
 						'</div>';
 
 		this.beforeEl.insertAdjacentHTML('afterend', template);
@@ -85,6 +92,21 @@ class Chat extends Helper {
 						    '<p class="a-block-with-proposal__buy_now">Готовы купить за<span>'+price+' руб.</span></p>' + 
 						   ' <p class="a-block-with-proposal__user">'+
 						   		((win == 0) ? "Нет победителей" : this.chatTemplateUsers(pretendents)) +
+						   '</p>' + 
+						'</div>';
+
+		return template;
+	}
+
+	chatTemplatePretendents(pretendents, price){
+		if(!pretendents) return;
+
+		let win = Object.keys(pretendents).length;
+
+		let template = '<div class="a-block-with-proposal">' + 
+						    '<p class="a-block-with-proposal__buy_now">Готовы купить за<span>'+price+' руб.</span></p>' + 
+						   ' <p class="a-block-with-proposal__user">'+
+						   		"Участвуют " + Object.keys(pretendents).length + "чел." +
 						   '</p>' + 
 						'</div>';
 

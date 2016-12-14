@@ -52,6 +52,10 @@ class Sockets extends Helper {
 
 	}
 
+	pretendentAdded(action, callback){
+		this.setRegisteredCallback(action, callback);
+	}
+
 	auctionFinished(action, callback){
 		this.setRegisteredCallback(action, callback);
 	}

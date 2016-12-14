@@ -8,11 +8,11 @@ block content
 		span.a-modal-close
 	include ./header
 	.a-table-admin
-		h1.a-head-font-left-side Правила
+		h1.a-head-font-left-side Информация о доставке
 		.a-rules-block
-			form.a-forms-rules-update(data-action="page_rules")
+			form.a-forms-rules-update(data-action="index_info_delivery")
 				textarea(name="text", data-id=rules.fieldId, rows="30")=rules.text
-				button.a-date-save.a-button-black(type="submit") Изменить правила
+				button.a-date-save.a-button-black(type="submit") Изменить
 			
 			
 	include ../footer

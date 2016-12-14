@@ -28,7 +28,11 @@
 	align-items center
 	padding 0 20px 0 0
 
-.a-side-logo p 
+.a-side-logo p, .a-side-logo p span
+	font-size 14px i
+	font-family HelveticaRoman i
+
+.a-side-logo .a-auction-info-text 
 	font-size 12px
 	font-family HelveticaRoman
 	margin-top -20px
@@ -47,6 +51,27 @@
 		border-width 8.5px 0 8.5px 13px
 		border-color transparent transparent transparent #ffb121
 		left 13px
+	&:hover .a-tooltip-info
+		display block
+
+.a-tooltip-info
+	display none
+	position absolute
+	background #fff
+	z-index 9
+	padding 20px
+	border 2px solid #ffca10
+	&:before 
+		content ""
+		position absolute
+		width 99px
+		display block
+		z-index -1
+		bottom 0
+		height 101px
+		right -3px
+		background url('../img/sprite.png')
+		background-position -440px -399px
 
 .a-menu-item
 	position absolute
