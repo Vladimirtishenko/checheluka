@@ -44,8 +44,6 @@ class Chat extends Helper {
 
 	addWinner(winner, price){
 
-		if(!winner) return;
-
 		this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplateWinner(winner, price));
 
 	}
@@ -60,17 +58,18 @@ class Chat extends Helper {
 
 	}
 
-	clearTemplate(id){
+	clearTemplate(id, count){
 
 		let template = '<div class="a-block-with-proposal">' + 
-						    '<p class="a-block-with-proposal__buy_now">Торги по лоту <span>№'+id+'</span></p>' + 
+						    '<p class="a-block-with-proposal__buy_now">Торги по лоту <span>№'+id+'</span>'+count+' ед.</p>' + 
 						'</div>';
 
-		this.beforeEl.insertAdjacentHTML('afterend', template);
+		this.beforeEl.insertAdjacentHTML('afterbegin', template);
 	}
 
 	chatTemplateWinner(pretendents, price){
-		let win = Object.keys(pretendents).length;
+
+		let win = pretendents && Object.keys(pretendents).length || 0;
 
 		let template = '<div class="a-block-with-proposal">' + 
 						    '<p class="a-block-with-proposal__buy_now">Купили товар за <span>'+price+' руб.</span></p>' + 
@@ -89,9 +88,9 @@ class Chat extends Helper {
 		let win = Object.keys(pretendents).length;
 
 		let template = '<div class="a-block-with-proposal">' + 
-						    '<p class="a-block-with-proposal__buy_now">Готовы купить за<span>'+price+' руб.</span></p>' + 
+						    '<p class="a-block-with-proposal__buy_now">Сделаны ставки на<span>'+price+' руб.</span></p>' + 
 						   ' <p class="a-block-with-proposal__user">'+
-						   		((win == 0) ? "Нет победителей" : this.chatTemplateUsers(pretendents)) +
+						   		((win == 0) ? "Нет победителей" : (win < 10) ? this.chatTemplateUsers(pretendents) : 'Количество желающих: '+ win) +
 						   '</p>' + 
 						'</div>';
 

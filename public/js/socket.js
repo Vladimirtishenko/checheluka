@@ -9,11 +9,11 @@ class Sockets extends Helper {
 	
 		this.socket.on('serverMessage',(mess) =>
 		{
-			console.log(mess);
+			//console.log(mess);
 			try{
 				this.registeredCallback[mess.action](mess);
 			} catch(e){
-				console.log(e);
+				//console.log(e);
 			}
 		});
 	}
@@ -75,7 +75,6 @@ class Sockets extends Helper {
 	}
 
 	upPrice(action, data, callback){
-		console.log(arguments);
 		this.setRegisteredCallback(action, callback);
 
 		this.socket.emit(action, data);

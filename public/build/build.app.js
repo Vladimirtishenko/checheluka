@@ -157,11 +157,11 @@
 			_this.registeredCallback = {};
 
 			_this.socket.on('serverMessage', function (mess) {
-				console.log(mess);
+				//console.log(mess);
 				try {
 					_this.registeredCallback[mess.action](mess);
 				} catch (e) {
-					console.log(e);
+					//console.log(e);
 				}
 			});
 			return _this;
@@ -232,7 +232,6 @@
 		}, {
 			key: 'upPrice',
 			value: function upPrice(action, data, callback) {
-				console.log(arguments);
 				this.setRegisteredCallback(action, callback);
 
 				this.socket.emit(action, data);
@@ -8058,7 +8057,12 @@
 			value: function errorCodes(code) {
 				var codesState = {
 					11000: 'Такой пользователь уже есть в системе',
-					401: 'Не правильно введен логин или пароль'
+					401: 'Не правильно введен логин или пароль',
+					304: 'Вы уже делали ставку!',
+					400: 'Ошибка! Цена либо колличество не верное, либо аукцион уже завершен',
+					405: 'Не возможно сделать ставку, скорее всего кто-то раньше вас её повысил.',
+					404: 'Аукциона не существует',
+					500: 'Простите у нас неполадки с сервером, попробуйте позже!'
 				};
 
 				return codesState[code];
@@ -8146,8 +8150,6 @@
 			key: 'addWinner',
 			value: function addWinner(winner, price) {
 
-				if (!winner) return;
-
 				this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplateWinner(winner, price));
 			}
 		}, {
@@ -8159,16 +8161,17 @@
 			}
 		}, {
 			key: 'clearTemplate',
-			value: function clearTemplate(id) {
+			value: function clearTemplate(id, count) {
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Торги по лоту <span>№' + id + '</span></p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Торги по лоту <span>№' + id + '</span>' + count + ' ед.</p>' + '</div>';
 
-				this.beforeEl.insertAdjacentHTML('afterend', template);
+				this.beforeEl.insertAdjacentHTML('afterbegin', template);
 			}
 		}, {
 			key: 'chatTemplateWinner',
 			value: function chatTemplateWinner(pretendents, price) {
-				var win = Object.keys(pretendents).length;
+
+				var win = pretendents && Object.keys(pretendents).length || 0;
 
 				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Купили товар за <span>' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : this.chatTemplateUsers(pretendents)) + '</p>' + '</div>';
 
@@ -8182,7 +8185,7 @@
 
 				var win = Object.keys(pretendents).length;
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Готовы купить за<span>' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : this.chatTemplateUsers(pretendents)) + '</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Сделаны ставки на<span>' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : win < 10 ? this.chatTemplateUsers(pretendents) : 'Количество желающих: ' + win) + '</p>' + '</div>';
 
 				return template;
 			}
@@ -8430,6 +8433,10 @@
 
 	var _bucket2 = _interopRequireDefault(_bucket);
 
+	var _error = __webpack_require__(65);
+
+	var _error2 = _interopRequireDefault(_error);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -8449,7 +8456,6 @@
 			if (!el) return _possibleConstructorReturn(_this);
 			_this.mainItem = el;
 			_this.goodsAfter = document.querySelector('.a-else-goods');
-			//this.buyAction = true;
 			_this.init();
 			return _this;
 		}
@@ -8474,18 +8480,22 @@
 					return;
 				}
 
+				try {
+					clearTimeout(this.globalTimer);
+				} catch (e) {}
+				this.timerStarted(response.data.timer);
+
 				this.itemCount = response.data.count;
 				this.auctionId = response.data._uid;
 				this.currentPrice = response.data.currentPrice;
 				this.previousPrice = response.data.price;
 				this.countInWarehouseValue = response.data.lot.countInWarehouse;
-
 				this.pretendentsAuction = response.data.pretendents || null;
 
 				if (response.data.status != 'started') {
 					$app.chat.clear();
 				} else {
-					$app.chat.clearTemplate(this.auctionId);
+					$app.chat.clearTemplate(this.auctionId, this.countInWarehouseValue);
 					$app.chat.add(this.pretendentsAuction, this.previousPrice);
 				}
 
@@ -8493,11 +8503,6 @@
 
 				this.mainItem.innerHTML = "";
 				this.mainItem.insertAdjacentHTML('beforeend', template);
-
-				try {
-					clearTimeout(this.globalTimer);
-				} catch (e) {}
-				this.timerStarted(response.data.timer);
 
 				this.buttonToBuy = document.querySelector('.a-general-goods__description_buy');
 				this.buttonToBuyUpPrice = document.querySelector('.a-general-goods__description_rates_button');
@@ -8536,7 +8541,9 @@
 				var timer = document.querySelector('.a-times-frontend');
 
 				this.globalTimer = setTimeout(function () {
-					timer.innerHTML = "00:" + (time < 10 ? '0' + time : time);
+					if (timer) {
+						timer.innerHTML = "00:" + (time < 10 ? '0' + time : time);
+					}
 
 					if (time < 1) {
 						_this2.clearTimerAndRequest();
@@ -8618,15 +8625,13 @@
 
 				this.auctionDisabled();
 
-				if (count > this.itemCount) {
-					console.log('this');
-					if (count > parseInt(this.countInWarehouseValue)) {
+				if (count > this.itemCount || count < 1) {
+					if (count > parseInt(this.countInWarehouseValue) || count < 1) {
 						this.notification.innerHTML = "На складе всего " + this.countInWarehouseValue + "ед. Вы не можете купить " + count + "ед.";
 						return;
 					}
 					$app.socket.upCount('upCount', { auction_id: this.auctionId, count: count }, this.upCount.bind(this));
 				} else {
-					console.log('baseBuy');
 					$app.socket.baseBuy('baseBuy', { auction_id: this.auctionId }, this.baseBuy.bind(this));
 				}
 			}
@@ -8650,26 +8655,27 @@
 			}
 		}, {
 			key: 'auctionDisabled',
-			value: function auctionDisabled() {
-				/*this.buyAction = false;
-	   this.buttonToBuy.classList.add('a-inactive');
-	   this.buttonToBuyUpPrice.classList.add('a-rates-inactive');*/
-				this.notification.innerHTML = $app.getTime() ? "Ставка сделана! Oждидайте завершения торгов!" : "Аукцион не начался вы не можете делать ставки!";
+			value: function auctionDisabled(message) {
+
+				this.notification.innerHTML = $app.getTime() ? message || "Ставка сделана! Oждидайте завершения торгов!" : "Аукцион не начался вы не можете делать ставки!";
 			}
 		}, {
 			key: 'auctionEnabled',
 			value: function auctionEnabled() {
-				/*$app.local.remove(['id', 'price']);
-	   this.buyAction = true;*/
 				this.notification.innerHTML = "";
-				//this.buttonToBuy.classList.remove('a-inactive');
-				//this.buttonToBuyUpPrice.classList.remove('a-rates-inactive');
 			}
 		}, {
 			key: 'upPrice',
 			value: function upPrice(response) {
 				if (!this.tryAuthoryze(response)) {
 					this.auctionEnabled();
+				}
+
+				if (response.error && response.error.errorCode) {
+					var message = _error2.default.errorCodes(response.error.errorCode);
+					if (message) {
+						this.auctionDisabled(message);
+					}
 				}
 			}
 		}, {
@@ -8678,12 +8684,26 @@
 				if (!this.tryAuthoryze(response)) {
 					this.auctionEnabled();
 				}
+
+				if (response.error && response.error.errorCode) {
+					var message = _error2.default.errorCodes(response.error.errorCode);
+					if (message) {
+						this.auctionDisabled(message);
+					}
+				}
 			}
 		}, {
 			key: 'baseBuy',
 			value: function baseBuy(response) {
 				if (!this.tryAuthoryze(response)) {
 					this.auctionEnabled();
+				}
+
+				if (response.error && response.error.errorCode) {
+					var message = _error2.default.errorCodes(response.error.errorCode);
+					if (message) {
+						this.auctionDisabled(message);
+					}
 				}
 			}
 		}, {

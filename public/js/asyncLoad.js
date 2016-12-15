@@ -1,6 +1,7 @@
 import Helper from './helper.js';
 import Template from './template.js';
 import Bucket from './bucket.js';
+import Error from './error.js';
 
 class AsyncLoad extends Helper {
 	constructor(el) {
@@ -8,7 +9,6 @@ class AsyncLoad extends Helper {
 		if(!el) return;
 		this.mainItem = el;
 		this.goodsAfter = document.querySelector('.a-else-goods');
-		//this.buyAction = true;
 		this.init();
 	}
 
@@ -30,20 +30,24 @@ class AsyncLoad extends Helper {
 			$app.chat.clear();
 			return;
 		} 
+
+		try{
+			clearTimeout(this.globalTimer);
+		} catch(e){}
+		this.timerStarted(response.data.timer);
 		
 		this.itemCount = response.data.count;
 		this.auctionId = response.data._uid;
 		this.currentPrice = response.data.currentPrice;
 		this.previousPrice = response.data.price;
 		this.countInWarehouseValue = response.data.lot.countInWarehouse;
-
 		this.pretendentsAuction = response.data.pretendents || null;
 
 
 		if(response.data.status != 'started'){
 			$app.chat.clear();
 		} else {
-			$app.chat.clearTemplate(this.auctionId);
+			$app.chat.clearTemplate(this.auctionId, this.countInWarehouseValue);
 			$app.chat.add(this.pretendentsAuction, this.previousPrice);
 		}
 
@@ -51,13 +55,7 @@ class AsyncLoad extends Helper {
 		let template = Template['getCurrentAuction'](this.auctionId, response.data.lot, this.currentPrice, response.data.timer, this.itemCount, this.butonsDefferent);
 
 		this.mainItem.innerHTML = "";
-		this.mainItem.insertAdjacentHTML('beforeend' ,template);
-
-		try{
-			clearTimeout(this.globalTimer);
-		} catch(e){}
-		this.timerStarted(response.data.timer);
-
+		this.mainItem.insertAdjacentHTML('beforeend' , template);
 
 		this.buttonToBuy = document.querySelector('.a-general-goods__description_buy');
 		this.buttonToBuyUpPrice = document.querySelector('.a-general-goods__description_rates_button');
@@ -96,7 +94,9 @@ class AsyncLoad extends Helper {
 		let timer = document.querySelector('.a-times-frontend');
 
 		this.globalTimer = setTimeout(() => {
-			timer.innerHTML = "00:"+ ((time < 10) ? '0'+time : time);
+			if(timer){
+				timer.innerHTML = "00:"+ ((time < 10) ? '0'+time : time);
+			}
 			
 			if(time < 1) {
 				this.clearTimerAndRequest(); 
@@ -176,15 +176,13 @@ class AsyncLoad extends Helper {
 
 		this.auctionDisabled();
 
-		if(count > this.itemCount){
-			console.log('this');
-			if(count > parseInt(this.countInWarehouseValue)){
+		if(count > this.itemCount || count < 1){
+			if(count > parseInt(this.countInWarehouseValue) || count < 1){
 				this.notification.innerHTML = "На складе всего " + this.countInWarehouseValue + "ед. Вы не можете купить " + count + "ед.";
 				return;
 			}
 			$app.socket.upCount('upCount', {auction_id: this.auctionId, count: count}, this.upCount.bind(this));
 		} else {
-			console.log('baseBuy');
 			$app.socket.baseBuy('baseBuy', {auction_id: this.auctionId}, this.baseBuy.bind(this));
 		}
 
@@ -208,24 +206,26 @@ class AsyncLoad extends Helper {
 
 	}
 
-	auctionDisabled(){
-		/*this.buyAction = false;
-		this.buttonToBuy.classList.add('a-inactive');
-		this.buttonToBuyUpPrice.classList.add('a-rates-inactive');*/
-		this.notification.innerHTML = $app.getTime() ? "Ставка сделана! Oждидайте завершения торгов!" : "Аукцион не начался вы не можете делать ставки!";
+	auctionDisabled(message){
+
+		this.notification.innerHTML = $app.getTime() ? (message || "Ставка сделана! Oждидайте завершения торгов!") : "Аукцион не начался вы не можете делать ставки!";
 	}
 
 	auctionEnabled(){
-		/*$app.local.remove(['id', 'price']);
-		this.buyAction = true;*/
 		this.notification.innerHTML = "";
-		//this.buttonToBuy.classList.remove('a-inactive');
-		//this.buttonToBuyUpPrice.classList.remove('a-rates-inactive');
 	}
+
 
 	upPrice(response){
 		if(!this.tryAuthoryze(response)){
 			this.auctionEnabled();
+		}
+
+		if(response.error && response.error.errorCode){
+			let message = Error.errorCodes(response.error.errorCode);
+			if(message) {
+				this.auctionDisabled(message)
+			}
 		}
 
 	}
@@ -234,12 +234,26 @@ class AsyncLoad extends Helper {
 		if(!this.tryAuthoryze(response)){
 			this.auctionEnabled();
 		}
+
+		if(response.error && response.error.errorCode){
+			let message = Error.errorCodes(response.error.errorCode);
+			if(message) {
+				this.auctionDisabled(message)
+			}
+		}
 	}
 
 
 	baseBuy(response){
 		if(!this.tryAuthoryze(response)){
 			this.auctionEnabled();
+		}
+
+		if(response.error && response.error.errorCode){
+			let message = Error.errorCodes(response.error.errorCode);
+			if(message) {
+				this.auctionDisabled(message)
+			}
 		}
 		
 	}
