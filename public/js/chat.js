@@ -35,16 +35,16 @@ class Chat extends Helper {
 
 	}
 
-	addPretendents(pretendents, price){
+	addPretendents(pretendents, price, count){
 		if(!pretendents || Object.keys(pretendents).length == 0) return;
 
-		this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplatePretendents(pretendents, price));
+		this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplatePretendents(pretendents, price, count));
 	}
 
 
-	addWinner(winner, price){
+	addWinner(winner, price, count){
 
-		this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplateWinner(winner, price));
+		this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplateWinner(winner, price, count));
 
 	}
 
@@ -61,18 +61,18 @@ class Chat extends Helper {
 	clearTemplate(id, count){
 
 		let template = '<div class="a-block-with-proposal">' + 
-						    '<p class="a-block-with-proposal__buy_now">Торги по лоту <span>№'+id+'</span>'+count+' ед.</p>' + 
+						    '<p class="a-block-with-proposal__buy_now">Торги по лоту <span>№'+id+'</span> '+count+' ед.</p>' + 
 						'</div>';
 
 		this.beforeEl.insertAdjacentHTML('afterbegin', template);
 	}
 
-	chatTemplateWinner(pretendents, price){
+	chatTemplateWinner(pretendents, price, count){
 
 		let win = pretendents && Object.keys(pretendents).length || 0;
 
 		let template = '<div class="a-block-with-proposal">' + 
-						    '<p class="a-block-with-proposal__buy_now">Купили товар за <span>'+price+' руб.</span></p>' + 
+						    '<p class="a-block-with-proposal__buy_now">Купили <span>'+count+' ед.</span> за <span> '+price+' руб/ед.</span></p>' + 
 						   ' <p class="a-block-with-proposal__user">'+
 						   		((win == 0) ? "Нет победителей" : this.chatTemplateUsers(pretendents)) +
 						   '</p>' + 
@@ -88,7 +88,7 @@ class Chat extends Helper {
 		let win = Object.keys(pretendents).length;
 
 		let template = '<div class="a-block-with-proposal">' + 
-						    '<p class="a-block-with-proposal__buy_now">Сделаны ставки на<span>'+price+' руб.</span></p>' + 
+						    '<p class="a-block-with-proposal__buy_now">Сделаны ставки на<span> '+price+' руб.</span></p>' + 
 						   ' <p class="a-block-with-proposal__user">'+
 						   		((win == 0) ? "Нет победителей" : (win < 10) ? this.chatTemplateUsers(pretendents) : 'Количество желающих: '+ win) +
 						   '</p>' + 
@@ -97,13 +97,13 @@ class Chat extends Helper {
 		return template;
 	}
 
-	chatTemplatePretendents(pretendents, price){
+	chatTemplatePretendents(pretendents, price, count){
 		if(!pretendents) return;
 
 		let win = Object.keys(pretendents).length;
 
 		let template = '<div class="a-block-with-proposal">' + 
-						    '<p class="a-block-with-proposal__buy_now">Готовы купить за<span>'+price+' руб.</span></p>' + 
+						    '<p class="a-block-with-proposal__buy_now">Готовы купить <span>'+count+' ед.</span> за<span> '+price+' руб/ед</span></p>' + 
 						   ' <p class="a-block-with-proposal__user">'+
 						   		"Участвуют " + Object.keys(pretendents).length + "чел." +
 						   '</p>' + 
@@ -121,7 +121,18 @@ class Chat extends Helper {
 			template = Object.keys(pretendents).length + 'чел.'
 		} else {
 			for(var user in pretendents){
-				template += '<i>'+(pretendents[user].login || pretendents[user].email.split('@')[0])+' (г.'+ (pretendents[user].city || "Белгород") +')</i>';
+
+				if(!pretendents[user].email && typeof pretendents[user] == 'object'){
+					console.log('if');
+					for(var ins in pretendents[user]){
+						template += '<i>'+(pretendents[user][ins].login || pretendents[user][ins].email.split('@')[0])+' (г.'+ (pretendents[user][ins].city || "Белгород") +')</i>';
+					}
+				} else {
+					console.log('else');
+					template += '<i>'+(pretendents[user].login || pretendents[user].email.split('@')[0])+' (г.'+ (pretendents[user].city || "Белгород") +')</i>';
+				}
+
+				
 			}
 		}
 

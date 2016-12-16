@@ -9,7 +9,7 @@ class Sockets extends Helper {
 	
 		this.socket.on('serverMessage',(mess) =>
 		{
-			//console.log(mess);
+			console.log(mess);
 			try{
 				this.registeredCallback[mess.action](mess);
 			} catch(e){

@@ -157,7 +157,7 @@
 			_this.registeredCallback = {};
 
 			_this.socket.on('serverMessage', function (mess) {
-				//console.log(mess);
+				console.log(mess);
 				try {
 					_this.registeredCallback[mess.action](mess);
 				} catch (e) {
@@ -8084,6 +8084,8 @@
 		value: true
 	});
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _helper = __webpack_require__(16);
@@ -8141,16 +8143,16 @@
 			}
 		}, {
 			key: 'addPretendents',
-			value: function addPretendents(pretendents, price) {
+			value: function addPretendents(pretendents, price, count) {
 				if (!pretendents || Object.keys(pretendents).length == 0) return;
 
-				this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplatePretendents(pretendents, price));
+				this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplatePretendents(pretendents, price, count));
 			}
 		}, {
 			key: 'addWinner',
-			value: function addWinner(winner, price) {
+			value: function addWinner(winner, price, count) {
 
-				this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplateWinner(winner, price));
+				this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplateWinner(winner, price, count));
 			}
 		}, {
 			key: 'clearChat',
@@ -8163,17 +8165,17 @@
 			key: 'clearTemplate',
 			value: function clearTemplate(id, count) {
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Торги по лоту <span>№' + id + '</span>' + count + ' ед.</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Торги по лоту <span>№' + id + '</span> ' + count + ' ед.</p>' + '</div>';
 
 				this.beforeEl.insertAdjacentHTML('afterbegin', template);
 			}
 		}, {
 			key: 'chatTemplateWinner',
-			value: function chatTemplateWinner(pretendents, price) {
+			value: function chatTemplateWinner(pretendents, price, count) {
 
 				var win = pretendents && Object.keys(pretendents).length || 0;
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Купили товар за <span>' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : this.chatTemplateUsers(pretendents)) + '</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Купили <span>' + count + ' ед.</span> за <span> ' + price + ' руб/ед.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : this.chatTemplateUsers(pretendents)) + '</p>' + '</div>';
 
 				return template;
 			}
@@ -8185,18 +8187,18 @@
 
 				var win = Object.keys(pretendents).length;
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Сделаны ставки на<span>' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : win < 10 ? this.chatTemplateUsers(pretendents) : 'Количество желающих: ' + win) + '</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Сделаны ставки на<span> ' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : win < 10 ? this.chatTemplateUsers(pretendents) : 'Количество желающих: ' + win) + '</p>' + '</div>';
 
 				return template;
 			}
 		}, {
 			key: 'chatTemplatePretendents',
-			value: function chatTemplatePretendents(pretendents, price) {
+			value: function chatTemplatePretendents(pretendents, price, count) {
 				if (!pretendents) return;
 
 				var win = Object.keys(pretendents).length;
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Готовы купить за<span>' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + "Участвуют " + Object.keys(pretendents).length + "чел." + '</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Готовы купить <span>' + count + ' ед.</span> за<span> ' + price + ' руб/ед</span></p>' + ' <p class="a-block-with-proposal__user">' + "Участвуют " + Object.keys(pretendents).length + "чел." + '</p>' + '</div>';
 
 				return template;
 			}
@@ -8210,7 +8212,16 @@
 					template = Object.keys(pretendents).length + 'чел.';
 				} else {
 					for (var user in pretendents) {
-						template += '<i>' + (pretendents[user].login || pretendents[user].email.split('@')[0]) + ' (г.' + (pretendents[user].city || "Белгород") + ')</i>';
+
+						if (!pretendents[user].email && _typeof(pretendents[user]) == 'object') {
+							console.log('if');
+							for (var ins in pretendents[user]) {
+								template += '<i>' + (pretendents[user][ins].login || pretendents[user][ins].email.split('@')[0]) + ' (г.' + (pretendents[user][ins].city || "Белгород") + ')</i>';
+							}
+						} else {
+							console.log('else');
+							template += '<i>' + (pretendents[user].login || pretendents[user].email.split('@')[0]) + ' (г.' + (pretendents[user].city || "Белгород") + ')</i>';
+						}
 					}
 				}
 
@@ -8493,10 +8504,15 @@
 				this.pretendentsAuction = response.data.pretendents || null;
 
 				if (response.data.status != 'started') {
+					console.log('!started');
 					$app.chat.clear();
 				} else {
-					$app.chat.clearTemplate(this.auctionId, this.countInWarehouseValue);
-					$app.chat.add(this.pretendentsAuction, this.previousPrice);
+					try {
+						$app.chat.clearTemplate(this.auctionId, this.countInWarehouseValue);
+						$app.chat.add(this.pretendentsAuction, this.previousPrice, this.itemCount);
+					} catch (e) {
+						console.log(e);
+					}
 				}
 
 				var template = _template2.default['getCurrentAuction'](this.auctionId, response.data.lot, this.currentPrice, response.data.timer, this.itemCount, this.butonsDefferent);
@@ -8540,6 +8556,8 @@
 
 				var timer = document.querySelector('.a-times-frontend');
 
+				console.log(time);
+
 				this.globalTimer = setTimeout(function () {
 					if (timer) {
 						timer.innerHTML = "00:" + (time < 10 ? '0' + time : time);
@@ -8572,7 +8590,7 @@
 			key: 'pretendentAdded',
 			value: function pretendentAdded(response) {
 				if (response && response.data) {
-					$app.chat.addPretendents(response.data.pretendents, response.data.price);
+					$app.chat.addPretendents(response.data.pretendents, response.data.price, response.data.count);
 				}
 			}
 		}, {
@@ -8581,7 +8599,7 @@
 				//this.buyAction = true;
 				//this.buttonToBuy.classList.remove('a-inactive');
 				_bucket2.default.getBucket();
-				$app.chat.addWinner(response.data.winner, response.data.price);
+				$app.chat.addWinner(response.data.winner, response.data.price, response.data.count);
 			}
 		}, {
 			key: 'auctionUpdated',
@@ -8597,7 +8615,7 @@
 					this.notification.innerHTML = "";
 					this.auctionEnabled();
 
-					$app.chat.add(this.pretendentsAuction, response.data.price);
+					//$app.chat.add(this.pretendentsAuction, response.data.price);
 
 					try {
 						clearTimeout(this.globalTimer);
@@ -8657,7 +8675,7 @@
 			key: 'auctionDisabled',
 			value: function auctionDisabled(message) {
 
-				this.notification.innerHTML = $app.getTime() ? message || "Ставка сделана! Oждидайте завершения торгов!" : "Аукцион не начался вы не можете делать ставки!";
+				this.notification.innerHTML = $app.getTime() ? message || "Ставка сделана! Oжидайте завершения торгов!" : "Аукцион не начался вы не можете делать ставки!";
 			}
 		}, {
 			key: 'auctionEnabled',
@@ -8667,43 +8685,43 @@
 		}, {
 			key: 'upPrice',
 			value: function upPrice(response) {
-				if (!this.tryAuthoryze(response)) {
-					this.auctionEnabled();
-				}
-
 				if (response.error && response.error.errorCode) {
 					var message = _error2.default.errorCodes(response.error.errorCode);
 					if (message) {
 						this.auctionDisabled(message);
 					}
+				}
+
+				if (!this.tryAuthoryze(response)) {
+					this.auctionEnabled();
 				}
 			}
 		}, {
 			key: 'upCount',
 			value: function upCount(response) {
-				if (!this.tryAuthoryze(response)) {
-					this.auctionEnabled();
-				}
-
 				if (response.error && response.error.errorCode) {
 					var message = _error2.default.errorCodes(response.error.errorCode);
 					if (message) {
 						this.auctionDisabled(message);
 					}
+				}
+
+				if (!this.tryAuthoryze(response)) {
+					this.auctionEnabled();
 				}
 			}
 		}, {
 			key: 'baseBuy',
 			value: function baseBuy(response) {
-				if (!this.tryAuthoryze(response)) {
-					this.auctionEnabled();
-				}
-
 				if (response.error && response.error.errorCode) {
 					var message = _error2.default.errorCodes(response.error.errorCode);
 					if (message) {
 						this.auctionDisabled(message);
 					}
+				}
+
+				if (!this.tryAuthoryze(response)) {
+					this.auctionEnabled();
 				}
 			}
 		}, {

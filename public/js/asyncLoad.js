@@ -25,7 +25,6 @@ class AsyncLoad extends Helper {
 
 	getCurrentAuction(response){
 
-
 		if(!response.data || !response.data.lot){
 			$app.chat.clear();
 			return;
@@ -43,14 +42,18 @@ class AsyncLoad extends Helper {
 		this.countInWarehouseValue = response.data.lot.countInWarehouse;
 		this.pretendentsAuction = response.data.pretendents || null;
 
-
 		if(response.data.status != 'started'){
+			console.log('!started');
 			$app.chat.clear();
 		} else {
-			$app.chat.clearTemplate(this.auctionId, this.countInWarehouseValue);
-			$app.chat.add(this.pretendentsAuction, this.previousPrice);
+			try{
+				$app.chat.clearTemplate(this.auctionId, this.countInWarehouseValue);
+				$app.chat.add(this.pretendentsAuction, this.previousPrice, this.itemCount);
+			} catch(e){
+				console.log(e);
+			}
+			
 		}
-
 
 		let template = Template['getCurrentAuction'](this.auctionId, response.data.lot, this.currentPrice, response.data.timer, this.itemCount, this.butonsDefferent);
 
@@ -93,6 +96,8 @@ class AsyncLoad extends Helper {
 	timerStarted(time){
 		let timer = document.querySelector('.a-times-frontend');
 
+		console.log(time);
+
 		this.globalTimer = setTimeout(() => {
 			if(timer){
 				timer.innerHTML = "00:"+ ((time < 10) ? '0'+time : time);
@@ -123,7 +128,7 @@ class AsyncLoad extends Helper {
 
 	pretendentAdded(response){
 		if(response && response.data){
-			$app.chat.addPretendents(response.data.pretendents, response.data.price);
+			$app.chat.addPretendents(response.data.pretendents, response.data.price, response.data.count);
 		}		
 	}
 
@@ -132,7 +137,7 @@ class AsyncLoad extends Helper {
 		//this.buyAction = true;
 		//this.buttonToBuy.classList.remove('a-inactive');
 		Bucket.getBucket();
-		$app.chat.addWinner(response.data.winner, response.data.price);
+		$app.chat.addWinner(response.data.winner, response.data.price, response.data.count);
 	}
 
 	auctionUpdated(response){
@@ -147,7 +152,7 @@ class AsyncLoad extends Helper {
 			this.notification.innerHTML = "";
 			this.auctionEnabled();
 
-			$app.chat.add(this.pretendentsAuction, response.data.price);
+			//$app.chat.add(this.pretendentsAuction, response.data.price);
 
 			try{
 				clearTimeout(this.globalTimer);
@@ -208,7 +213,7 @@ class AsyncLoad extends Helper {
 
 	auctionDisabled(message){
 
-		this.notification.innerHTML = $app.getTime() ? (message || "Ставка сделана! Oждидайте завершения торгов!") : "Аукцион не начался вы не можете делать ставки!";
+		this.notification.innerHTML = $app.getTime() ? (message || "Ставка сделана! Oжидайте завершения торгов!") : "Аукцион не начался вы не можете делать ставки!";
 	}
 
 	auctionEnabled(){
@@ -217,43 +222,43 @@ class AsyncLoad extends Helper {
 
 
 	upPrice(response){
-		if(!this.tryAuthoryze(response)){
-			this.auctionEnabled();
-		}
-
 		if(response.error && response.error.errorCode){
 			let message = Error.errorCodes(response.error.errorCode);
 			if(message) {
 				this.auctionDisabled(message)
 			}
+		}
+
+		if(!this.tryAuthoryze(response)){
+			this.auctionEnabled();
 		}
 
 	}
 
 	upCount(response){
-		if(!this.tryAuthoryze(response)){
-			this.auctionEnabled();
-		}
-
 		if(response.error && response.error.errorCode){
 			let message = Error.errorCodes(response.error.errorCode);
 			if(message) {
 				this.auctionDisabled(message)
 			}
+		}
+
+		if(!this.tryAuthoryze(response)){
+			this.auctionEnabled();
 		}
 	}
 
 
 	baseBuy(response){
-		if(!this.tryAuthoryze(response)){
-			this.auctionEnabled();
-		}
-
 		if(response.error && response.error.errorCode){
 			let message = Error.errorCodes(response.error.errorCode);
 			if(message) {
 				this.auctionDisabled(message)
 			}
+		}
+
+		if(!this.tryAuthoryze(response)){
+			this.auctionEnabled();
 		}
 		
 	}
