@@ -60,8 +60,6 @@ socketFrontController.prototype.initStart = function(){
     var self = this;
 
     configOptions.getOption('date', function(err, conf){
-        console.log('get options');
-        console.log(err, conf);
         if (conf && conf.params)
         {
             var d = new Date();
@@ -139,7 +137,6 @@ socketFrontController.prototype.register_user = function(client, data){
 }
 
 socketFrontController.prototype.getAuctions = function(client, data){
-    console.log(client.socket.request.session);
     var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
     delete auctions[this.curAuction];
     client.socket.emit('serverMessage', this.createMessage('getAuctions', auctions));
@@ -281,7 +278,6 @@ socketFrontController.prototype.createError = function(code, message){
 };
 
 socketFrontController.prototype.productLoad = function(){
-    console.log('product load');
     var keys = Object.keys(this.productsPull);
     var keysAuc = Object.keys(this.auctionsPull);
     if (keysAuc.length >= this.limit )
@@ -381,7 +377,6 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
         productsModule.setListenere("productUpdated",function(event, product)
         {
             productsModule.unsetListener(event);
-            console.log('Product updated');
             for (var i = 0; i < winKeys.length; i++)
             {
                 ordersModule.createOrder(
