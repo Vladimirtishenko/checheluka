@@ -11,8 +11,10 @@ var dateToStart = require('../middleware/services/configOptions'),
 
 module.exports.get = function(req, res, next) {
 
-    var view = req.originalUrl.slice(1);
-    var agent = useragent.is(req.headers['user-agent'])
+    var view = req.originalUrl.slice(1),
+        agent = useragent.is(req.headers['user-agent']),
+        timeDiff = req.session.timeDiff;
+
 
     if (req.session.user) {
 
@@ -63,7 +65,8 @@ module.exports.get = function(req, res, next) {
                 auctions_info: result.auctions_info,
                 auctions_info_sliced: $ ? $.text().slice(0, 105) + "..." : "Нет никакой информации!!!", 
                 delivery_info: result.delivery_info,
-                agent: agent
+                agent: agent,
+                timeDiff: timeDiff || 0
             });
         });
 
@@ -86,6 +89,8 @@ module.exports.get = function(req, res, next) {
                             $ = null;
                         }
 
+                        console.log(req.session.timeDiff);
+
                         res.render(view, {
                             title: "Chechelyka - Модные аукционы",
                             date: data.data || "",
@@ -93,7 +98,8 @@ module.exports.get = function(req, res, next) {
                             auctions_info: data.auctions_info,
                             auctions_info_sliced: $ ? $.text().slice(0, 105) + "..." : "Нет никакой информации!!!", 
                             delivery_info: data.delivery_info,
-                            sessionUser: null
+                            sessionUser: null,
+                            timeDiff: timeDiff || 0
                         });
 
                     })

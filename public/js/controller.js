@@ -13,6 +13,8 @@ import LocalBase from './localBase.js';
 
 window.$app = {};
 
+$app.timeDiff = timeDiff;
+
 window.addEventListener('DOMContentLoaded', () => {
 	$app.socket = new Sockets();
 	$app.local = new LocalBase();

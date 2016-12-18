@@ -29,21 +29,21 @@ class AsyncLoad extends Helper {
 			$app.chat.clear();
 			return;
 		} 
-
-		try{
-			clearTimeout(this.globalTimer);
-		} catch(e){}
-		this.timerStarted(response.data.timer);
 		
 		this.itemCount = response.data.count;
 		this.auctionId = response.data._uid;
 		this.currentPrice = response.data.currentPrice;
 		this.previousPrice = response.data.price;
 		this.countInWarehouseValue = response.data.lot.countInWarehouse;
-		this.pretendentsAuction = response.data.pretendents || null;
+		this.pretendentsAuction = response.data.pretendents || null,
+		this.finishedTime = response.data.finishedTime;
+
+		try{
+			clearTimeout(this.globalTimer);
+		} catch(e){}
+		this.timerStarted();
 
 		if(response.data.status != 'started'){
-			console.log('!started');
 			$app.chat.clear();
 		} else {
 			try{
@@ -93,10 +93,9 @@ class AsyncLoad extends Helper {
 
 	}
 
-	timerStarted(time){
+	timerStarted(){
 		let timer = document.querySelector('.a-times-frontend');
-
-		console.log(time);
+		let time = Math.round( ( this.finishedTime - ( (new Date()).getTime() + ($app.timeDiff) * 1000 ) ) / 1000)
 
 		this.globalTimer = setTimeout(() => {
 			if(timer){
@@ -108,8 +107,7 @@ class AsyncLoad extends Helper {
 				return;
 			}
 
-			time--;
-			this.timerStarted(time);
+			this.timerStarted();
 		}, 1000)
 
 	}
@@ -149,6 +147,7 @@ class AsyncLoad extends Helper {
 			this.currentPrice = response.data.currentPrice;
 			this.countInWarehouse.innerHTML = response.data.lot.countInWarehouse + 'ед.';
 			this.pretendentsAuction = response.data.pretendents;
+			this.finishedTime = response.data.finishedTime;
 			this.notification.innerHTML = "";
 			this.auctionEnabled();
 
@@ -159,7 +158,7 @@ class AsyncLoad extends Helper {
 			} catch(e){
 				console.log(e);
 			}
-			this.timerStarted(response.data.timer);
+			this.timerStarted();
 
 		}
 		
