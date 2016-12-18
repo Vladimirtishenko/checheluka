@@ -6,7 +6,10 @@ class Sockets extends Helper {
 		super();
 		this.socket = io();
 		this.registeredCallback = {};
-	
+		//set client-server time diff
+		var dateT = new Date();
+		this.socket.emit('setClientTime', {time: dateT.getTime()});
+
 		this.socket.on('serverMessage',(mess) =>
 		{
 			console.log(mess);

@@ -39,6 +39,17 @@ socketClient.prototype.setUserData = function(data){
     }
 }
 
+socketClient.prototype.setTimeDiff = function(data){
+    console.log(data);
+    if(this.socket.request.session)
+    {
+        this.socket.request.session.timeDiff = data;
+        this.socket.request.session.save(function(err,data) {
+            //TODO:: error handling
+        });
+    }
+}
+
 socketClient.prototype.setEvent = function(event,callback)
 {
     this.socket.on(event, function(){

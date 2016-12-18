@@ -40,6 +40,9 @@ ProductModule.prototype.getProducts = function(uid, offset, limit){
 
 ProductModule.prototype.removeAll = function(){
     productModel.clearTable();
-}
+};
+ProductModule.prototype.removeProduct = function(uid){
+    productModel.removeEntity(uid);
+};
 
 module.exports = ProductModule;

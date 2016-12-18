@@ -38,6 +38,7 @@ function socketFrontController(io){
         newClient.setEvent('upPrice', this.upPrice.bind(this));
         newClient.setEvent('getCurrentTime', this.getCurrentTime.bind(this));
         newClient.setEvent('reloadAuction', this.reloadAuction.bind(this));
+        newClient.setEvent('setClientTime', this.setClientTime.bind(this));
     }.bind(this));
     io.on('error', function(err) {
         //here i change options
@@ -45,6 +46,15 @@ function socketFrontController(io){
     });
     this.productLoad();
 }
+socketFrontController.prototype.setClientTime = function(client, data){
+    if (data.time)
+    {
+        var d = new Date();
+        var diff = Math.round((d.getTime() - data.time)/1000);
+        client.setTimeDiff(diff);
+    }
+};
+
 
 socketFrontController.prototype.initStart = function(){
     var self = this;
@@ -129,6 +139,7 @@ socketFrontController.prototype.register_user = function(client, data){
 }
 
 socketFrontController.prototype.getAuctions = function(client, data){
+    console.log(client.socket.request.session);
     var auctions = JSON.parse(JSON.stringify(this.auctionsPull));
     delete auctions[this.curAuction];
     client.socket.emit('serverMessage', this.createMessage('getAuctions', auctions));
@@ -271,7 +282,6 @@ socketFrontController.prototype.createError = function(code, message){
 
 socketFrontController.prototype.productLoad = function(){
     console.log('product load');
-    this.isTimerForLoadSet = false;
     var keys = Object.keys(this.productsPull);
     var keysAuc = Object.keys(this.auctionsPull);
     if (keysAuc.length >= this.limit )
@@ -285,6 +295,7 @@ socketFrontController.prototype.productLoad = function(){
     }
     limit = (limit <= 0) ? 1 : limit;
     productsModule.loadProducts(this.offset, limit);
+    this.isTimerForLoadSet = false;
 }
 
 socketFrontController.prototype.setProductList = function(event, products){
@@ -316,7 +327,7 @@ socketFrontController.prototype.setProductList = function(event, products){
             this.isTimerForLoadSet = setTimeout(this.productLoad.bind(this),1000*loadProductSleepTime);
         }
     }
-}
+};
 
 socketFrontController.prototype.setAuctionList = function(products){
     for(var i in products)
@@ -346,6 +357,7 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     this.sendToAll(this.createMessage('auctionFinished', data));
     productsModule.setListenere("productUpdated",function(event, product)
     {
+        productsModule.unsetListener(event);
         var keys = Object.keys(this.productsPull);
         if (keys.length < this.limit && this.isTimerForLoadSet === false)
         {
@@ -360,7 +372,8 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
         var winKeys = Object.keys(data.winner);
         var prod = this.productsPull[data.lot._id];
         prod = JSON.parse(JSON.stringify(prod));
-        auction.lot.countInWarehouse = data.lot.countInWarehouse - (data.count * winKeys.length);
+        countIwWarehouse = data.lot.countInWarehouse - (data.count * winKeys.length);
+        auction.lot.countInWarehouse = countIwWarehouse;
         var updata = {
             _id: data.lot._id,
             countInWarehouse: auction.lot.countInWarehouse
@@ -405,6 +418,7 @@ socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, 
     delete this.productsPull[data.lot._id];
     delete this.auctionsPull[data._uid];
     auctionModule.removeAuction(data._uid);
+    productsModule.removeProduct(data.lot._uid);
     //wait 3 sec besore start new auction
     sleep(3000);
 

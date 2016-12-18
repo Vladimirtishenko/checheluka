@@ -30,20 +30,6 @@ var sessionMiddleware = session({
 app.use(sessionMiddleware);
 io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
-  // var parseCookie = cookieParser(config.get("secret"));
-  // var handshake = socket.request;
-  //
-  // parseCookie(handshake, null, function (err, data) {
-  //   sessionService.get(handshake, function (err, session) {
-  //     if (err)
-  //       next(new Error(err.message));
-  //     if (!session)
-  //       next(new Error("Not authorized"));
-  //
-  //     handshake.session = session;
-  //     next();
-  //   });
-  // });
 });
 //
 // view engine setup

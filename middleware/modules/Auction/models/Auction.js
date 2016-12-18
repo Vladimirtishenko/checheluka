@@ -19,17 +19,22 @@ function Auction() {
         status: 'new',
         newPretendentInit: false,
         history: [],
-        timer: 0
+        timer: 0,
+        finishedTime: 0
     }
 }
 Auction.prototype = Object.create(parent.prototype);
 Auction.prototype.setTimer = function(entity, timer, callback)
 {
     entity.timer = timer;
+    entity.finishedTime = this.getCurrTime() + entity.timer * 1000;
     var interval = null;
     var func = function(){
         entity.timer--;
-        if (entity.timer == 0)
+        var d = new Date().getTime();
+        //console.log(entity.timer);
+        //if (entity.timer == 0)
+        if (d >= entity.finishedTime)
         {
             clearInterval(interval);
 
@@ -42,7 +47,13 @@ Auction.prototype.setTimer = function(entity, timer, callback)
 Auction.prototype.updateTimer = function(entity, timer)
 {
     entity.timer = timer;
+    entity.finishedTime = this.getCurrTime() + entity.timer * 1000;
 };
+
+Auction.prototype.getCurrTime = function()
+{
+    return new Date().getTime();
+}
 
 Auction.prototype.saveToStorage = function(entity, callback)
 {

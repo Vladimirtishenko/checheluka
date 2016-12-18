@@ -149,7 +149,7 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
 
 AuctionModule.prototype.getWinner = function(uid){
     var auction = auctionModel.getEntity(uid);
-    if (!auction.pretendents[auction.price])
+    if (!auction || !auction.pretendents[auction.price])
     {
         return null;
     }
