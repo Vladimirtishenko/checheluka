@@ -52,6 +52,10 @@ AuctionModule.prototype.removeAuction = function(uid){
     auctionModel.removeEntity(uid);
 };
 AuctionModule.prototype.startAuction = function(uid){
+    if (this.started && this.started._uid == uid)
+    {
+        return false;
+    }
     var auction = auctionModel.getEntity(uid);
     //set default data
     auction.price = auction.basePrice;
@@ -171,7 +175,7 @@ AuctionModule.prototype.getWinner = function(uid){
 
 AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMessage, action){
     action = action || null;
-    auction = auctionModel.getEntity(auction._uid);
+    auction = auctionModel.getEntity(auction._uid) || auction;
     auction.history.push({action:eventName, data:historyMessage});
     var sended = JSON.parse(JSON.stringify(auction));
     delete sended.history;

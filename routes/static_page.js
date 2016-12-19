@@ -110,11 +110,7 @@ module.exports.get = function(req, res, next) {
 
         })
 
-
-
-
     }
-
 
     function dataTry(callback) {
 
@@ -130,7 +126,7 @@ module.exports.get = function(req, res, next) {
         orders.find({ "userId": req.session.user }, function(err, orders) {
             if (err) next(err);
             callback(null, date, orders);
-        })
+        }).sort({orderNumber: -1});
 
     }
 

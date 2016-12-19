@@ -350,7 +350,6 @@ socketFrontController.prototype.sendToAllGeAuctions = function(){
 }
 
 socketFrontController.prototype.sendNotifyThatAuctionFinished = function(event, data){
-    console.log(111111);
     this.sendToAll(this.createMessage('auctionFinished', data));
     productsModule.setListenere("productUpdated",function(event, product)
     {
@@ -436,8 +435,7 @@ socketFrontController.prototype.notifyAuctionUpdated = function(event, data){
     this.sendToAll(this.createMessage('auctionUpdated', data));
 }
 
-socketFrontController.prototype.notifyAuctionStarted = function(event, data){ 
-console.log(22321);   
+socketFrontController.prototype.notifyAuctionStarted = function(event, data){    
     this.sendToAll(this.createMessage('actionStarted', data));
 }
 

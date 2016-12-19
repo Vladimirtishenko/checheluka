@@ -9113,10 +9113,11 @@
 
 			_this.button = el;
 			_this.form = document.querySelector('.a-data-order');
+			_this.formToOrder = document.querySelector('.a-form-submit-order');
 			_this.sendButton = document.querySelector('.a-data-order-send');
 
 			_this.flyEvent('add', ['click'], [_this.button], [_this.openForm.bind(_this)]);
-			_this.flyEvent('add', ['click'], [_this.sendButton], _this.sendForm.bind(_this));
+			_this.flyEvent('add', ['submit'], [_this.formToOrder], _this.sendForm.bind(_this));
 			return _this;
 		}
 
@@ -9134,7 +9135,7 @@
 
 				event.preventDefault();
 
-				var parentForm = event && event.target && event.target.closest('form') || null,
+				var parentForm = event && event.target || null,
 				    data = {};
 
 				if (!parentForm) return;

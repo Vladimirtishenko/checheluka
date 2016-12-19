@@ -7,10 +7,11 @@ class Privat extends Helper {
 
 		this.button = el;
 		this.form = document.querySelector('.a-data-order');
+		this.formToOrder = document.querySelector('.a-form-submit-order');
 		this.sendButton = document.querySelector('.a-data-order-send');
 
 		this.flyEvent('add', ['click'], [this.button], [this.openForm.bind(this)]);
-		this.flyEvent('add', ['click'], [this.sendButton], this.sendForm.bind(this));
+		this.flyEvent('add', ['submit'], [this.formToOrder], this.sendForm.bind(this));
 	}
 
 	openForm(event){
@@ -25,7 +26,7 @@ class Privat extends Helper {
 
 		event.preventDefault();
 
-		let parentForm = event && event.target && event.target.closest('form') || null,
+		let parentForm = event && event.target || null,
 			data = {};
 
 		if(!parentForm) return;
