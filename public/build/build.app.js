@@ -8140,11 +8140,11 @@
 			}
 		}, {
 			key: 'addChat',
-			value: function addChat(pretendents, price) {
+			value: function addChat(pretendents, price, count) {
 
 				if (!pretendents || Object.keys(pretendents).length == 0) return;
 
-				this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplate(pretendents, price));
+				this.beforeEl.insertAdjacentHTML('afterbegin', this.chatTemplate(pretendents, price, count));
 			}
 		}, {
 			key: 'addPretendents',
@@ -8186,13 +8186,13 @@
 			}
 		}, {
 			key: 'chatTemplate',
-			value: function chatTemplate(pretendents, price) {
+			value: function chatTemplate(pretendents, price, count) {
 
 				if (!pretendents) return;
 
 				var win = Object.keys(pretendents).length;
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Сделаны ставки на<span> ' + price + ' руб.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : win < 10 ? this.chatTemplateUsers(pretendents) : 'Количество желающих: ' + win) + '</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Сделана ставка <span>' + count + 'ед.</span> за<span> ' + price + ' руб/ед.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : win < 10 ? this.chatTemplateUsers(pretendents) : 'Количество желающих: ' + win) + '</p>' + '</div>';
 
 				return template;
 			}
@@ -8592,7 +8592,12 @@
 			key: 'pretendentAdded',
 			value: function pretendentAdded(response) {
 				if (response && response.data) {
-					$app.chat.addPretendents(response.data.pretendents, response.data.price, response.data.count);
+					console.log(response);
+					if (response.data.action == 'setPrice' || response.data.action == 'setCount') {
+						$app.chat.add(response.data.pretendents, response.data.price, response.data.count);
+					} else {
+						$app.chat.addPretendents(response.data.pretendents, response.data.price, response.data.count);
+					}
 				}
 			}
 		}, {
@@ -8670,7 +8675,7 @@
 
 				var buttonPriceArray = target.innerText.match(/\d+/);
 
-				if (buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) > 50 && parseInt(buttonPriceArray[0]) < 502) {
+				if (buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) >= 50 && parseInt(buttonPriceArray[0]) < 502) {
 					$app.socket.upPrice('upPrice', { auction_id: this.auctionId, price: parseInt(buttonPriceArray[0]) }, this.upPrice.bind(this));
 				}
 			}
@@ -8980,7 +8985,9 @@
 			$app.synteticTime = _this.synteticEventTimer.bind(_this);
 			$app.getTime = _this.getTime.bind(_this);
 
-			$app.socket.getCurrentTime('getCurrentTime', _this.createTimer.bind(_this));
+			_this.createTimer();
+
+			//$app.socket.getCurrentTime('getCurrentTime', this.createTimer.bind(this));
 
 			return _this;
 		}
@@ -8992,17 +8999,13 @@
 			}
 		}, {
 			key: 'createTimer',
-			value: function createTimer(response) {
-
-				if (!response.data.time) return;
-
-				this.staticServerTime = response.data.time;
+			value: function createTimer() {
 
 				if (!this.attr || this.attr == 'null') {
 					this.timeStatus = true;
 					this.removed.innerHTML = "Аукцион начался...";
 				} else {
-					this.estimate = +new Date(+this.attr);
+					this.estimate = +this.attr;
 					this.tryTime();
 				}
 			}
@@ -9016,7 +9019,7 @@
 			key: 'tryTime',
 			value: function tryTime() {
 
-				if (this.staticServerTime >= this.estimate) {
+				if (!Math.round((this.estimate - (new Date().getTime() + $app.timeDiff * 1000)) / 1000)) {
 
 					this.timeStatus = true;
 
@@ -9039,7 +9042,7 @@
 			value: function startTimer() {
 				var _this2 = this;
 
-				var date = this.estimate - this.staticServerTime,
+				var date = Math.round(this.estimate - (new Date().getTime() + $app.timeDiff * 1000)),
 				    dateString = {
 					seconds: Math.floor(date / 1000 % 60),
 					minutes: Math.floor(date / 1000 / 60 % 60),

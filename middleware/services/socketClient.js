@@ -40,7 +40,6 @@ socketClient.prototype.setUserData = function(data){
 }
 
 socketClient.prototype.setTimeDiff = function(data){
-    console.log(data);
     if(this.socket.request.session)
     {
         this.socket.request.session.timeDiff = data;

@@ -71,7 +71,8 @@ AuctionModule.prototype.getCurrent = function(){
     return this.started;
 };
 
-AuctionModule.prototype.setPretendent = function(uid, user){
+AuctionModule.prototype.setPretendent = function(uid, user, action){
+    action = action || 'setPretendent';
     var auction = auctionModel.getEntity(uid);
     if (auction.newPretendentInit)
     {
@@ -90,11 +91,12 @@ AuctionModule.prototype.setPretendent = function(uid, user){
     auction.pretendents[auction.currentPrice][user._id] = user;
     auction.price = auction.currentPrice;
     var mess = "New pretendent - "+user._id+". Price - "+auction.currentPrice;
-    this.dispatchEvent('pretendentAdded', auction, mess);
+    this.dispatchEvent('pretendentAdded', auction, mess, action);
     return true;
 };
 
 AuctionModule.prototype.setCount = function(uid, count, user){
+    var action = 'setCount';
     var auction = auctionModel.getEntity(uid);
     var auc_count = auction.count;
     if (!auction || auction.count > count)
@@ -103,11 +105,11 @@ AuctionModule.prototype.setCount = function(uid, count, user){
     }
     else if (auction.count == count)
     {
-        return this.setPretendent(uid, user);
+        return this.setPretendent(uid, user, action);
     }
     auction.count = count;
     auction.newPretendentInit = true;
-    var res = this.setPretendent(uid, user);
+    var res = this.setPretendent(uid, user, action);
     if (res)
     {
         auctionModel.updateTimer(auction, this.auctionTimer);
@@ -122,6 +124,7 @@ AuctionModule.prototype.setCount = function(uid, count, user){
 };
 
 AuctionModule.prototype.setPrice = function(uid, price, user){
+    var action = 'setPrice';
     var auction = auctionModel.getEntity(uid);
     if (!auction)
     {
@@ -131,7 +134,7 @@ AuctionModule.prototype.setPrice = function(uid, price, user){
     auction.currentPrice = auction.currentPrice + price;
     auction.nextPrice = auction.currentPrice + this.upPrice;
     auction.newPretendentInit = true;
-    if ( this.setPretendent(uid, user))
+    if ( this.setPretendent(uid, user, action))
     {
         auctionModel.updateTimer(auction, this.auctionTimer);
         var mess = "Pretendent updated auction - "+auction.lot._id+" price";
@@ -166,12 +169,14 @@ AuctionModule.prototype.getWinner = function(uid){
     return winners || null;
 };
 
-AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMessage){
+AuctionModule.prototype.dispatchEvent = function(eventName, auction, historyMessage, action){
+    action = action || null;
     auction = auctionModel.getEntity(auction._uid);
     auction.history.push({action:eventName, data:historyMessage});
     var sended = JSON.parse(JSON.stringify(auction));
     delete sended.history;
     sended.pretendents = sended.pretendents[sended.price] || {};
+    sended.action = action;
     if (eventName == 'startAuction')
     {
         auction.status = 'started';

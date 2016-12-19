@@ -126,7 +126,12 @@ class AsyncLoad extends Helper {
 
 	pretendentAdded(response){
 		if(response && response.data){
-			$app.chat.addPretendents(response.data.pretendents, response.data.price, response.data.count);
+			console.log(response);
+			if(response.data.action == 'setPrice' || response.data.action == 'setCount'){
+				$app.chat.add(response.data.pretendents, response.data.price, response.data.count);
+			} else {
+				$app.chat.addPretendents(response.data.pretendents, response.data.price, response.data.count);
+			}
 		}		
 	}
 
@@ -204,7 +209,7 @@ class AsyncLoad extends Helper {
 
 		let buttonPriceArray = target.innerText.match(/\d+/);
 
-		if(buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) > 50 && parseInt(buttonPriceArray[0]) < 502) {
+		if(buttonPriceArray instanceof Array && parseInt(buttonPriceArray[0]) >= 50 && parseInt(buttonPriceArray[0]) < 502) {
 			$app.socket.upPrice('upPrice', {auction_id: this.auctionId, price: parseInt(buttonPriceArray[0])}, this.upPrice.bind(this));
 		}
 

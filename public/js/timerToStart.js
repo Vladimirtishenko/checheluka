@@ -11,7 +11,9 @@ class Timer extends Helper {
 		$app.synteticTime = this.synteticEventTimer.bind(this);
 		$app.getTime = this.getTime.bind(this);
 
-		$app.socket.getCurrentTime('getCurrentTime', this.createTimer.bind(this));
+		this.createTimer();
+
+		//$app.socket.getCurrentTime('getCurrentTime', this.createTimer.bind(this));
 
 	}
 
@@ -19,17 +21,13 @@ class Timer extends Helper {
 		return this.timeStatus;
 	}
 
-	createTimer(response){
-
-		if(!response.data.time) return; 
-
-		this.staticServerTime = response.data.time;
+	createTimer(){
 
 		if(!this.attr || this.attr == 'null'){
 			this.timeStatus = true;
 			this.removed.innerHTML = "Аукцион начался..."
 		} else {
-			this.estimate = +new Date(+this.attr);
+			this.estimate = +this.attr;
 			this.tryTime();
 		}
 	}
@@ -41,7 +39,7 @@ class Timer extends Helper {
 
 	tryTime(){
 
-		if(this.staticServerTime >= this.estimate){
+		if(!Math.round( ( this.estimate - ( (new Date()).getTime() + ($app.timeDiff) * 1000 ) ) / 1000)){
 
 			this.timeStatus = true;
 
@@ -65,14 +63,14 @@ class Timer extends Helper {
 
 	startTimer(){
 
-		let date = this.estimate - this.staticServerTime,
+		let date = Math.round( ( this.estimate - ( (new Date()).getTime() + ($app.timeDiff) * 1000 ))),
 			dateString = {
 				seconds: Math.floor( (date/1000) % 60 ),
 				minutes: Math.floor( (date/1000/60) % 60 ),
 				hours: Math.floor( (date/(1000*60*60)) % 24 ),
 				days: Math.floor( date/(1000*60*60*24) )
 			}
-
+			
 		if(this.removed){
 			this.removed.parentNode.removeChild(this.removed);
 			this.removed = null;
