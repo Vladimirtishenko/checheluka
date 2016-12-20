@@ -8180,7 +8180,7 @@
 
 				var win = pretendents && Object.keys(pretendents).length || 0;
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Купили <span>' + count + ' ед.</span> за <span> ' + price + ' руб/ед.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : this.chatTemplateUsers(pretendents)) + '</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Купили <span>' + count + ' ед.</span> по <span> ' + price + ' руб/ед.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : this.chatTemplateUsers(pretendents)) + '</p>' + '</div>';
 
 				return template;
 			}
@@ -8192,7 +8192,7 @@
 
 				var win = Object.keys(pretendents).length;
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Сделана ставка <span>' + count + 'ед.</span> за<span> ' + price + ' руб/ед.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : win < 10 ? this.chatTemplateUsers(pretendents) : 'Количество желающих: ' + win) + '</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Сделана ставка <span>' + count + 'ед.</span> по<span> ' + price + ' руб/ед.</span></p>' + ' <p class="a-block-with-proposal__user">' + (win == 0 ? "Нет победителей" : win < 10 ? this.chatTemplateUsers(pretendents) : 'Количество желающих: ' + win) + '</p>' + '</div>';
 
 				return template;
 			}
@@ -8203,7 +8203,7 @@
 
 				var win = Object.keys(pretendents).length;
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Готовы купить <span>' + count + ' ед.</span> за<span> ' + price + ' руб/ед</span></p>' + ' <p class="a-block-with-proposal__user">' + "Участвуют " + Object.keys(pretendents).length + "чел." + '</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Готовы купить <span>' + count + ' ед.</span> по<span> ' + price + ' руб/ед</span></p>' + ' <p class="a-block-with-proposal__user">' + "Участвуют " + Object.keys(pretendents).length + "чел." + '</p>' + '</div>';
 
 				return template;
 			}
@@ -8592,7 +8592,6 @@
 			key: 'pretendentAdded',
 			value: function pretendentAdded(response) {
 				if (response && response.data) {
-					console.log(response);
 					if (response.data.action == 'setPrice' || response.data.action == 'setCount') {
 						$app.chat.add(response.data.pretendents, response.data.price, response.data.count);
 					} else {
@@ -8649,8 +8648,6 @@
 
 				if (!event || !event.target) return;
 
-				this.auctionDisabled();
-
 				if (count > this.itemCount || count < 1) {
 					if (count > parseInt(this.countInWarehouseValue) || count < 1) {
 						this.notification.innerHTML = "На складе всего " + this.countInWarehouseValue + "ед. Вы не можете купить " + count + "ед.";
@@ -8670,8 +8667,6 @@
 				var target = event && event.target || null;
 
 				if (target.tagName != 'BUTTON') return;
-
-				this.auctionDisabled();
 
 				var buttonPriceArray = target.innerText.match(/\d+/);
 
@@ -8703,6 +8698,8 @@
 				if (!this.tryAuthoryze(response)) {
 					this.auctionEnabled();
 				}
+
+				this.auctionDisabled();
 			}
 		}, {
 			key: 'upCount',
@@ -8717,6 +8714,8 @@
 				if (!this.tryAuthoryze(response)) {
 					this.auctionEnabled();
 				}
+
+				this.auctionDisabled();
 			}
 		}, {
 			key: 'baseBuy',
@@ -8731,6 +8730,8 @@
 				if (!this.tryAuthoryze(response)) {
 					this.auctionEnabled();
 				}
+
+				this.auctionDisabled();
 			}
 		}, {
 			key: 'tryAuthoryze',

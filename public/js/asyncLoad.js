@@ -126,7 +126,6 @@ class AsyncLoad extends Helper {
 
 	pretendentAdded(response){
 		if(response && response.data){
-			console.log(response);
 			if(response.data.action == 'setPrice' || response.data.action == 'setCount'){
 				$app.chat.add(response.data.pretendents, response.data.price, response.data.count);
 			} else {
@@ -183,8 +182,6 @@ class AsyncLoad extends Helper {
 
 		if(!event || !event.target) return;
 
-		this.auctionDisabled();
-
 		if(count > this.itemCount || count < 1){
 			if(count > parseInt(this.countInWarehouseValue) || count < 1){
 				this.notification.innerHTML = "На складе всего " + this.countInWarehouseValue + "ед. Вы не можете купить " + count + "ед.";
@@ -204,8 +201,6 @@ class AsyncLoad extends Helper {
 		let target = event && event.target || null;
 
 		if(target.tagName != 'BUTTON') return;
-
-		this.auctionDisabled();
 
 		let buttonPriceArray = target.innerText.match(/\d+/);
 
@@ -237,6 +232,8 @@ class AsyncLoad extends Helper {
 			this.auctionEnabled();
 		}
 
+		this.auctionDisabled();
+
 	}
 
 	upCount(response){
@@ -250,6 +247,8 @@ class AsyncLoad extends Helper {
 		if(!this.tryAuthoryze(response)){
 			this.auctionEnabled();
 		}
+
+		this.auctionDisabled();
 	}
 
 
@@ -264,6 +263,8 @@ class AsyncLoad extends Helper {
 		if(!this.tryAuthoryze(response)){
 			this.auctionEnabled();
 		}
+
+		this.auctionDisabled();
 		
 	}
 
