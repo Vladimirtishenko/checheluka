@@ -39,7 +39,7 @@ class Timer extends Helper {
 
 	tryTime(){
 
-		if(!Math.round( ( this.estimate - ( (new Date()).getTime() + ($app.timeDiff) * 1000 ) ) / 1000)){
+		if(Math.round( ( this.estimate - ( (new Date()).getTime() + ($app.timeDiff) * 1000 ) ) / 1000) < 1){
 
 			this.timeStatus = true;
 

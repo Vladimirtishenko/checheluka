@@ -46,25 +46,25 @@
 
 	'use strict';
 
-	__webpack_require__(75);
+	__webpack_require__(73);
 
-	var _add_or_delete_action = __webpack_require__(77);
+	var _add_or_delete_action = __webpack_require__(75);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _all_goods_load = __webpack_require__(78);
+	var _all_goods_load = __webpack_require__(76);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
 
-	var _config = __webpack_require__(81);
+	var _config = __webpack_require__(79);
 
 	var _config2 = _interopRequireDefault(_config);
 
-	var _rules = __webpack_require__(84);
+	var _rules = __webpack_require__(82);
 
 	var _rules2 = _interopRequireDefault(_rules);
 
-	var _auction_reload = __webpack_require__(85);
+	var _auction_reload = __webpack_require__(83);
 
 	var _auction_reload2 = _interopRequireDefault(_auction_reload);
 
@@ -7737,16 +7737,14 @@
 /* 70 */,
 /* 71 */,
 /* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */
+/* 73 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 76 */,
-/* 77 */
+/* 74 */,
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7903,7 +7901,7 @@
 	exports.default = ModalGoodsToAdd;
 
 /***/ },
-/* 78 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7918,15 +7916,15 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _add_or_delete_action = __webpack_require__(77);
+	var _add_or_delete_action = __webpack_require__(75);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _privat_change_status_order = __webpack_require__(79);
+	var _privat_change_status_order = __webpack_require__(77);
 
 	var _privat_change_status_order2 = _interopRequireDefault(_privat_change_status_order);
 
-	var _templates = __webpack_require__(80);
+	var _templates = __webpack_require__(78);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -8080,7 +8078,7 @@
 	exports.default = AsyncLoadFromAnouterResourse;
 
 /***/ },
-/* 79 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8162,7 +8160,7 @@
 	exports.default = ChangeStatus;
 
 /***/ },
-/* 80 */
+/* 78 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8275,7 +8273,7 @@
 	exports.default = new Templates();
 
 /***/ },
-/* 81 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8290,15 +8288,15 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _flatpickr = __webpack_require__(82);
+	var _flatpickr = __webpack_require__(80);
 
 	var _flatpickr2 = _interopRequireDefault(_flatpickr);
 
-	var _flatpickrL10nRu = __webpack_require__(83);
+	var _flatpickrL10nRu = __webpack_require__(81);
 
 	var _flatpickrL10nRu2 = _interopRequireDefault(_flatpickrL10nRu);
 
-	var _templates = __webpack_require__(80);
+	var _templates = __webpack_require__(78);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -8453,7 +8451,7 @@
 	exports.default = Config;
 
 /***/ },
-/* 82 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -9931,7 +9929,7 @@
 	if (true) module.exports = Flatpickr;
 
 /***/ },
-/* 83 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Russian locals for flatpickr */
@@ -9952,7 +9950,7 @@
 
 
 /***/ },
-/* 84 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10029,7 +10027,7 @@
 	exports.default = Rules;
 
 /***/ },
-/* 85 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

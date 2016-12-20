@@ -203,7 +203,7 @@ class AsyncLoad extends Helper {
 
 		let target = event && event.target || null;
 
-		if(!target.matches('button')) return;
+		if(target.tagName != 'BUTTON') return;
 
 		this.auctionDisabled();
 
