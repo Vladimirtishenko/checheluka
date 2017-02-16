@@ -12,7 +12,7 @@ var schema = mongoose.Schema({
     consistOf: String,
     material: String,
     countInWarehouse: {type: Number, default: 1},
-    auctionPrice: {type: Number, default: 30},
+    auctionPrice: {type: Number, default: 100},
     price: {type: Number, default: 0},
     priority: {type: Number, default: 0},
     unsoldCount: {type: Number, default: 0},

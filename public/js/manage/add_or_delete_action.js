@@ -75,7 +75,8 @@ class ModalGoodsToAdd extends Helper {
 			for (var i = 0; i < elementsCheckbox.length; i++) {
 
 				if(elementsCheckbox[i].checked && elementsCheckbox[i].name == "size"){
-					data.push(helpToValidate(elementsCheckbox[i]));
+					let warehouse = elementsCheckbox[i].parentNode.querySelector('[data-label-count="'+elementsCheckbox[i].value+'"]');
+					data.push(helpToValidate(elementsCheckbox[i], warehouse));
 				}
 
 				if(elementsCheckbox[i].name == "priority"){
@@ -85,10 +86,14 @@ class ModalGoodsToAdd extends Helper {
 			}
 
 
-		function  helpToValidate(checkbox) {
+		function  helpToValidate(checkbox, warehouse) {
 			let templateData = {};
 			for (var i = 0; i < elementsAllWithoutCheckbox.length; i++) {
 				templateData[elementsAllWithoutCheckbox[i].name] = encodeURIComponent(elementsAllWithoutCheckbox[i].value)
+			}
+
+			if(warehouse){
+				templateData[warehouse.name] = warehouse.value;
 			}
 
 			templateData[checkbox.name] = checkbox.name == "size" ? encodeURIComponent(checkbox.value) : checkbox.checked ? true : false;
@@ -96,7 +101,7 @@ class ModalGoodsToAdd extends Helper {
 			return templateData;
 
 		}
-			
+
 		this.xhrRequest("POST", '/allGoods', 'application/json; charset=utf-8', JSON.stringify(data), this.handlerToResponse.bind(this))
 		
 	}

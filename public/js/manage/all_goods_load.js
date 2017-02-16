@@ -58,9 +58,6 @@ class AsyncLoadFromAnouterResourse extends Helper {
 			obj = (JSON.parse(el)).goods || null;
 
 
-
-
-
 		if(!obj || obj.length == 0){
 			this.flyEvent('remove', ['scroll'], [window], this.scrollEvent);
 			return;
@@ -99,8 +96,6 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		}
 
 		this.viewElement.insertAdjacentHTML('beforeend', tmp);
-
-
 
 		if(this.action != 'orders' && !window.globalRegistredModules['ModalGoodsToAdd']){
 			window.globalRegistredModules['ModalGoodsToAdd'] = true;

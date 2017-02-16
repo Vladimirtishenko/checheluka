@@ -9,8 +9,10 @@ class Templates {
 
                 let sizesTmp = ""
                 sizesToArray.forEach((item, i) => {
-                    sizesTmp += '<label for=""><span>' + item + '</span>' +
-                        '<input type="checkbox" name="size" value="' + item + '"/>' +
+                    sizesTmp += '<label class="che-input-with-checkbox__wrapper" for="">'+
+                            '<span class="che-input-with-checkbox__title">' + item + '</span>' +
+                            '<input type="checkbox" name="size" value="' + item + '"/>' +
+                            '<input class="che-input-with-checkbox__item" type="number" min="1" name="countInWarehouse" data-label-count="'+item+'" value="1" />' + 
                         '</label>';
                 });
 
@@ -45,7 +47,6 @@ class Templates {
                 '<input type="hidden" name="consistOf" value="' + consistOf + '"/>' +
                 '<input type="hidden" name="material" value="' + material + '"/>' +
                 '<input type="hidden" name="price" value="' + price + '"/>' +
-                '<input type="hidden" name="countInWarehouse" value="' + (count || 0) + '"/>' +
                 '<input type="hidden" name="art" value="' + (art || "Нет артикула") + '"/>' +
                 '<div class="a-container-for-img"><img src="' + img + '" alt=""/></div>' +
                 '<div class="a-hidden-form_description">' +
@@ -61,14 +62,14 @@ class Templates {
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Размеры</p>' +
-                sizeEach(size) +
+                '<div class="che-input-with-checkbox__main">'+sizeEach(size)+'</div>' +
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Цена розничная</p><span>' + price + ' руб.</span>' +
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Начальная ставка</p>' +
-                '<span><input type="text" name="auctionPrice" value="30"><i> руб.</i></span>' +
+                '<span><input type="text" name="auctionPrice" value="100"><i> руб.</i></span>' +
                 '</div>' +
                 '</div>' +
                 '<div class="a-containet-flex-to-end-button">' +
@@ -104,9 +105,18 @@ class Templates {
                 '<i>Размер </i>' +
                 '<span>' + decodeURIComponent(size) + '</span>' +
                 '</span>' +
+                '<span class="a-hidden-block__description-link">' +
+                '<i>Цена </i>' +
+                '<span>' + decodeURIComponent(price) + '</span>' +
+                '</span>' +
+                '<span class="a-hidden-block__description-link">' +
+                '<i>Количество </i>' +
+                '<span>' + decodeURIComponent(count) + '</span>' +
+                '</span>' +
                 '<span class="a-hidden-block__description-link"> ' +
                 '<i>Цвет</i>' +
                 '<span>' + decodeURIComponent(color) + '</span>' +
+
                 '</span>' +
                 '</div>' +
                 '</div>' +
@@ -129,6 +139,9 @@ class Templates {
                 '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' +
                 '</div>' +
                 '<div class="container-description-form">' +
+                '<p class="container-description-form__else_params">Артикл</p><span>' + decodeURIComponent(art) + '</span>' +
+                '</div>' +
+                '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' +
                 '</div>' +
                 '<div class="container-description-form">' +
@@ -141,7 +154,7 @@ class Templates {
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Количество на складе</p>' +
-                '<input type="text" name="countInWarehouse" value="' + (count || 0) + '"/>' +
+                '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' +
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Розничная цена</p>' +
