@@ -3,8 +3,9 @@ header.a-head
 		input(type="checkbox" id="a-menu-item-check" class="a-menu-item-check")
 		label(class="a-button-mobile-menu" for="a-menu-item-check")
 		.a-menu-item
-			a(class="a-link-item" href="/goods") Список товаров
-			a(class="a-link-item button-modal" href="#" data-attr="rules") Правила аукциона
+			a(class="a-link-item" href="/") Аукционы
+			a(class="a-link-item" href="/goods") Все лоты
+			a(class="a-link-item button-modal" href="#" data-attr="rules") Правила
 			a(class="a-link-item" href="/comments") Отзывы
 			- if(!sessionUser)
 				a(class="a-link-item button-modal __login_action" href="#" data-attr="enter") Войти
