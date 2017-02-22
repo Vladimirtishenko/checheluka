@@ -10,7 +10,7 @@ header.a-head
 				li
 					a(href="/page_to_manage_goods") Все товары
 				li
-					a(href="/page_auction") Товары аукциона
+					a(href="/page_auction") Аукцион
 				li
 					a(href="/page_orders") Заказы 
 				li
@@ -27,5 +27,7 @@ header.a-head
 
 				li
 					a(href="/page_config") Настройки
-
-			button(class="a-reload-auction") Пересчитать аукционы
+			.che-action-button
+				a.che-print-image(href="/print" target="_blank") 
+						img(width="50" src="/img/printer.svg", alt="")
+				button(class="a-reload-auction") Обновить данные

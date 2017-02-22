@@ -231,7 +231,7 @@ td
 .a-menu-admin__links a, .a-menu-admin__links p
   color #fff
   font-family HelveticaThin
-  font-size 17px
+  font-size 20px
   padding 10px
   display inline-block
   cursor pointer
@@ -676,7 +676,6 @@ td
   margin-top 30px
 
 .a-reload-auction
-  position absolute
   background #fc392c
   border none
   padding 15px 20px
@@ -1039,6 +1038,56 @@ span
 .che-input-with-checkbox__item
   width 50px i
   margin 0 10px
+
+.che-print-image
+  padding 0 10px i
+  
+.che-print-image img
+  display block
+  
+.che-action-button
+  display flex 
+  align-items center 
+  justify-content space-between
+
+.che-print-items
+  display table 
+  
+.che-print-items__image
+  width 100%
+  
+.che-print-items__image-block
+  width 100px
+
+.che-print-items td, .che-print-items th 
+  vertical-align middle
+
+.che-print-button
+  background #fc392c
+  border none
+  padding 15px 20px
+  text-transform uppercase
+  color #fff
+  letter-spacing 1px
+  right 0
+  cursor pointer
+  border 2px solid transparent
+  
+.che-items-print-controls
+  padding 10px
+  
+.che-items-print-heading
+  font-family HelveticaLight
+  font-size 22px 
+  text-align center
+  padding 20px 0
+
+@media print
+  .che-items-print-controls
+    display none
+    
+ .pagebreak
+    page-break-after auto
 
 @media all and (-ms-high-contrast:none)
   .flatpickr-month
