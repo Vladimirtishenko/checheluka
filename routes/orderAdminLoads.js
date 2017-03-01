@@ -10,14 +10,20 @@ module.exports.get = function(req, res, next) {
     searchString = {};
 
     if(req.query.searhByTitle){
-        searchString = {"orderNumber": req.query.searhByTitle}
+
+        var orders = isNaN(req.query.searhByTitle) ? null : {'orderNumber': parseInt(req.query.searhByTitle)}
+
+        searchString =  orders || {'fio': {'$regex': encodeURIComponent(req.query.searhByTitle), $options: 'i'}};
+                                           
     }
 
-    Order.find(searchString, function(err, doc) {
+    Order.find(searchString, 
 
-        if (err) {
+        function(err, doc) {
+
+        /*if (err) {
             next(err);
-        }
+        }*/
 
         res.json({ goods: doc, offset: parseInt(params.start) + (parseInt(params.limit) || 20) });
 

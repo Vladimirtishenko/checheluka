@@ -1,0 +1,78 @@
+extends layout_manage
+
+block content
+	.che-items-print-controls
+		button.che-print-button(onclick="window.print()")
+			| Распечатать страницу 
+
+	h1.che-items-print-heading 
+		span Заказ №
+		input(type="number" name="1C" value="")
+
+	.a-privat-table_bought
+		.a-privat-table_bought__number
+			p
+				span Дата: 
+				| #{(decodeURIComponent(data.date.toLocaleTimeString("ru-RU", {year: 'numeric', month: 'numeric', day: 'numeric' })))}
+			p.che-flex-print
+				i На сумму: 
+				span 
+					input(type="number" min="1" value=data.priceCommon)
+				i руб.
+			p.che-flex-print
+				i Сумма доставки:
+				span 
+					input(type="number" min="0" value='')
+				i руб.
+
+		.a-privat-table.a-privat-table__bought.a-privat-table__orders
+			.a-privat-table__info_order
+				h5 Заказ:
+				table
+					tbody
+						tr
+							th Наименование
+							th Размер
+							th Количество
+							th Цена
+						each goods in data.goods
+							tr
+								td=goods.art + ' / ' + goods.title
+								td=goods.size
+								td=goods.count
+								td=goods.price
+			.a-privat-table__user
+				h5 Информация о заказе:
+				table
+					tbody
+						tr
+							th Страна
+							td=(decodeURIComponent(data.country))
+						tr
+							th Город
+							td=(decodeURIComponent(data.sity))
+						tr
+							th Служба доставки
+							td=(decodeURIComponent(data.delivery))
+						tr
+							th Склад
+							td=(decodeURIComponent(data.warehouse))
+				h5 Информация о клиенте:
+				table
+					tbody
+						tr
+							th ФИО
+							td=(decodeURIComponent(data.fio))
+						tr
+							th Номер телефона
+							td=(decodeURIComponent(data.number))
+						tr
+							th Почта
+							td=(decodeURIComponent(data.email))
+
+	.a-privat-table_bought
+		h5 Общая сумма:
+		p.che-flex-print
+			span 
+				input(type="number" min="0" value='')
+			i руб.	

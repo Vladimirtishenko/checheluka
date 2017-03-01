@@ -229,15 +229,12 @@ class Templates {
 
         function templates(data) {
 
-
             let constructorDate = new Date(data.date),
                 date = constructorDate.getDate() + "/" + constructorDate.getMonth() + "/" +  constructorDate.getFullYear();
 
-
-
             let templates = '<div class="a-privat-table_bought">' +
                 				'<div class="a-privat-table_bought__number">' +
-                					'<p> <span>Заказ </span>№ ' +data.orderNumber+ '<span>от </span> '+date+' </p>' +
+                					'<p> <span>Заказ </span>№ ' +data.orderNumber+ '<span>от </span> '+date+' <a class="che-print-image" href="/order/print/'+data._id+'">Печать</a></p>' +
                 					'<p>На сумму: <span>'+data.priceCommon+' руб.</span></p>' +
                 				'</div>' +
                 				'<div class="a-privat-table a-privat-table__bought a-privat-table__orders">' +
@@ -313,7 +310,7 @@ class Templates {
                 for (var key in goods) {
 
                     tmp += '<tr>'+
-		                		'<td>'+decodeURIComponent(goods[key].title)+'</td>'+
+		                		'<td>'+decodeURIComponent(goods[key].art) + ' / ' +decodeURIComponent(goods[key].title)+'</td>'+
 		                		'<td>'+decodeURIComponent(goods[key].size)+'</td>'+
 		                		'<td>'+goods[key].count+'</td>'+
 		                		'<td>'+goods[key].price+'</td>'+

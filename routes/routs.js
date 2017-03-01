@@ -50,5 +50,6 @@ module.exports = function(app){
 	app.get("/page_hidden_get_date", CheckAuth, require("./manage/page_hidden_get_date").get)
 
 	app.get("/print", CheckAuth, require("./manage/print").get)
+	app.get("/order/print/:id", CheckAuth, require("./manage/order_print").get)
 
 }
