@@ -229,12 +229,11 @@ class Templates {
 
         function templates(data) {
 
-            let constructorDate = new Date(data.date),
-                date = constructorDate.getDate() + "/" + constructorDate.getMonth() + "/" +  constructorDate.getFullYear();
+            let constructorDate = new Date(data.date).toLocaleDateString();
 
             let templates = '<div class="a-privat-table_bought">' +
                 				'<div class="a-privat-table_bought__number">' +
-                					'<p> <span>Заказ </span>№ ' +data.orderNumber+ '<span>от </span> '+date+' <a class="che-print-image" href="/order/print/'+data._id+'">Печать</a></p>' +
+                					'<p> <span>Заказ </span>№ ' +data.orderNumber+ '<span> от </span> '+constructorDate+' <a class="che-print-image" href="/order/print/'+data._id+'">Печать</a></p>' +
                 					'<p>На сумму: <span>'+data.priceCommon+' руб.</span></p>' +
                 				'</div>' +
                 				'<div class="a-privat-table a-privat-table__bought a-privat-table__orders">' +
