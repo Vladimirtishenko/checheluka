@@ -242,7 +242,8 @@ class Templates {
                     					'<table>'+
     					                	'<tr>'+
     					                		'<th>Наименование</th>'+
-    					                		'<th>Размер</th>'+
+                                                '<th>Размер</th>'+
+    					                		'<th>Цвет</th>'+
     					                		'<th>Количество</th>'+
     					                		'<th>Цена</th>'+
     					                	'</tr>'+
@@ -310,7 +311,8 @@ class Templates {
 
                     tmp += '<tr>'+
 		                		'<td>'+decodeURIComponent(goods[key].art) + ' / ' +decodeURIComponent(goods[key].title)+'</td>'+
-		                		'<td>'+decodeURIComponent(goods[key].size)+'</td>'+
+                                '<td>'+decodeURIComponent(goods[key].size)+'</td>'+
+		                		'<td>'+decodeURIComponent(goods[key].color)+'</td>'+
 		                		'<td>'+goods[key].count+'</td>'+
 		                		'<td>'+goods[key].price+'</td>'+
 		                	'</tr>';
