@@ -13,7 +13,7 @@ block content
 		.a-privat-table_bought__number
 			p
 				span Дата: 
-				| #{(decodeURIComponent(data.date.toLocaleTimeString("ru-RU", {year: 'numeric', month: 'numeric', day: 'numeric' })))}
+				| #{(decodeURIComponent(data.date.toLocaleDateString()))}
 			p.che-flex-print
 				i На сумму: 
 				span 
