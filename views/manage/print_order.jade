@@ -33,12 +33,14 @@ block content
 						tr
 							th Наименование
 							th Размер
+							th Цвет
 							th Количество
 							th Цена
 						each goods in data.goods
 							tr
 								td=goods.art + ' / ' + goods.title
 								td=goods.size
+								td=goods.color
 								td=goods.count
 								td=goods.price
 			.a-privat-table__user
