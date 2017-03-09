@@ -1,5 +1,6 @@
 {
-	"port": 3090,
+	"port": 3080,
+	"port_static": 3090,
 	"mongoose": {
 		"uri": "mongodb://localhost/checheluka"
 	},

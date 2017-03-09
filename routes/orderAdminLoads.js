@@ -22,9 +22,6 @@ module.exports.get = function(req, res, next) {
 
     }
 
-
-    console.log(searchString)
-
     Order.find(searchString, 
 
         function(err, doc) {
