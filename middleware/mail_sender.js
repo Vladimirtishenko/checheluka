@@ -13,7 +13,7 @@ module.exports = function(req, callback){
 	server.send({
 	   text:    '', 
 	   from:    "Первый честный аукцион одежды <sale@chechelyka-auction.com>", 
-	   to:      'vladimirtishenko1@gmail.com', //req.body.email,
+	   to:      req.body.email,
 	   subject: req.body.subject || 'Ваш заказ отправлен!',
 	   attachment: 
 	   [
