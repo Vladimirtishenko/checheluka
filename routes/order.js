@@ -1,6 +1,7 @@
 var dateToStart = require('../middleware/services/configOptions'),
     ordersBucket = require('../middleware/modules/Orders/models/SchemaModel'),
-    orders = require('../models/order_save');
+    orders = require('../models/order_save'),
+    mail = require('../middleware/mail_sender.js');
 
 
 module.exports.post = function(req, res, next) {
@@ -21,8 +22,27 @@ module.exports.post = function(req, res, next) {
 
             data.orderNumber = orderNumberTry;
 
-            saveInDb(data);
-
+            saveInDb(data, function(err, data){
+                if (err) {
+                    res.json({ status: 500 });
+                    res.end();
+                } 
+                mailSend(
+                    {body: 
+                        {
+                            id: 'send_page',
+                            email: data.email, 
+                            subject: 'Заказ принят!',
+                            html_msg: 'Спасибо ваш заказ принят и обрабатывается.'
+                        }
+                    }, function(err, mail){
+                    if (err) {
+                        res.json({ status: 500 });
+                    } else {
+                        res.json({ status: 200 });
+                    }
+                });
+            });
 
         }).sort({ _id: -1 }).limit(1);
 
@@ -39,17 +59,13 @@ module.exports.post = function(req, res, next) {
 
     }
 
-    function saveInDb(data) {
+    function saveInDb(data, callback) {
         orders.update({ "orderNumber": data.orderNumber }, data, { upsert: true }, function(err, save) {
             if (err) {
                 res.json({ status: 500 });
             } else {
                 ordersBucket.remove({ userId: { $in: data.userId } }, function(err, response) {
-                    if (err) {
-                        res.json({ status: 500 });
-                    } else {
-                        res.json({ status: 200 });
-                    }
+                    callback(err, response);
                 });
             }
 
@@ -64,6 +80,13 @@ module.exports.post = function(req, res, next) {
             callback(null, result.params);
         });
 
+    }
+
+
+    function mailSend(req, callback){
+        mail(req, function(err, mail){
+            callback(err, mail);
+        });
     }
 
 }

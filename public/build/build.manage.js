@@ -46,27 +46,39 @@
 
 	'use strict';
 
-	__webpack_require__(75);
+	__webpack_require__(79);
 
-	var _add_or_delete_action = __webpack_require__(77);
+	var _add_or_delete_action = __webpack_require__(81);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _all_goods_load = __webpack_require__(78);
+	var _all_goods_load = __webpack_require__(82);
 
 	var _all_goods_load2 = _interopRequireDefault(_all_goods_load);
 
-	var _config = __webpack_require__(81);
+	var _config = __webpack_require__(86);
 
 	var _config2 = _interopRequireDefault(_config);
 
-	var _rules = __webpack_require__(84);
+	var _rules = __webpack_require__(89);
 
 	var _rules2 = _interopRequireDefault(_rules);
 
-	var _auction_reload = __webpack_require__(85);
+	var _auction_reload = __webpack_require__(90);
 
 	var _auction_reload2 = _interopRequireDefault(_auction_reload);
+
+	var _user_controls = __webpack_require__(91);
+
+	var _user_controls2 = _interopRequireDefault(_user_controls);
+
+	var _order_details = __webpack_require__(92);
+
+	var _order_details2 = _interopRequireDefault(_order_details);
+
+	var _auction_goods_remove = __webpack_require__(93);
+
+	var _auction_goods_remove2 = _interopRequireDefault(_auction_goods_remove);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -77,6 +89,9 @@
 		new _config2.default(document.querySelector('.a-table-admin.__a-for-config'));
 		new _rules2.default(document.querySelector('.a-rules-block'));
 		new _auction_reload2.default(document.querySelector('.a-reload-auction'));
+		new _user_controls2.default(document.querySelector('.che-users-view'));
+		new _order_details2.default(document.querySelector('.che-items-print-controls'));
+		new _auction_goods_remove2.default(document.querySelector('.a-fuck-auction-remove'));
 	});
 
 /***/ },
@@ -239,8 +254,8 @@
 	 */
 
 	var url = __webpack_require__(18);
-	var parser = __webpack_require__(23);
-	var Manager = __webpack_require__(31);
+	var parser = __webpack_require__(24);
+	var Manager = __webpack_require__(35);
 	var debug = __webpack_require__(20)('socket.io-client');
 
 	/**
@@ -340,8 +355,8 @@
 	 * @api public
 	 */
 
-	exports.Manager = __webpack_require__(31);
-	exports.Socket = __webpack_require__(57);
+	exports.Manager = __webpack_require__(35);
+	exports.Socket = __webpack_require__(62);
 
 
 /***/ },
@@ -475,14 +490,14 @@
 /* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+	/* WEBPACK VAR INJECTION */(function(process) {
 	/**
 	 * This is the web browser implementation of `debug()`.
 	 *
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = __webpack_require__(21);
+	exports = module.exports = __webpack_require__(22);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -516,7 +531,8 @@
 
 	function useColors() {
 	  // is webkit? http://stackoverflow.com/a/16459606/376773
-	  return ('WebkitAppearance' in document.documentElement.style) ||
+	  // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
+	  return (typeof document !== 'undefined' && 'WebkitAppearance' in document.documentElement.style) ||
 	    // is firebug? http://stackoverflow.com/a/398120/376773
 	    (window.console && (console.firebug || (console.exception && console.table))) ||
 	    // is firefox >= v31?
@@ -529,7 +545,11 @@
 	 */
 
 	exports.formatters.j = function(v) {
-	  return JSON.stringify(v);
+	  try {
+	    return JSON.stringify(v);
+	  } catch (err) {
+	    return '[UnexpectedJSONParseError]: ' + err.message;
+	  }
 	};
 
 
@@ -616,9 +636,13 @@
 	function load() {
 	  var r;
 	  try {
-	    r = exports.storage.debug;
+	    return exports.storage.debug;
 	  } catch(e) {}
-	  return r;
+
+	  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
+	  if (typeof process !== 'undefined' && 'env' in process) {
+	    return process.env.DEBUG;
+	  }
 	}
 
 	/**
@@ -644,9 +668,196 @@
 	  } catch (e) {}
 	}
 
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ },
 /* 21 */
+/***/ function(module, exports) {
+
+	// shim for using process in browser
+	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
+	(function () {
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
+	    }
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
+	    }
+	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
+
+	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
+	    } else {
+	        queueIndex = -1;
+	    }
+	    if (queue.length) {
+	        drainQueue();
+	    }
+	}
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = runTimeout(cleanUpNextTick);
+	    draining = true;
+
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            if (currentQueue) {
+	                currentQueue[queueIndex].run();
+	            }
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    runClearTimeout(timeout);
+	}
+
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        runTimeout(drainQueue);
+	    }
+	};
+
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function() { return 0; };
+
+
+/***/ },
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -657,12 +868,12 @@
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = debug;
+	exports = module.exports = debug.debug = debug;
 	exports.coerce = coerce;
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(22);
+	exports.humanize = __webpack_require__(23);
 
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -734,7 +945,10 @@
 	    if (null == self.useColors) self.useColors = exports.useColors();
 	    if (null == self.color && self.useColors) self.color = selectColor();
 
-	    var args = Array.prototype.slice.call(arguments);
+	    var args = new Array(arguments.length);
+	    for (var i = 0; i < args.length; i++) {
+	      args[i] = arguments[i];
+	    }
 
 	    args[0] = exports.coerce(args[0]);
 
@@ -761,9 +975,9 @@
 	      return match;
 	    });
 
-	    if ('function' === typeof exports.formatArgs) {
-	      args = exports.formatArgs.apply(self, args);
-	    }
+	    // apply env-specific formatting
+	    args = exports.formatArgs.apply(self, args);
+
 	    var logFn = enabled.log || exports.log || console.log.bind(console);
 	    logFn.apply(self, args);
 	  }
@@ -792,7 +1006,7 @@
 
 	  for (var i = 0; i < len; i++) {
 	    if (!split[i]) continue; // ignore empty strings
-	    namespaces = split[i].replace(/\*/g, '.*?');
+	    namespaces = split[i].replace(/[\\^$+?.()|[\]{}]/g, '\\$&').replace(/\*/g, '.*?');
 	    if (namespaces[0] === '-') {
 	      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
 	    } else {
@@ -849,18 +1063,18 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	/**
 	 * Helpers.
 	 */
 
-	var s = 1000;
-	var m = s * 60;
-	var h = m * 60;
-	var d = h * 24;
-	var y = d * 365.25;
+	var s = 1000
+	var m = s * 60
+	var h = m * 60
+	var d = h * 24
+	var y = d * 365.25
 
 	/**
 	 * Parse or format the given `val`.
@@ -871,17 +1085,23 @@
 	 *
 	 * @param {String|Number} val
 	 * @param {Object} options
+	 * @throws {Error} throw an error if val is not a non-empty string or a number
 	 * @return {String|Number}
 	 * @api public
 	 */
 
-	module.exports = function(val, options){
-	  options = options || {};
-	  if ('string' == typeof val) return parse(val);
-	  return options.long
-	    ? long(val)
-	    : short(val);
-	};
+	module.exports = function (val, options) {
+	  options = options || {}
+	  var type = typeof val
+	  if (type === 'string' && val.length > 0) {
+	    return parse(val)
+	  } else if (type === 'number' && isNaN(val) === false) {
+	    return options.long ?
+				fmtLong(val) :
+				fmtShort(val)
+	  }
+	  throw new Error('val is not a non-empty string or a valid number. val=' + JSON.stringify(val))
+	}
 
 	/**
 	 * Parse the given `str` and return milliseconds.
@@ -892,47 +1112,53 @@
 	 */
 
 	function parse(str) {
-	  str = '' + str;
-	  if (str.length > 10000) return;
-	  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
-	  if (!match) return;
-	  var n = parseFloat(match[1]);
-	  var type = (match[2] || 'ms').toLowerCase();
+	  str = String(str)
+	  if (str.length > 10000) {
+	    return
+	  }
+	  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str)
+	  if (!match) {
+	    return
+	  }
+	  var n = parseFloat(match[1])
+	  var type = (match[2] || 'ms').toLowerCase()
 	  switch (type) {
 	    case 'years':
 	    case 'year':
 	    case 'yrs':
 	    case 'yr':
 	    case 'y':
-	      return n * y;
+	      return n * y
 	    case 'days':
 	    case 'day':
 	    case 'd':
-	      return n * d;
+	      return n * d
 	    case 'hours':
 	    case 'hour':
 	    case 'hrs':
 	    case 'hr':
 	    case 'h':
-	      return n * h;
+	      return n * h
 	    case 'minutes':
 	    case 'minute':
 	    case 'mins':
 	    case 'min':
 	    case 'm':
-	      return n * m;
+	      return n * m
 	    case 'seconds':
 	    case 'second':
 	    case 'secs':
 	    case 'sec':
 	    case 's':
-	      return n * s;
+	      return n * s
 	    case 'milliseconds':
 	    case 'millisecond':
 	    case 'msecs':
 	    case 'msec':
 	    case 'ms':
-	      return n;
+	      return n
+	    default:
+	      return undefined
 	  }
 	}
 
@@ -944,12 +1170,20 @@
 	 * @api private
 	 */
 
-	function short(ms) {
-	  if (ms >= d) return Math.round(ms / d) + 'd';
-	  if (ms >= h) return Math.round(ms / h) + 'h';
-	  if (ms >= m) return Math.round(ms / m) + 'm';
-	  if (ms >= s) return Math.round(ms / s) + 's';
-	  return ms + 'ms';
+	function fmtShort(ms) {
+	  if (ms >= d) {
+	    return Math.round(ms / d) + 'd'
+	  }
+	  if (ms >= h) {
+	    return Math.round(ms / h) + 'h'
+	  }
+	  if (ms >= m) {
+	    return Math.round(ms / m) + 'm'
+	  }
+	  if (ms >= s) {
+	    return Math.round(ms / s) + 's'
+	  }
+	  return ms + 'ms'
 	}
 
 	/**
@@ -960,12 +1194,12 @@
 	 * @api private
 	 */
 
-	function long(ms) {
-	  return plural(ms, d, 'day')
-	    || plural(ms, h, 'hour')
-	    || plural(ms, m, 'minute')
-	    || plural(ms, s, 'second')
-	    || ms + ' ms';
+	function fmtLong(ms) {
+	  return plural(ms, d, 'day') ||
+	    plural(ms, h, 'hour') ||
+	    plural(ms, m, 'minute') ||
+	    plural(ms, s, 'second') ||
+	    ms + ' ms'
 	}
 
 	/**
@@ -973,14 +1207,18 @@
 	 */
 
 	function plural(ms, n, name) {
-	  if (ms < n) return;
-	  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
-	  return Math.ceil(ms / n) + ' ' + name + 's';
+	  if (ms < n) {
+	    return
+	  }
+	  if (ms < n * 1.5) {
+	    return Math.floor(ms / n) + ' ' + name
+	  }
+	  return Math.ceil(ms / n) + ' ' + name + 's'
 	}
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -988,12 +1226,11 @@
 	 * Module dependencies.
 	 */
 
-	var debug = __webpack_require__(20)('socket.io-parser');
-	var json = __webpack_require__(24);
-	var isArray = __webpack_require__(27);
-	var Emitter = __webpack_require__(28);
-	var binary = __webpack_require__(29);
-	var isBuf = __webpack_require__(30);
+	var debug = __webpack_require__(25)('socket.io-parser');
+	var json = __webpack_require__(28);
+	var Emitter = __webpack_require__(31);
+	var binary = __webpack_require__(32);
+	var isBuf = __webpack_require__(34);
 
 	/**
 	 * Protocol version.
@@ -1308,16 +1545,21 @@
 
 	  // look up json data
 	  if (str.charAt(++i)) {
-	    try {
-	      p.data = json.parse(str.substr(i));
-	    } catch(e){
-	      return error();
-	    }
+	    p = tryParse(p, str.substr(i));
 	  }
 
 	  debug('decoded %s as %j', str, p);
 	  return p;
 	}
+
+	function tryParse(p, str) {
+	  try {
+	    p.data = json.parse(str);
+	  } catch(e){
+	    return error();
+	  }
+	  return p; 
+	};
 
 	/**
 	 * Deallocates a parser's resources
@@ -1386,14 +1628,522 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * This is the web browser implementation of `debug()`.
+	 *
+	 * Expose `debug()` as the module.
+	 */
+
+	exports = module.exports = __webpack_require__(26);
+	exports.log = log;
+	exports.formatArgs = formatArgs;
+	exports.save = save;
+	exports.load = load;
+	exports.useColors = useColors;
+	exports.storage = 'undefined' != typeof chrome
+	               && 'undefined' != typeof chrome.storage
+	                  ? chrome.storage.local
+	                  : localstorage();
+
+	/**
+	 * Colors.
+	 */
+
+	exports.colors = [
+	  'lightseagreen',
+	  'forestgreen',
+	  'goldenrod',
+	  'dodgerblue',
+	  'darkorchid',
+	  'crimson'
+	];
+
+	/**
+	 * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+	 * and the Firebug extension (any Firefox version) are known
+	 * to support "%c" CSS customizations.
+	 *
+	 * TODO: add a `localStorage` variable to explicitly enable/disable colors
+	 */
+
+	function useColors() {
+	  // is webkit? http://stackoverflow.com/a/16459606/376773
+	  return ('WebkitAppearance' in document.documentElement.style) ||
+	    // is firebug? http://stackoverflow.com/a/398120/376773
+	    (window.console && (console.firebug || (console.exception && console.table))) ||
+	    // is firefox >= v31?
+	    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+	    (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
+	}
+
+	/**
+	 * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+	 */
+
+	exports.formatters.j = function(v) {
+	  return JSON.stringify(v);
+	};
+
+
+	/**
+	 * Colorize log arguments if enabled.
+	 *
+	 * @api public
+	 */
+
+	function formatArgs() {
+	  var args = arguments;
+	  var useColors = this.useColors;
+
+	  args[0] = (useColors ? '%c' : '')
+	    + this.namespace
+	    + (useColors ? ' %c' : ' ')
+	    + args[0]
+	    + (useColors ? '%c ' : ' ')
+	    + '+' + exports.humanize(this.diff);
+
+	  if (!useColors) return args;
+
+	  var c = 'color: ' + this.color;
+	  args = [args[0], c, 'color: inherit'].concat(Array.prototype.slice.call(args, 1));
+
+	  // the final "%c" is somewhat tricky, because there could be other
+	  // arguments passed either before or after the %c, so we need to
+	  // figure out the correct index to insert the CSS into
+	  var index = 0;
+	  var lastC = 0;
+	  args[0].replace(/%[a-z%]/g, function(match) {
+	    if ('%%' === match) return;
+	    index++;
+	    if ('%c' === match) {
+	      // we only are interested in the *last* %c
+	      // (the user may have provided their own)
+	      lastC = index;
+	    }
+	  });
+
+	  args.splice(lastC, 0, c);
+	  return args;
+	}
+
+	/**
+	 * Invokes `console.log()` when available.
+	 * No-op when `console.log` is not a "function".
+	 *
+	 * @api public
+	 */
+
+	function log() {
+	  // this hackery is required for IE8/9, where
+	  // the `console.log` function doesn't have 'apply'
+	  return 'object' === typeof console
+	    && console.log
+	    && Function.prototype.apply.call(console.log, console, arguments);
+	}
+
+	/**
+	 * Save `namespaces`.
+	 *
+	 * @param {String} namespaces
+	 * @api private
+	 */
+
+	function save(namespaces) {
+	  try {
+	    if (null == namespaces) {
+	      exports.storage.removeItem('debug');
+	    } else {
+	      exports.storage.debug = namespaces;
+	    }
+	  } catch(e) {}
+	}
+
+	/**
+	 * Load `namespaces`.
+	 *
+	 * @return {String} returns the previously persisted debug modes
+	 * @api private
+	 */
+
+	function load() {
+	  var r;
+	  try {
+	    r = exports.storage.debug;
+	  } catch(e) {}
+	  return r;
+	}
+
+	/**
+	 * Enable namespaces listed in `localStorage.debug` initially.
+	 */
+
+	exports.enable(load());
+
+	/**
+	 * Localstorage attempts to return the localstorage.
+	 *
+	 * This is necessary because safari throws
+	 * when a user disables cookies/localstorage
+	 * and you attempt to access it.
+	 *
+	 * @return {LocalStorage}
+	 * @api private
+	 */
+
+	function localstorage(){
+	  try {
+	    return window.localStorage;
+	  } catch (e) {}
+	}
+
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * This is the common logic for both the Node.js and web browser
+	 * implementations of `debug()`.
+	 *
+	 * Expose `debug()` as the module.
+	 */
+
+	exports = module.exports = debug;
+	exports.coerce = coerce;
+	exports.disable = disable;
+	exports.enable = enable;
+	exports.enabled = enabled;
+	exports.humanize = __webpack_require__(27);
+
+	/**
+	 * The currently active debug mode names, and names to skip.
+	 */
+
+	exports.names = [];
+	exports.skips = [];
+
+	/**
+	 * Map of special "%n" handling functions, for the debug "format" argument.
+	 *
+	 * Valid key names are a single, lowercased letter, i.e. "n".
+	 */
+
+	exports.formatters = {};
+
+	/**
+	 * Previously assigned color.
+	 */
+
+	var prevColor = 0;
+
+	/**
+	 * Previous log timestamp.
+	 */
+
+	var prevTime;
+
+	/**
+	 * Select a color.
+	 *
+	 * @return {Number}
+	 * @api private
+	 */
+
+	function selectColor() {
+	  return exports.colors[prevColor++ % exports.colors.length];
+	}
+
+	/**
+	 * Create a debugger with the given `namespace`.
+	 *
+	 * @param {String} namespace
+	 * @return {Function}
+	 * @api public
+	 */
+
+	function debug(namespace) {
+
+	  // define the `disabled` version
+	  function disabled() {
+	  }
+	  disabled.enabled = false;
+
+	  // define the `enabled` version
+	  function enabled() {
+
+	    var self = enabled;
+
+	    // set `diff` timestamp
+	    var curr = +new Date();
+	    var ms = curr - (prevTime || curr);
+	    self.diff = ms;
+	    self.prev = prevTime;
+	    self.curr = curr;
+	    prevTime = curr;
+
+	    // add the `color` if not set
+	    if (null == self.useColors) self.useColors = exports.useColors();
+	    if (null == self.color && self.useColors) self.color = selectColor();
+
+	    var args = Array.prototype.slice.call(arguments);
+
+	    args[0] = exports.coerce(args[0]);
+
+	    if ('string' !== typeof args[0]) {
+	      // anything else let's inspect with %o
+	      args = ['%o'].concat(args);
+	    }
+
+	    // apply any `formatters` transformations
+	    var index = 0;
+	    args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
+	      // if we encounter an escaped % then don't increase the array index
+	      if (match === '%%') return match;
+	      index++;
+	      var formatter = exports.formatters[format];
+	      if ('function' === typeof formatter) {
+	        var val = args[index];
+	        match = formatter.call(self, val);
+
+	        // now we need to remove `args[index]` since it's inlined in the `format`
+	        args.splice(index, 1);
+	        index--;
+	      }
+	      return match;
+	    });
+
+	    if ('function' === typeof exports.formatArgs) {
+	      args = exports.formatArgs.apply(self, args);
+	    }
+	    var logFn = enabled.log || exports.log || console.log.bind(console);
+	    logFn.apply(self, args);
+	  }
+	  enabled.enabled = true;
+
+	  var fn = exports.enabled(namespace) ? enabled : disabled;
+
+	  fn.namespace = namespace;
+
+	  return fn;
+	}
+
+	/**
+	 * Enables a debug mode by namespaces. This can include modes
+	 * separated by a colon and wildcards.
+	 *
+	 * @param {String} namespaces
+	 * @api public
+	 */
+
+	function enable(namespaces) {
+	  exports.save(namespaces);
+
+	  var split = (namespaces || '').split(/[\s,]+/);
+	  var len = split.length;
+
+	  for (var i = 0; i < len; i++) {
+	    if (!split[i]) continue; // ignore empty strings
+	    namespaces = split[i].replace(/\*/g, '.*?');
+	    if (namespaces[0] === '-') {
+	      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+	    } else {
+	      exports.names.push(new RegExp('^' + namespaces + '$'));
+	    }
+	  }
+	}
+
+	/**
+	 * Disable debug output.
+	 *
+	 * @api public
+	 */
+
+	function disable() {
+	  exports.enable('');
+	}
+
+	/**
+	 * Returns true if the given mode name is enabled, false otherwise.
+	 *
+	 * @param {String} name
+	 * @return {Boolean}
+	 * @api public
+	 */
+
+	function enabled(name) {
+	  var i, len;
+	  for (i = 0, len = exports.skips.length; i < len; i++) {
+	    if (exports.skips[i].test(name)) {
+	      return false;
+	    }
+	  }
+	  for (i = 0, len = exports.names.length; i < len; i++) {
+	    if (exports.names[i].test(name)) {
+	      return true;
+	    }
+	  }
+	  return false;
+	}
+
+	/**
+	 * Coerce `val`.
+	 *
+	 * @param {Mixed} val
+	 * @return {Mixed}
+	 * @api private
+	 */
+
+	function coerce(val) {
+	  if (val instanceof Error) return val.stack || val.message;
+	  return val;
+	}
+
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	/**
+	 * Helpers.
+	 */
+
+	var s = 1000;
+	var m = s * 60;
+	var h = m * 60;
+	var d = h * 24;
+	var y = d * 365.25;
+
+	/**
+	 * Parse or format the given `val`.
+	 *
+	 * Options:
+	 *
+	 *  - `long` verbose formatting [false]
+	 *
+	 * @param {String|Number} val
+	 * @param {Object} options
+	 * @return {String|Number}
+	 * @api public
+	 */
+
+	module.exports = function(val, options){
+	  options = options || {};
+	  if ('string' == typeof val) return parse(val);
+	  return options.long
+	    ? long(val)
+	    : short(val);
+	};
+
+	/**
+	 * Parse the given `str` and return milliseconds.
+	 *
+	 * @param {String} str
+	 * @return {Number}
+	 * @api private
+	 */
+
+	function parse(str) {
+	  str = '' + str;
+	  if (str.length > 10000) return;
+	  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
+	  if (!match) return;
+	  var n = parseFloat(match[1]);
+	  var type = (match[2] || 'ms').toLowerCase();
+	  switch (type) {
+	    case 'years':
+	    case 'year':
+	    case 'yrs':
+	    case 'yr':
+	    case 'y':
+	      return n * y;
+	    case 'days':
+	    case 'day':
+	    case 'd':
+	      return n * d;
+	    case 'hours':
+	    case 'hour':
+	    case 'hrs':
+	    case 'hr':
+	    case 'h':
+	      return n * h;
+	    case 'minutes':
+	    case 'minute':
+	    case 'mins':
+	    case 'min':
+	    case 'm':
+	      return n * m;
+	    case 'seconds':
+	    case 'second':
+	    case 'secs':
+	    case 'sec':
+	    case 's':
+	      return n * s;
+	    case 'milliseconds':
+	    case 'millisecond':
+	    case 'msecs':
+	    case 'msec':
+	    case 'ms':
+	      return n;
+	  }
+	}
+
+	/**
+	 * Short format for `ms`.
+	 *
+	 * @param {Number} ms
+	 * @return {String}
+	 * @api private
+	 */
+
+	function short(ms) {
+	  if (ms >= d) return Math.round(ms / d) + 'd';
+	  if (ms >= h) return Math.round(ms / h) + 'h';
+	  if (ms >= m) return Math.round(ms / m) + 'm';
+	  if (ms >= s) return Math.round(ms / s) + 's';
+	  return ms + 'ms';
+	}
+
+	/**
+	 * Long format for `ms`.
+	 *
+	 * @param {Number} ms
+	 * @return {String}
+	 * @api private
+	 */
+
+	function long(ms) {
+	  return plural(ms, d, 'day')
+	    || plural(ms, h, 'hour')
+	    || plural(ms, m, 'minute')
+	    || plural(ms, s, 'second')
+	    || ms + ' ms';
+	}
+
+	/**
+	 * Pluralization helper.
+	 */
+
+	function plural(ms, n, name) {
+	  if (ms < n) return;
+	  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
+	  return Math.ceil(ms / n) + ' ' + name + 's';
+	}
+
+
+/***/ },
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! JSON v3.3.2 | http://bestiejs.github.io/json3 | Copyright 2012-2014, Kit Cambridge | http://kit.mit-license.org */
 	;(function () {
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(26);
+	  var isLoader = "function" === "function" && __webpack_require__(30);
 
 	  // A set of types used to distinguish objects from primitives.
 	  var objectTypes = {
@@ -2292,10 +3042,10 @@
 	  }
 	}).call(this);
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)(module), (function() { return this; }())))
 
 /***/ },
-/* 25 */
+/* 29 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -2311,7 +3061,7 @@
 
 
 /***/ },
-/* 26 */
+/* 30 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -2319,16 +3069,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 27 */
-/***/ function(module, exports) {
-
-	module.exports = Array.isArray || function (arr) {
-	  return Object.prototype.toString.call(arr) == '[object Array]';
-	};
-
-
-/***/ },
-/* 28 */
+/* 31 */
 /***/ function(module, exports) {
 
 	
@@ -2498,7 +3239,7 @@
 
 
 /***/ },
-/* 29 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -2507,8 +3248,8 @@
 	 * Module requirements
 	 */
 
-	var isArray = __webpack_require__(27);
-	var isBuf = __webpack_require__(30);
+	var isArray = __webpack_require__(33);
+	var isBuf = __webpack_require__(34);
 
 	/**
 	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -2646,7 +3387,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 30 */
+/* 33 */
+/***/ function(module, exports) {
+
+	module.exports = Array.isArray || function (arr) {
+	  return Object.prototype.toString.call(arr) == '[object Array]';
+	};
+
+
+/***/ },
+/* 34 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -2666,7 +3416,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 31 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -2674,15 +3424,15 @@
 	 * Module dependencies.
 	 */
 
-	var eio = __webpack_require__(32);
-	var Socket = __webpack_require__(57);
-	var Emitter = __webpack_require__(58);
-	var parser = __webpack_require__(23);
-	var on = __webpack_require__(60);
-	var bind = __webpack_require__(61);
+	var eio = __webpack_require__(36);
+	var Socket = __webpack_require__(62);
+	var Emitter = __webpack_require__(53);
+	var parser = __webpack_require__(24);
+	var on = __webpack_require__(64);
+	var bind = __webpack_require__(65);
 	var debug = __webpack_require__(20)('socket.io-client:manager');
-	var indexOf = __webpack_require__(55);
-	var Backoff = __webpack_require__(63);
+	var indexOf = __webpack_require__(60);
+	var Backoff = __webpack_require__(67);
 
 	/**
 	 * IE6+ hasOwnProperty
@@ -3232,19 +3982,19 @@
 
 
 /***/ },
-/* 32 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(33);
+	module.exports = __webpack_require__(37);
 
 
 /***/ },
-/* 33 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(34);
+	module.exports = __webpack_require__(38);
 
 	/**
 	 * Exports parser
@@ -3252,25 +4002,25 @@
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(41);
+	module.exports.parser = __webpack_require__(45);
 
 
 /***/ },
-/* 34 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var transports = __webpack_require__(35);
-	var Emitter = __webpack_require__(28);
+	var transports = __webpack_require__(39);
+	var Emitter = __webpack_require__(53);
 	var debug = __webpack_require__(20)('engine.io-client:socket');
-	var index = __webpack_require__(55);
-	var parser = __webpack_require__(41);
+	var index = __webpack_require__(60);
+	var parser = __webpack_require__(45);
 	var parseuri = __webpack_require__(19);
-	var parsejson = __webpack_require__(56);
-	var parseqs = __webpack_require__(49);
+	var parsejson = __webpack_require__(61);
+	var parseqs = __webpack_require__(54);
 
 	/**
 	 * Module exports.
@@ -3333,6 +4083,7 @@
 	  this.transports = opts.transports || ['polling', 'websocket'];
 	  this.readyState = '';
 	  this.writeBuffer = [];
+	  this.prevBufferLen = 0;
 	  this.policyPort = opts.policyPort || 843;
 	  this.rememberUpgrade = opts.rememberUpgrade || false;
 	  this.binaryType = null;
@@ -3352,6 +4103,7 @@
 	  this.ca = opts.ca || null;
 	  this.ciphers = opts.ciphers || null;
 	  this.rejectUnauthorized = opts.rejectUnauthorized === undefined ? null : opts.rejectUnauthorized;
+	  this.forceNode = !!opts.forceNode;
 
 	  // other options for Node.js client
 	  var freeGlobal = typeof global === 'object' && global;
@@ -3359,7 +4111,21 @@
 	    if (opts.extraHeaders && Object.keys(opts.extraHeaders).length > 0) {
 	      this.extraHeaders = opts.extraHeaders;
 	    }
+
+	    if (opts.localAddress) {
+	      this.localAddress = opts.localAddress;
+	    }
 	  }
+
+	  // set on handshake
+	  this.id = null;
+	  this.upgrades = null;
+	  this.pingInterval = null;
+	  this.pingTimeout = null;
+
+	  // set on heartbeat
+	  this.pingIntervalTimer = null;
+	  this.pingTimeoutTimer = null;
 
 	  this.open();
 	}
@@ -3386,9 +4152,9 @@
 	 */
 
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(40);
-	Socket.transports = __webpack_require__(35);
-	Socket.parser = __webpack_require__(41);
+	Socket.Transport = __webpack_require__(44);
+	Socket.transports = __webpack_require__(39);
+	Socket.parser = __webpack_require__(45);
 
 	/**
 	 * Creates transport of the given type.
@@ -3434,7 +4200,9 @@
 	    ciphers: this.ciphers,
 	    rejectUnauthorized: this.rejectUnauthorized,
 	    perMessageDeflate: this.perMessageDeflate,
-	    extraHeaders: this.extraHeaders
+	    extraHeaders: this.extraHeaders,
+	    forceNode: this.forceNode,
+	    localAddress: this.localAddress
 	  });
 
 	  return transport;
@@ -3665,7 +4433,8 @@
 	 */
 
 	Socket.prototype.onPacket = function (packet) {
-	  if ('opening' === this.readyState || 'open' === this.readyState) {
+	  if ('opening' === this.readyState || 'open' === this.readyState ||
+	      'closing' === this.readyState) {
 	    debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
 
 	    this.emit('packet', packet);
@@ -3982,17 +4751,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 35 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies
 	 */
 
-	var XMLHttpRequest = __webpack_require__(36);
-	var XHR = __webpack_require__(38);
-	var JSONP = __webpack_require__(52);
-	var websocket = __webpack_require__(53);
+	var XMLHttpRequest = __webpack_require__(40);
+	var XHR = __webpack_require__(42);
+	var JSONP = __webpack_require__(57);
+	var websocket = __webpack_require__(58);
 
 	/**
 	 * Export transports.
@@ -4042,15 +4811,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 36 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// browser shim for xmlhttprequest module
+	/* WEBPACK VAR INJECTION */(function(global) {// browser shim for xmlhttprequest module
 
-	// Indicate to eslint that ActiveXObject is global
-	/* global ActiveXObject */
-
-	var hasCORS = __webpack_require__(37);
+	var hasCORS = __webpack_require__(41);
 
 	module.exports = function (opts) {
 	  var xdomain = opts.xdomain;
@@ -4081,14 +4847,15 @@
 
 	  if (!xdomain) {
 	    try {
-	      return new ActiveXObject('Microsoft.XMLHTTP');
+	      return new global[['Active'].concat('Object').join('X')]('Microsoft.XMLHTTP');
 	    } catch (e) { }
 	  }
 	};
 
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 37 */
+/* 41 */
 /***/ function(module, exports) {
 
 	
@@ -4111,17 +4878,17 @@
 
 
 /***/ },
-/* 38 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module requirements.
 	 */
 
-	var XMLHttpRequest = __webpack_require__(36);
-	var Polling = __webpack_require__(39);
-	var Emitter = __webpack_require__(28);
-	var inherit = __webpack_require__(50);
+	var XMLHttpRequest = __webpack_require__(40);
+	var Polling = __webpack_require__(43);
+	var Emitter = __webpack_require__(53);
+	var inherit = __webpack_require__(55);
 	var debug = __webpack_require__(20)('engine.io-client:polling-xhr');
 
 	/**
@@ -4146,6 +4913,7 @@
 
 	function XHR (opts) {
 	  Polling.call(this, opts);
+	  this.requestTimeout = opts.requestTimeout;
 
 	  if (global.location) {
 	    var isSSL = 'https:' === location.protocol;
@@ -4200,6 +4968,7 @@
 	  opts.ca = this.ca;
 	  opts.ciphers = this.ciphers;
 	  opts.rejectUnauthorized = this.rejectUnauthorized;
+	  opts.requestTimeout = this.requestTimeout;
 
 	  // other options for Node.js client
 	  opts.extraHeaders = this.extraHeaders;
@@ -4263,6 +5032,7 @@
 	  this.isBinary = opts.isBinary;
 	  this.supportsBinary = opts.supportsBinary;
 	  this.enablesXDR = opts.enablesXDR;
+	  this.requestTimeout = opts.requestTimeout;
 
 	  // SSL options for Node.js client
 	  this.pfx = opts.pfx;
@@ -4335,9 +5105,17 @@
 	      } catch (e) {}
 	    }
 
+	    try {
+	      xhr.setRequestHeader('Accept', '*/*');
+	    } catch (e) {}
+
 	    // ie6 check
 	    if ('withCredentials' in xhr) {
 	      xhr.withCredentials = true;
+	    }
+
+	    if (this.requestTimeout) {
+	      xhr.timeout = this.requestTimeout;
 	    }
 
 	    if (this.hasXDR()) {
@@ -4509,9 +5287,10 @@
 	 * emitted.
 	 */
 
+	Request.requestsCount = 0;
+	Request.requests = {};
+
 	if (global.document) {
-	  Request.requestsCount = 0;
-	  Request.requests = {};
 	  if (global.attachEvent) {
 	    global.attachEvent('onunload', unloadHandler);
 	  } else if (global.addEventListener) {
@@ -4530,18 +5309,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 39 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(40);
-	var parseqs = __webpack_require__(49);
-	var parser = __webpack_require__(41);
-	var inherit = __webpack_require__(50);
-	var yeast = __webpack_require__(51);
+	var Transport = __webpack_require__(44);
+	var parseqs = __webpack_require__(54);
+	var parser = __webpack_require__(45);
+	var inherit = __webpack_require__(55);
+	var yeast = __webpack_require__(56);
 	var debug = __webpack_require__(20)('engine.io-client:polling');
 
 	/**
@@ -4555,7 +5334,7 @@
 	 */
 
 	var hasXHR2 = (function () {
-	  var XMLHttpRequest = __webpack_require__(36);
+	  var XMLHttpRequest = __webpack_require__(40);
 	  var xhr = new XMLHttpRequest({ xdomain: false });
 	  return null != xhr.responseType;
 	})();
@@ -4765,8 +5544,8 @@
 	  query = parseqs.encode(query);
 
 	  // avoid port if default for schema
-	  if (this.port && (('https' === schema && this.port !== 443) ||
-	     ('http' === schema && this.port !== 80))) {
+	  if (this.port && (('https' === schema && Number(this.port) !== 443) ||
+	     ('http' === schema && Number(this.port) !== 80))) {
 	    port = ':' + this.port;
 	  }
 
@@ -4781,15 +5560,15 @@
 
 
 /***/ },
-/* 40 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(41);
-	var Emitter = __webpack_require__(28);
+	var parser = __webpack_require__(45);
+	var Emitter = __webpack_require__(53);
 
 	/**
 	 * Module exports.
@@ -4825,9 +5604,11 @@
 	  this.ca = opts.ca;
 	  this.ciphers = opts.ciphers;
 	  this.rejectUnauthorized = opts.rejectUnauthorized;
+	  this.forceNode = opts.forceNode;
 
 	  // other options for Node.js client
 	  this.extraHeaders = opts.extraHeaders;
+	  this.localAddress = opts.localAddress;
 	}
 
 	/**
@@ -4942,22 +5723,22 @@
 
 
 /***/ },
-/* 41 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var keys = __webpack_require__(42);
-	var hasBinary = __webpack_require__(43);
-	var sliceBuffer = __webpack_require__(44);
-	var after = __webpack_require__(45);
-	var utf8 = __webpack_require__(46);
+	var keys = __webpack_require__(46);
+	var hasBinary = __webpack_require__(47);
+	var sliceBuffer = __webpack_require__(48);
+	var after = __webpack_require__(49);
+	var utf8 = __webpack_require__(50);
 
 	var base64encoder;
-	if (global.ArrayBuffer) {
-	  base64encoder = __webpack_require__(47);
+	if (global && global.ArrayBuffer) {
+	  base64encoder = __webpack_require__(51);
 	}
 
 	/**
@@ -5015,7 +5796,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 
-	var Blob = __webpack_require__(48);
+	var Blob = __webpack_require__(52);
 
 	/**
 	 * Encodes a packet.
@@ -5169,8 +5950,11 @@
 	 */
 
 	exports.decodePacket = function (data, binaryType, utf8decode) {
+	  if (data === undefined) {
+	    return err;
+	  }
 	  // String data
-	  if (typeof data == 'string' || data === undefined) {
+	  if (typeof data == 'string') {
 	    if (data.charAt(0) == 'b') {
 	      return exports.decodeBase64Packet(data.substr(1), binaryType);
 	    }
@@ -5555,7 +6339,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 42 */
+/* 46 */
 /***/ function(module, exports) {
 
 	
@@ -5580,7 +6364,7 @@
 
 
 /***/ },
-/* 43 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -5588,7 +6372,7 @@
 	 * Module requirements.
 	 */
 
-	var isArray = __webpack_require__(27);
+	var isArray = __webpack_require__(33);
 
 	/**
 	 * Module exports.
@@ -5645,7 +6429,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 44 */
+/* 48 */
 /***/ function(module, exports) {
 
 	/**
@@ -5680,7 +6464,7 @@
 
 
 /***/ },
-/* 45 */
+/* 49 */
 /***/ function(module, exports) {
 
 	module.exports = after
@@ -5714,7 +6498,7 @@
 
 
 /***/ },
-/* 46 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/wtf8 v1.0.0 by @mathias */
@@ -5950,10 +6734,10 @@
 
 	}(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)(module), (function() { return this; }())))
 
 /***/ },
-/* 47 */
+/* 51 */
 /***/ function(module, exports) {
 
 	/*
@@ -6026,7 +6810,7 @@
 
 
 /***/ },
-/* 48 */
+/* 52 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -6129,7 +6913,176 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 49 */
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Expose `Emitter`.
+	 */
+
+	if (true) {
+	  module.exports = Emitter;
+	}
+
+	/**
+	 * Initialize a new `Emitter`.
+	 *
+	 * @api public
+	 */
+
+	function Emitter(obj) {
+	  if (obj) return mixin(obj);
+	};
+
+	/**
+	 * Mixin the emitter properties.
+	 *
+	 * @param {Object} obj
+	 * @return {Object}
+	 * @api private
+	 */
+
+	function mixin(obj) {
+	  for (var key in Emitter.prototype) {
+	    obj[key] = Emitter.prototype[key];
+	  }
+	  return obj;
+	}
+
+	/**
+	 * Listen on the given `event` with `fn`.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+
+	Emitter.prototype.on =
+	Emitter.prototype.addEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+	  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
+	    .push(fn);
+	  return this;
+	};
+
+	/**
+	 * Adds an `event` listener that will be invoked a single
+	 * time then automatically removed.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+
+	Emitter.prototype.once = function(event, fn){
+	  function on() {
+	    this.off(event, on);
+	    fn.apply(this, arguments);
+	  }
+
+	  on.fn = fn;
+	  this.on(event, on);
+	  return this;
+	};
+
+	/**
+	 * Remove the given callback for `event` or all
+	 * registered callbacks.
+	 *
+	 * @param {String} event
+	 * @param {Function} fn
+	 * @return {Emitter}
+	 * @api public
+	 */
+
+	Emitter.prototype.off =
+	Emitter.prototype.removeListener =
+	Emitter.prototype.removeAllListeners =
+	Emitter.prototype.removeEventListener = function(event, fn){
+	  this._callbacks = this._callbacks || {};
+
+	  // all
+	  if (0 == arguments.length) {
+	    this._callbacks = {};
+	    return this;
+	  }
+
+	  // specific event
+	  var callbacks = this._callbacks['$' + event];
+	  if (!callbacks) return this;
+
+	  // remove all handlers
+	  if (1 == arguments.length) {
+	    delete this._callbacks['$' + event];
+	    return this;
+	  }
+
+	  // remove specific handler
+	  var cb;
+	  for (var i = 0; i < callbacks.length; i++) {
+	    cb = callbacks[i];
+	    if (cb === fn || cb.fn === fn) {
+	      callbacks.splice(i, 1);
+	      break;
+	    }
+	  }
+	  return this;
+	};
+
+	/**
+	 * Emit `event` with the given args.
+	 *
+	 * @param {String} event
+	 * @param {Mixed} ...
+	 * @return {Emitter}
+	 */
+
+	Emitter.prototype.emit = function(event){
+	  this._callbacks = this._callbacks || {};
+	  var args = [].slice.call(arguments, 1)
+	    , callbacks = this._callbacks['$' + event];
+
+	  if (callbacks) {
+	    callbacks = callbacks.slice(0);
+	    for (var i = 0, len = callbacks.length; i < len; ++i) {
+	      callbacks[i].apply(this, args);
+	    }
+	  }
+
+	  return this;
+	};
+
+	/**
+	 * Return array of callbacks for `event`.
+	 *
+	 * @param {String} event
+	 * @return {Array}
+	 * @api public
+	 */
+
+	Emitter.prototype.listeners = function(event){
+	  this._callbacks = this._callbacks || {};
+	  return this._callbacks['$' + event] || [];
+	};
+
+	/**
+	 * Check if this emitter has `event` handlers.
+	 *
+	 * @param {String} event
+	 * @return {Boolean}
+	 * @api public
+	 */
+
+	Emitter.prototype.hasListeners = function(event){
+	  return !! this.listeners(event).length;
+	};
+
+
+/***/ },
+/* 54 */
 /***/ function(module, exports) {
 
 	/**
@@ -6172,7 +7125,7 @@
 
 
 /***/ },
-/* 50 */
+/* 55 */
 /***/ function(module, exports) {
 
 	
@@ -6184,7 +7137,7 @@
 	};
 
 /***/ },
-/* 51 */
+/* 56 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6258,7 +7211,7 @@
 
 
 /***/ },
-/* 52 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -6266,8 +7219,8 @@
 	 * Module requirements.
 	 */
 
-	var Polling = __webpack_require__(39);
-	var inherit = __webpack_require__(50);
+	var Polling = __webpack_require__(43);
+	var inherit = __webpack_require__(55);
 
 	/**
 	 * Module exports.
@@ -6496,20 +7449,26 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 53 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(40);
-	var parser = __webpack_require__(41);
-	var parseqs = __webpack_require__(49);
-	var inherit = __webpack_require__(50);
-	var yeast = __webpack_require__(51);
+	var Transport = __webpack_require__(44);
+	var parser = __webpack_require__(45);
+	var parseqs = __webpack_require__(54);
+	var inherit = __webpack_require__(55);
+	var yeast = __webpack_require__(56);
 	var debug = __webpack_require__(20)('engine.io-client:websocket');
 	var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
+	var NodeWebSocket;
+	if (typeof window === 'undefined') {
+	  try {
+	    NodeWebSocket = __webpack_require__(59);
+	  } catch (e) { }
+	}
 
 	/**
 	 * Get either the `WebSocket` or `MozWebSocket` globals
@@ -6519,9 +7478,7 @@
 
 	var WebSocket = BrowserWebSocket;
 	if (!WebSocket && typeof window === 'undefined') {
-	  try {
-	    WebSocket = __webpack_require__(54);
-	  } catch (e) { }
+	  WebSocket = NodeWebSocket;
 	}
 
 	/**
@@ -6543,6 +7500,10 @@
 	    this.supportsBinary = false;
 	  }
 	  this.perMessageDeflate = opts.perMessageDeflate;
+	  this.usingBrowserWebSocket = BrowserWebSocket && !opts.forceNode;
+	  if (!this.usingBrowserWebSocket) {
+	    WebSocket = NodeWebSocket;
+	  }
 	  Transport.call(this, opts);
 	}
 
@@ -6596,9 +7557,12 @@
 	  if (this.extraHeaders) {
 	    opts.headers = this.extraHeaders;
 	  }
+	  if (this.localAddress) {
+	    opts.localAddress = this.localAddress;
+	  }
 
 	  try {
-	    this.ws = BrowserWebSocket ? new WebSocket(uri) : new WebSocket(uri, protocols, opts);
+	    this.ws = this.usingBrowserWebSocket ? new WebSocket(uri) : new WebSocket(uri, protocols, opts);
 	  } catch (err) {
 	    return this.emit('error', err);
 	  }
@@ -6641,23 +7605,6 @@
 	};
 
 	/**
-	 * Override `onData` to use a timer on iOS.
-	 * See: https://gist.github.com/mloughran/2052006
-	 *
-	 * @api private
-	 */
-
-	if ('undefined' !== typeof navigator &&
-	  /iPad|iPhone|iPod/i.test(navigator.userAgent)) {
-	  WS.prototype.onData = function (data) {
-	    var self = this;
-	    setTimeout(function () {
-	      Transport.prototype.onData.call(self, data);
-	    }, 0);
-	  };
-	}
-
-	/**
 	 * Writes data to socket.
 	 *
 	 * @param {Array} array of packets.
@@ -6674,7 +7621,7 @@
 	  for (var i = 0, l = total; i < l; i++) {
 	    (function (packet) {
 	      parser.encodePacket(packet, self.supportsBinary, function (data) {
-	        if (!BrowserWebSocket) {
+	        if (!self.usingBrowserWebSocket) {
 	          // always create a new object (GH-437)
 	          var opts = {};
 	          if (packet.options) {
@@ -6693,7 +7640,7 @@
 	        // have a chance of informing us about it yet, in that case send will
 	        // throw an error
 	        try {
-	          if (BrowserWebSocket) {
+	          if (self.usingBrowserWebSocket) {
 	            // TypeError is thrown when passing the second argument on Safari
 	            self.ws.send(data);
 	          } else {
@@ -6754,8 +7701,8 @@
 	  var port = '';
 
 	  // avoid port if default for schema
-	  if (this.port && (('wss' === schema && this.port !== 443) ||
-	    ('ws' === schema && this.port !== 80))) {
+	  if (this.port && (('wss' === schema && Number(this.port) !== 443) ||
+	    ('ws' === schema && Number(this.port) !== 80))) {
 	    port = ':' + this.port;
 	  }
 
@@ -6794,13 +7741,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 54 */
+/* 59 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 55 */
+/* 60 */
 /***/ function(module, exports) {
 
 	
@@ -6815,7 +7762,7 @@
 	};
 
 /***/ },
-/* 56 */
+/* 61 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -6853,7 +7800,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 57 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -6861,13 +7808,13 @@
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(23);
-	var Emitter = __webpack_require__(58);
-	var toArray = __webpack_require__(59);
-	var on = __webpack_require__(60);
-	var bind = __webpack_require__(61);
+	var parser = __webpack_require__(24);
+	var Emitter = __webpack_require__(53);
+	var toArray = __webpack_require__(63);
+	var on = __webpack_require__(64);
+	var bind = __webpack_require__(65);
 	var debug = __webpack_require__(20)('socket.io-client:socket');
-	var hasBin = __webpack_require__(62);
+	var hasBin = __webpack_require__(66);
 
 	/**
 	 * Module exports.
@@ -7278,174 +8225,7 @@
 
 
 /***/ },
-/* 58 */
-/***/ function(module, exports) {
-
-	
-	/**
-	 * Expose `Emitter`.
-	 */
-
-	module.exports = Emitter;
-
-	/**
-	 * Initialize a new `Emitter`.
-	 *
-	 * @api public
-	 */
-
-	function Emitter(obj) {
-	  if (obj) return mixin(obj);
-	};
-
-	/**
-	 * Mixin the emitter properties.
-	 *
-	 * @param {Object} obj
-	 * @return {Object}
-	 * @api private
-	 */
-
-	function mixin(obj) {
-	  for (var key in Emitter.prototype) {
-	    obj[key] = Emitter.prototype[key];
-	  }
-	  return obj;
-	}
-
-	/**
-	 * Listen on the given `event` with `fn`.
-	 *
-	 * @param {String} event
-	 * @param {Function} fn
-	 * @return {Emitter}
-	 * @api public
-	 */
-
-	Emitter.prototype.on =
-	Emitter.prototype.addEventListener = function(event, fn){
-	  this._callbacks = this._callbacks || {};
-	  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
-	    .push(fn);
-	  return this;
-	};
-
-	/**
-	 * Adds an `event` listener that will be invoked a single
-	 * time then automatically removed.
-	 *
-	 * @param {String} event
-	 * @param {Function} fn
-	 * @return {Emitter}
-	 * @api public
-	 */
-
-	Emitter.prototype.once = function(event, fn){
-	  function on() {
-	    this.off(event, on);
-	    fn.apply(this, arguments);
-	  }
-
-	  on.fn = fn;
-	  this.on(event, on);
-	  return this;
-	};
-
-	/**
-	 * Remove the given callback for `event` or all
-	 * registered callbacks.
-	 *
-	 * @param {String} event
-	 * @param {Function} fn
-	 * @return {Emitter}
-	 * @api public
-	 */
-
-	Emitter.prototype.off =
-	Emitter.prototype.removeListener =
-	Emitter.prototype.removeAllListeners =
-	Emitter.prototype.removeEventListener = function(event, fn){
-	  this._callbacks = this._callbacks || {};
-
-	  // all
-	  if (0 == arguments.length) {
-	    this._callbacks = {};
-	    return this;
-	  }
-
-	  // specific event
-	  var callbacks = this._callbacks['$' + event];
-	  if (!callbacks) return this;
-
-	  // remove all handlers
-	  if (1 == arguments.length) {
-	    delete this._callbacks['$' + event];
-	    return this;
-	  }
-
-	  // remove specific handler
-	  var cb;
-	  for (var i = 0; i < callbacks.length; i++) {
-	    cb = callbacks[i];
-	    if (cb === fn || cb.fn === fn) {
-	      callbacks.splice(i, 1);
-	      break;
-	    }
-	  }
-	  return this;
-	};
-
-	/**
-	 * Emit `event` with the given args.
-	 *
-	 * @param {String} event
-	 * @param {Mixed} ...
-	 * @return {Emitter}
-	 */
-
-	Emitter.prototype.emit = function(event){
-	  this._callbacks = this._callbacks || {};
-	  var args = [].slice.call(arguments, 1)
-	    , callbacks = this._callbacks['$' + event];
-
-	  if (callbacks) {
-	    callbacks = callbacks.slice(0);
-	    for (var i = 0, len = callbacks.length; i < len; ++i) {
-	      callbacks[i].apply(this, args);
-	    }
-	  }
-
-	  return this;
-	};
-
-	/**
-	 * Return array of callbacks for `event`.
-	 *
-	 * @param {String} event
-	 * @return {Array}
-	 * @api public
-	 */
-
-	Emitter.prototype.listeners = function(event){
-	  this._callbacks = this._callbacks || {};
-	  return this._callbacks['$' + event] || [];
-	};
-
-	/**
-	 * Check if this emitter has `event` handlers.
-	 *
-	 * @param {String} event
-	 * @return {Boolean}
-	 * @api public
-	 */
-
-	Emitter.prototype.hasListeners = function(event){
-	  return !! this.listeners(event).length;
-	};
-
-
-/***/ },
-/* 59 */
+/* 63 */
 /***/ function(module, exports) {
 
 	module.exports = toArray
@@ -7464,7 +8244,7 @@
 
 
 /***/ },
-/* 60 */
+/* 64 */
 /***/ function(module, exports) {
 
 	
@@ -7494,7 +8274,7 @@
 
 
 /***/ },
-/* 61 */
+/* 65 */
 /***/ function(module, exports) {
 
 	/**
@@ -7523,7 +8303,7 @@
 
 
 /***/ },
-/* 62 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -7531,7 +8311,7 @@
 	 * Module requirements.
 	 */
 
-	var isArray = __webpack_require__(27);
+	var isArray = __webpack_require__(33);
 
 	/**
 	 * Module exports.
@@ -7589,7 +8369,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 63 */
+/* 67 */
 /***/ function(module, exports) {
 
 	
@@ -7680,8 +8460,8 @@
 
 
 /***/ },
-/* 64 */,
-/* 65 */
+/* 68 */,
+/* 69 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7730,23 +8510,23 @@
 	exports.default = new ErrorCode();
 
 /***/ },
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
 /* 70 */,
 /* 71 */,
 /* 72 */,
 /* 73 */,
 /* 74 */,
-/* 75 */
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 76 */,
-/* 77 */
+/* 80 */,
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7908,7 +8688,7 @@
 	exports.default = ModalGoodsToAdd;
 
 /***/ },
-/* 78 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7923,15 +8703,15 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _add_or_delete_action = __webpack_require__(77);
+	var _add_or_delete_action = __webpack_require__(81);
 
 	var _add_or_delete_action2 = _interopRequireDefault(_add_or_delete_action);
 
-	var _privat_change_status_order = __webpack_require__(79);
+	var _privat_change_status_order = __webpack_require__(83);
 
 	var _privat_change_status_order2 = _interopRequireDefault(_privat_change_status_order);
 
-	var _templates = __webpack_require__(80);
+	var _templates = __webpack_require__(85);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
@@ -7962,10 +8742,16 @@
 			_this.viewElement = el.querySelector('view');
 			_this.status = true;
 			_this.searchButton = document.querySelector('#a-search-admin');
+			_this.searchSelect = document.querySelector('#a-search-admin__select');
 			_this.scrollEvent = _this.handlerScroll.bind(_this);
 
 			_this.flyEvent('add', ['scroll'], [window], _this.scrollEvent);
 			_this.flyEvent('add', ['keyup'], [_this.searchButton], _this.handlerToSearch.bind(_this));
+
+			if (_this.searchSelect) {
+				_this.flyEvent('add', ['change'], [_this.searchSelect], _this.handlerToSearchFilters.bind(_this));
+			}
+
 			_this.tryXHR();
 
 			return _this;
@@ -7975,7 +8761,16 @@
 			key: 'handlerScroll',
 			value: function handlerScroll() {
 				if (this.viewElement.clientHeight - document.body.scrollTop < 1000 && this.status) {
-					this.tryXHR();
+
+					if (this.valueSearch && this.valueSearch != '' && this.valueSearchSelect) {
+						this.tryXHR('&searhByTitle=' + this.valueSearch + '&searhByStatus=' + this.valueSearchSelect);
+					} else if (this.valueSearch && this.valueSearch != '') {
+						this.tryXHR('&searhByTitle=' + this.valueSearch);
+					} else if (this.valueSearchSelect) {
+						this.tryXHR('&searhByStatus=' + this.valueSearchSelect);
+					} else {
+						this.tryXHR();
+					}
 				}
 			}
 		}, {
@@ -7992,8 +8787,20 @@
 				if (event && event.keyCode == 13) {
 					this.offsetStart = 0;
 					this.offsetEnd = 30;
-					this.tryXHR('&searhByTitle=' + encodeURIComponent(event.target.value), 'clear');
+					this.valueSearch = encodeURIComponent(event.target.value);
+					this.tryXHR('&searhByTitle=' + this.valueSearch, 'clear');
 				}
+			}
+		}, {
+			key: 'handlerToSearchFilters',
+			value: function handlerToSearchFilters(event) {
+				if (!event && !event.target) return;
+
+				this.valueSearchSelect = event.target.value;
+				this.offsetStart = 0;
+				this.offsetEnd = 30;
+
+				this.tryXHR('&searhByStatus=' + this.valueSearchSelect, 'clear');
 			}
 		}, {
 			key: 'responseFromServerGoodsItems',
@@ -8085,7 +8892,7 @@
 	exports.default = AsyncLoadFromAnouterResourse;
 
 /***/ },
-/* 79 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8099,6 +8906,10 @@
 	var _helper = __webpack_require__(16);
 
 	var _helper2 = _interopRequireDefault(_helper);
+
+	var _notifier = __webpack_require__(84);
+
+	var _notifier2 = _interopRequireDefault(_notifier);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8119,45 +8930,77 @@
 			if (!elem) return _possibleConstructorReturn(_this);
 
 			_this.view = elem;
-			_this.searchButton = document.querySelector('#a-search-admin');
+			_this.Notification = new _notifier2.default();
+			_this.savedVerify = ['_id', 'status', 'country', 'sity', 'delivery', 'warehouse'];
 
-			_this.flyEvent('add', ['click'], [_this.view], _this.checkedSelect.bind(_this));
+			_this.flyEvent('add', ['click'], [_this.view], _this.removeItem.bind(_this));
+			_this.flyEvent('add', ['submit'], [_this.view], _this.submitForm.bind(_this));
 
 			return _this;
 		}
 
 		_createClass(ChangeStatus, [{
-			key: 'findSelected',
-			value: function findSelected(number) {
-				var status = {
-					0: "Не оплачен",
-					1: "Оплачен",
-					2: "Отменен"
-				};
+			key: 'removeItem',
+			value: function removeItem(event) {
 
-				return status[number];
+				if (event && event.target && !event.target.classList.contains('a-remove-item-order')) return;
+
+				var _id = event.target.getAttribute('data-id'),
+				    _number = event.target.getAttribute('data-number');
+				parent = event.target.parentNode;
+
+				this.xhrRequest('GET', '/order_one_edit?_id=' + _id + "&_number=" + _number, null, null, this.responseAfterDelete.bind(this, parent));
 			}
 		}, {
-			key: 'checkedSelect',
-			value: function checkedSelect(event) {
+			key: 'submitForm',
+			value: function submitForm(event) {
+				event.preventDefault();
 
-				var target = event && event.target && event.target.classList.contains('a-privat-table__submit') ? event.target : null;
+				var form = event.target,
+				    elements = form.elements,
+				    data = {};
 
-				if (!target) return;
+				for (var i = 0; i < elements.length; i++) {
+					if (this.savedVerify.indexOf(elements[i].name) != -1) {
+						data[elements[i].name] = elements[i].value;
+					}
+				}
 
-				var selected = target.previousElementSibling,
-				    value = selected.value,
-				    fieldToReplace = selected.previousElementSibling,
-				    orderNumber = target.getAttribute('data-value');
-
-				fieldToReplace.firstElementChild.innerHTML = this.findSelected(value);
-
-				this.xhrRequest('POST', '/orderAdminLoads', 'application/x-www-form-urlencoded', 'status=' + value + '&orderNumber=' + orderNumber, this.responseChange.bind(this));
+				this.xhrRequest('POST', '/order_one_edit', 'application/json', JSON.stringify(data), this.responseAfterUpdate.bind(this));
 			}
 		}, {
-			key: 'responseChange',
-			value: function responseChange(obj) {
-				console.log(obj);
+			key: 'responseAfterDelete',
+			value: function responseAfterDelete(parent, obj) {
+				try {
+					var json = JSON.parse(obj);
+
+					if (json.status != 200) {
+						throw json.errorMsg;
+					}
+
+					var commonPrice = json.priceUpdated,
+					    priceCommon = document.querySelector('.a-common-price-' + json._id);
+
+					priceCommon.innerHTML = commonPrice + "руб.";
+					parent.parentNode.removeChild(parent);
+				} catch (e) {
+					this.Notification.errCode(e);
+				}
+			}
+		}, {
+			key: 'responseAfterUpdate',
+			value: function responseAfterUpdate(obj) {
+				try {
+					var json = JSON.parse(obj);
+
+					if (json.status != 200) {
+						throw json.errorMsg;
+					}
+
+					this.Notification.errCode(json.successMsg);
+				} catch (e) {
+					this.Notification.errCode(e);
+				}
 			}
 		}]);
 
@@ -8167,7 +9010,56 @@
 	exports.default = ChangeStatus;
 
 /***/ },
-/* 80 */
+/* 84 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Notifier = function () {
+		function Notifier() {
+			_classCallCheck(this, Notifier);
+
+			this.notifyWrapper = document.querySelector('.a-notifier');
+			this.closeNotify = document.querySelector('.a-close-notifier');
+			this.contentNotify = document.querySelector('.a-texts-err-to-notify');
+			this.closeNotify.addEventListener('click', this.notifyClose.bind(this));
+		}
+
+		_createClass(Notifier, [{
+			key: 'errCode',
+			value: function errCode(string) {
+				this.contentNotify.innerHTML = string;
+				this.notifyShow();
+			}
+		}, {
+			key: 'notifyShow',
+			value: function notifyShow() {
+				this.notifyWrapper.classList.remove('a-hide-notify');
+			}
+		}, {
+			key: 'notifyClose',
+			value: function notifyClose(event) {
+
+				this.contentNotify.innerHTML = "";
+				this.notifyWrapper.classList.add('a-hide-notify');
+			}
+		}]);
+
+		return Notifier;
+	}();
+
+	exports.default = Notifier;
+
+/***/ },
+/* 85 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8215,7 +9107,7 @@
 
 	            function templates(id, img, title, description, size, color, consistOf, material, count, priority, price, auctionPrice, art, unsold) {
 
-	                var tmp = '<div class="a-all-goods-table__item">' + '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' + '<img src="' + decodeURIComponent(img) + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' + '<p class="a-all-goods-table__description_info_article">Артикул: <span>' + (decodeURIComponent(art) || "Нет артикула") + '</span></p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + decodeURIComponent(size) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link">' + '<i>Цена </i>' + '<span>' + decodeURIComponent(price) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link">' + '<i>Количество </i>' + '<span>' + decodeURIComponent(count) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + decodeURIComponent(color) + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="_id" value="' + id + '"/>' + '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' + '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' + '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' + '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' + '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' + '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' + '<input type="hidden" name="price" value="' + decodeURIComponent(price) + '"/>' + '<input type="hidden" name="auctionPrice" value="' + decodeURIComponent(auctionPrice) + '"/>' + '<input type="hidden" name="art" value="' + decodeURIComponent(art) + '"/>' + '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Артикл</p><span>' + decodeURIComponent(art) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + '<span>' + decodeURIComponent(size) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Не продано</p>' + '<input type="text" name="unsoldCount" value="' + (unsold || 0) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Количество на складе</p>' + '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Розничная цена</p>' + '<span>' + decodeURIComponent(price) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<input type="text" name="auctionPrice" value="' + auctionPrice + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Приоритет</p>' + '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
+	                var tmp = '<div class="a-all-goods-table__item">' + '<span class="a-delete-this-item-with-id" data-id="' + id + '"></span>' + '<img src="' + decodeURIComponent(img) + '" alt=""/>' + '<div class="a-all-goods-table__description">' + '<p class="a-all-goods-table__description_info">' + decodeURIComponent(title) + '</p>' + '<p class="a-all-goods-table__description_info_article">Артикул: <span>' + (decodeURIComponent(art) || "Нет артикула") + '</span></p>' + '</div>' + '<div class="a-hidden-block">' + '<div class="a-hidden-block__description">' + '<div class="a-hidden-block__description__outer">' + '<span class="a-hidden-block__description-link">' + '<i>Размер </i>' + '<span>' + decodeURIComponent(size) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link">' + '<i>Цена </i>' + '<span>' + decodeURIComponent(price) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link">' + '<i>Количество </i>' + '<span>' + decodeURIComponent(count) + '</span>' + '</span>' + '<span class="a-hidden-block__description-link"> ' + '<i>Цвет</i>' + '<span>' + decodeURIComponent(color) + '</span>' + '</span>' + '</div>' + '</div>' + '</div>' + '<form class="a-hidden-form">' + '<input type="hidden" name="_id" value="' + id + '"/>' + '<input type="hidden" name="title" value="' + decodeURIComponent(title) + '"/>' + '<input type="hidden" name="description" value="' + decodeURIComponent(description) + '"/>' + '<input type="hidden" name="color" value="' + decodeURIComponent(color) + '"/>' + '<input type="hidden" name="src" value="' + decodeURIComponent(img) + '"/>' + '<input type="hidden" name="consistOf" value="' + decodeURIComponent(consistOf) + '"/>' + '<input type="hidden" name="material" value="' + decodeURIComponent(material) + '"/>' + '<input type="hidden" name="price" value="' + decodeURIComponent(price) + '"/>' + '<input type="hidden" name="auctionPrice" value="' + decodeURIComponent(auctionPrice) + '"/>' + '<input type="hidden" name="art" value="' + decodeURIComponent(art) + '"/>' + '<div class="a-container-for-img"><img src="' + decodeURIComponent(img) + '" alt=""/></div>' + '<div class="a-hidden-form_description">' + '<div class="a-containet-flex-to-start-description">' + '<div class="container-description-form">' + '<p class="container-description-form__title">' + decodeURIComponent(title) + '</p>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Артикл</p><span>' + decodeURIComponent(art) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Цвет</p><span>' + decodeURIComponent(color) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Размеры</p>' + '<span>' + decodeURIComponent(size) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Не продано</p>' + '<input type="text" name="unsoldCount" value="' + (unsold || 0) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Количество на складе</p>' + '<input type="text" name="countInWarehouse" value="' + (count || 0) + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Розничная цена</p>' + '<span>' + decodeURIComponent(price) + '</span>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Начальная ставка</p>' + '<input type="text" name="auctionPrice" value="' + auctionPrice + '"/>' + '</div>' + '<div class="container-description-form">' + '<p class="container-description-form__else_params">Приоритет</p>' + '<input type="checkbox" name="priority" ' + (priority ? "checked" : "") + ' />' + '</div>' + '</div>' + '<div class="a-containet-flex-to-end-button">' + '<input value="Добавить товар" type="submit" class="a-button-white"/>' + '</div>' + '</div>' + '</form>' + '</div>';
 
 	                return tmp;
 	            }
@@ -8253,17 +9145,36 @@
 
 	                var constructorDate = new Date(data.date).toLocaleDateString();
 
-	                var templates = '<div class="a-privat-table_bought">' + '<div class="a-privat-table_bought__number">' + '<p> <span>Заказ </span>№ ' + data.orderNumber + '<span> от </span> ' + constructorDate + ' <a class="che-print-image" href="/order/print/' + data._id + '">Печать</a></p>' + '<p>На сумму: <span>' + data.priceCommon + ' руб.</span></p>' + '</div>' + '<div class="a-privat-table a-privat-table__bought a-privat-table__orders">' + '<div class="a-privat-table__info_order">' + '<h5>Заказ:</h5>' + '<table>' + '<tr>' + '<th>Наименование</th>' + '<th>Размер</th>' + '<th>Цвет</th>' + '<th>Количество</th>' + '<th>Цена</th>' + '</tr>' + ordersOne(data.goods) + '</table>' + '<h5 class="a-status-orders">Статус: <span>' + (data.status == 0 ? 'Не оплачен' : data.status == 1 ? 'Оплачен' : "Отменен") + '<span></h5>' + '<select class="a-privat-table__changed" name="status">' + '<option value="0">' + 'Не оплачен' + '</option>' + '<option value="1">' + 'Оплачен' + '</option>' + '<option value="2">' + 'Отменен' + '</option>' + '</select>' + '<button class="a-privat-table__submit" data-value="' + data.orderNumber + '">Сохранить статус</button>' + '</div>' + '<div class="a-privat-table__user">' + '<h5>Информация о заказе:</h5>' + '<table>' + '<tr>' + '<th>Страна</th>' + '<td>' + decodeURIComponent(data.country) + '</td>' + '</tr>' + '<tr>' + '<th>Город</th>' + '<td>' + decodeURIComponent(data.sity) + '</td>' + '</tr>' + '<tr>' + '<th>Служба доставки</th>' + '<td>' + decodeURIComponent(data.delivery) + '</td>' + '</tr>' + '<tr>' + '<th>Склад</th>' + '<td>' + decodeURIComponent(data.warehouse) + '</td>' + '</tr>' + '</table>' + '<h5>Информация о клиенте:</h5>' + '<table>' + '<tr>' + '<th>ФИО</th>' + '<td>' + decodeURIComponent(data.fio) + '</td>' + '</tr>' + '<tr>' + '<th>Номер телефона</th>' + '<td>' + decodeURIComponent(data.number) + '</td>' + '</tr>' + '<tr>' + '<th>Почта</th>' + '<td>' + decodeURIComponent(data.email) + '</td>' + '</tr>' + '</table>' + '</div>' + '</div>' + '</div>';
+	                var templates = '<form class="a-privat-table_bought">' + '<input name="_id" type="hidden" value="' + data._id + '" />' + '<div class="a-privat-table_bought__number">' + '<p> <span>Заказ </span>№ ' + data.orderNumber + '<span> от </span> ' + constructorDate + ' <a class="che-print-image" href="/order/print/' + data._id + '">Другие действия</a></p>' + '<p>На сумму: <span class="a-common-price-' + data._id + '">' + data.priceCommon + ' руб.</span></p>' + '</div>' + '<div class="a-privat-table a-privat-table__bought a-privat-table__orders">' + '<div class="a-privat-table__info_order">' + '<h5>Заказ:</h5>' + '<table>' + '<tr cols="2">' + '<th></th>' + '<th>Наименование</th>' + '<th>Размер</th>' + '<th>Цвет</th>' + '<th>Количество</th>' + '<th>Цена</th>' + '</tr>' + ordersOne(data.goods, data._id) + '</table>' + '<div class="a-status-block">' + '<h5 class="a-status-orders"><span>Статус:<span></h5>' + '<select class="a-privat-table__changed" name="status">' + statusChecker(data.status) + '</select>' + '</div>' + '</div>' + '<div class="a-privat-table__user">' + '<h5>Информация о заказе:</h5>' + '<table>' + '<tr>' + '<th>Страна</th>' + '<td><input name="country" type="text" value="' + decodeURIComponent(data.country) + '" /></td>' + '</tr>' + '<tr>' + '<th>Город</th>' + '<td><input name="sity" type="text" value="' + decodeURIComponent(data.sity) + '" /></td>' + '</tr>' + '<tr>' + '<th>Служба доставки</th>' + '<td><input name="delivery" type="text" value="' + decodeURIComponent(data.delivery) + '" /></td>' + '</tr>' + '<tr>' + '<th>Склад</th>' + '<td><input name="warehouse" type="text" value="' + decodeURIComponent(data.warehouse) + '" /></td>' + '</tr>' + '</table>' + '<h5>Информация о клиенте:</h5>' + '<table>' + '<tr>' + '<th>ФИО</th>' + '<td>' + decodeURIComponent(data.fio) + '</td>' + '</tr>' + '<tr>' + '<th>Номер телефона</th>' + '<td>' + decodeURIComponent(data.number) + '</td>' + '</tr>' + '<tr>' + '<th>Почта</th>' + '<td>' + decodeURIComponent(data.email) + '</td>' + '</tr>' + '</table>' + '</div>' + '</div>' + '<div class="a-saved-status">' + '<button type="submit" class="a-privat-table__submit">Сохранить</button>' + '</div>' + '</form>';
 
-	                function ordersOne(goods) {
-	                    var tmp = "";
+	                function ordersOne(goods, id) {
+	                    var tmp = "",
+	                        count = 0,
+	                        price = 0,
+	                        color = "";
 
 	                    for (var key in goods) {
 
-	                        tmp += '<tr>' + '<td>' + decodeURIComponent(goods[key].art) + ' / ' + decodeURIComponent(goods[key].title) + '</td>' + '<td>' + decodeURIComponent(goods[key].size) + '</td>' + '<td>' + decodeURIComponent(goods[key].color) + '</td>' + '<td>' + goods[key].count + '</td>' + '<td>' + goods[key].price + '</td>' + '</tr>';
+	                        count += +goods[key].count;
+	                        price += +goods[key].price, color = decodeURIComponent(goods[key].color).replace("+", " + ");
+
+	                        tmp += '<tr>' + '<td data-number="' + key + '" data-id="' + id + '" class="a-remove-item-order">X</td>' + '<td>' + decodeURIComponent(goods[key].art) + ' / ' + decodeURIComponent(goods[key].title) + '</td>' + '<td>' + decodeURIComponent(goods[key].size) + '</td>' + '<td>' + color + '</td>' + '<td>' + goods[key].count + '</td>' + '<td>' + goods[key].price + '</td>' + '</tr>';
 	                    }
 
 	                    return tmp;
+	                }
+
+	                function statusChecker(status) {
+
+	                    var str = '',
+	                        statusText = ['Не оплачен', 'Оплачен', 'Выполнен', 'Отменен'];
+
+	                    for (var i = 0; i <= statusText.length; i++) {
+	                        var active = status == i ? 'selected' : '';
+	                        str += '<option ' + active + ' value="' + i + '">' + statusText[i] + '</option>';
+	                    }
+
+	                    return str;
 	                }
 
 	                return templates;
@@ -8279,7 +9190,7 @@
 	exports.default = new Templates();
 
 /***/ },
-/* 81 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8294,19 +9205,19 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _flatpickr = __webpack_require__(82);
+	var _flatpickr = __webpack_require__(87);
 
 	var _flatpickr2 = _interopRequireDefault(_flatpickr);
 
-	var _flatpickrL10nRu = __webpack_require__(83);
+	var _flatpickrL10nRu = __webpack_require__(88);
 
 	var _flatpickrL10nRu2 = _interopRequireDefault(_flatpickrL10nRu);
 
-	var _templates = __webpack_require__(80);
+	var _templates = __webpack_require__(85);
 
 	var _templates2 = _interopRequireDefault(_templates);
 
-	var _error = __webpack_require__(65);
+	var _error = __webpack_require__(69);
 
 	var _error2 = _interopRequireDefault(_error);
 
@@ -8457,7 +9368,7 @@
 	exports.default = Config;
 
 /***/ },
-/* 82 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -9935,7 +10846,7 @@
 	if (true) module.exports = Flatpickr;
 
 /***/ },
-/* 83 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* Russian locals for flatpickr */
@@ -9956,7 +10867,7 @@
 
 
 /***/ },
-/* 84 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9971,7 +10882,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _error = __webpack_require__(65);
+	var _error = __webpack_require__(69);
 
 	var _error2 = _interopRequireDefault(_error);
 
@@ -10033,7 +10944,7 @@
 	exports.default = Rules;
 
 /***/ },
-/* 85 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10048,7 +10959,7 @@
 
 	var _helper2 = _interopRequireDefault(_helper);
 
-	var _error = __webpack_require__(65);
+	var _error = __webpack_require__(69);
 
 	var _error2 = _interopRequireDefault(_error);
 
@@ -10117,6 +11028,270 @@
 	}(_helper2.default);
 
 	exports.default = AuctionReload;
+
+/***/ },
+/* 91 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	var _notifier = __webpack_require__(84);
+
+	var _notifier2 = _interopRequireDefault(_notifier);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var UserControls = function (_Helper) {
+		_inherits(UserControls, _Helper);
+
+		function UserControls(el) {
+			_classCallCheck(this, UserControls);
+
+			var _this = _possibleConstructorReturn(this, (UserControls.__proto__ || Object.getPrototypeOf(UserControls)).call(this));
+
+			if (!el) return _possibleConstructorReturn(_this);
+
+			_this.flyEvent('add', ['click'], [el], _this.handlerToRemove.bind(_this));
+			_this.Notifier = new _notifier2.default();
+
+			return _this;
+		}
+
+		_createClass(UserControls, [{
+			key: 'handlerToRemove',
+			value: function handlerToRemove(event) {
+
+				if (!event && !event.target && !event.target.classList.contains('che-remove-user')) return;
+
+				var target = event.target,
+				    id = target.getAttribute('data-id'),
+				    closest = target.closest('.che-users-view__removed');
+				if (confirm('Уверены?')) {
+					this.xhrRequest('DELETE', '/page_user', 'application/x-www-form-urlencoded', 'id=' + id, this.responseHandler.bind(this, closest));
+				}
+			}
+		}, {
+			key: 'responseHandler',
+			value: function responseHandler(closest, obj) {
+				try {
+					var json = JSON.parse(obj);
+					if (json.status != 200) {
+						throw json.errmsg;
+					}
+					closest.parentNode.removeChild(closest);
+				} catch (e) {
+					this.Notifier.errCode(e);
+				}
+			}
+		}]);
+
+		return UserControls;
+	}(_helper2.default);
+
+	exports.default = UserControls;
+
+/***/ },
+/* 92 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	var _notifier = __webpack_require__(84);
+
+	var _notifier2 = _interopRequireDefault(_notifier);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var OrdersDetails = function (_Helper) {
+		_inherits(OrdersDetails, _Helper);
+
+		function OrdersDetails(el) {
+			_classCallCheck(this, OrdersDetails);
+
+			var _this = _possibleConstructorReturn(this, (OrdersDetails.__proto__ || Object.getPrototypeOf(OrdersDetails)).call(this));
+
+			_this.el = el;
+			_this.blockForm = document.querySelector('.a-form-to-send-details');
+			_this.access = ['subject', 'html_msg', 'ttn', 'order', 'email'];
+			_this.Notification = new _notifier2.default();
+
+			_this.flyEvent('add', ['click'], [_this.el], _this.tabChange.bind(_this));
+			_this.flyEvent('add', ['submit'], [_this.blockForm], _this.submitMessage.bind(_this));
+
+			return _this;
+		}
+
+		_createClass(OrdersDetails, [{
+			key: 'tabChange',
+			value: function tabChange(event) {
+
+				if (!event || !event.target || !event.target.classList.contains('che-print-button')) return;
+
+				var target = event.target,
+				    _id = target.getAttribute('data-id'),
+				    active = document.querySelector('.a-active-tab'),
+				    checked = document.querySelector('#' + _id);
+
+				checked.classList.add('a-active-tab');
+				active.classList.remove('a-active-tab');
+			}
+		}, {
+			key: 'submitMessage',
+			value: function submitMessage(event) {
+				event.preventDefault();
+
+				var form = event.target,
+				    elements = form.elements,
+				    id = form.id,
+				    data = {
+					id: id
+				};
+
+				for (var i = 0; i < elements.length; i++) {
+					if (this.access.indexOf(elements[i].name) != -1) {
+						data[elements[i].name] = elements[i].value;
+					}
+				}
+
+				this.xhrRequest('POST', '/send_message', 'application/json', JSON.stringify(data), this.messageNotify.bind(this));
+			}
+		}, {
+			key: 'messageNotify',
+			value: function messageNotify(obj) {
+
+				try {
+					var json = JSON.parse(obj);
+
+					if (json.status != 200) {
+						throw json.errorMsg;
+					}
+
+					this.Notification.errCode(json.successMsg);
+				} catch (e) {
+					this.Notification.errCode(e);
+				}
+			}
+		}]);
+
+		return OrdersDetails;
+	}(_helper2.default);
+
+	exports.default = OrdersDetails;
+
+/***/ },
+/* 93 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _helper = __webpack_require__(16);
+
+	var _helper2 = _interopRequireDefault(_helper);
+
+	var _notifier = __webpack_require__(84);
+
+	var _notifier2 = _interopRequireDefault(_notifier);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var RemoveGoodsAll = function (_Helper) {
+		_inherits(RemoveGoodsAll, _Helper);
+
+		function RemoveGoodsAll(el) {
+			_classCallCheck(this, RemoveGoodsAll);
+
+			var _this = _possibleConstructorReturn(this, (RemoveGoodsAll.__proto__ || Object.getPrototypeOf(RemoveGoodsAll)).call(this));
+
+			if (!el) return _possibleConstructorReturn(_this);
+
+			_this.el = el;
+			_this.Notification = new _notifier2.default();
+			_this.view = document.querySelector('.a-all-goods-table');
+
+			_this.flyEvent('add', ['click'], [_this.el], _this.removeAllHandler.bind(_this));
+
+			return _this;
+		}
+
+		_createClass(RemoveGoodsAll, [{
+			key: 'removeAllHandler',
+			value: function removeAllHandler(event) {
+
+				if (!event && !event.target) return;
+
+				var promt = prompt('Ключевое слово?');
+
+				if (promt) {
+					this.xhrRequest('GET', '/remove_auction_goods?key=' + promt, null, null, this.responseAfterDelete.bind(this));
+				}
+			}
+		}, {
+			key: 'responseAfterDelete',
+			value: function responseAfterDelete(obj) {
+				try {
+					var json = JSON.parse(obj);
+
+					if (json.status != 200) {
+						throw json.errorMsg;
+					}
+
+					this.Notification.errCode(json.successMsg);
+
+					this.view.innerHTML = "";
+				} catch (e) {
+					this.Notification.errCode(e);
+				}
+			}
+		}]);
+
+		return RemoveGoodsAll;
+	}(_helper2.default);
+
+	exports.default = RemoveGoodsAll;
 
 /***/ }
 /******/ ]);

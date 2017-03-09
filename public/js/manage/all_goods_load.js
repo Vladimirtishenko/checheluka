@@ -20,17 +20,32 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		this.viewElement = el.querySelector('view');
 		this.status = true;
 		this.searchButton = document.querySelector('#a-search-admin');
+		this.searchSelect = document.querySelector('#a-search-admin__select');
 		this.scrollEvent = this.handlerScroll.bind(this);
 
 		this.flyEvent('add', ['scroll'], [window], this.scrollEvent);
 		this.flyEvent('add', ['keyup'], [this.searchButton], this.handlerToSearch.bind(this));
+
+		if(this.searchSelect){
+			this.flyEvent('add', ['change'], [this.searchSelect], this.handlerToSearchFilters.bind(this));
+		}
+
 		this.tryXHR();
 
 	}
 
 	handlerScroll(){
 		if((this.viewElement.clientHeight - document.body.scrollTop) < 1000 && this.status){
-			this.tryXHR();
+			
+			if(this.valueSearch && this.valueSearch != '' && this.valueSearchSelect){
+				this.tryXHR('&searhByTitle='+this.valueSearch+'&searhByStatus='+this.valueSearchSelect);
+			} else if(this.valueSearch && this.valueSearch != ''){
+				this.tryXHR('&searhByTitle='+this.valueSearch);
+			} else if (this.valueSearchSelect) {
+				this.tryXHR('&searhByStatus='+this.valueSearchSelect);
+			} else {
+				this.tryXHR();
+			}		
 		}
 	}
 
@@ -39,7 +54,7 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		this.status = false;
 		let search = urls || '';
 		let url = this.url+"?start="+this.offsetStart+"&end="+this.offsetEnd+search;
-		this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this, clear), this)
+		this.xhrRequest("GET", url, null, null, this.responseFromServerGoodsItems.bind(this, clear), this);
 
 	}
 
@@ -47,10 +62,22 @@ class AsyncLoadFromAnouterResourse extends Helper {
 		if(event && event.keyCode == 13){
 			this.offsetStart = 0;
 			this.offsetEnd = 30;
-			this.tryXHR('&searhByTitle='+encodeURIComponent(event.target.value), 'clear');
+			this.valueSearch = encodeURIComponent(event.target.value);
+			this.tryXHR('&searhByTitle='+this.valueSearch, 'clear');
 		}
 	}
 
+
+	handlerToSearchFilters(event){
+		if(!event && !event.target) return;
+
+		this.valueSearchSelect = event.target.value;
+		this.offsetStart = 0;
+		this.offsetEnd = 30;
+
+		this.tryXHR('&searhByStatus='+this.valueSearchSelect, 'clear');	
+
+	}
 
 	responseFromServerGoodsItems(clear, el){
 

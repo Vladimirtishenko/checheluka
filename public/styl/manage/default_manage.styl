@@ -127,7 +127,7 @@ span
 i 
   font-style normal 
 
-input[type="text"], input[type="email"], input[type="password"]
+input[type="text"], input[type="email"], input[type="password"], .a-search-box__select
   border 2px solid #000
   width 200px
   background #fff 
@@ -227,6 +227,7 @@ td
   display flex
   position relative
   align-items center
+  justify-content space-between
   
 .a-menu-admin__links a, .a-menu-admin__links p
   color #fff
@@ -240,6 +241,14 @@ td
   width w
   margin 20px auto 0
   display flex 
+  justify-content flex-start
+  align-items center
+
+.a-container-width-button
+  justify-content space-between
+
+.a-container-wrapper-search
+  display flex
   justify-content flex-start
   align-items center
 
@@ -505,7 +514,7 @@ td
   
 .a-privat-table_bought
   width w
-  margin 0 auto
+  margin 0 auto 20px
   position relative
   &:nth-child(2n + 2):after 
     content ""
@@ -514,7 +523,16 @@ td
     height 100px
     background url('../../img/sprite.png') -483px -293px
     left -102px
-  
+ 
+ .a-saved-status
+   display flex 
+   justify-content flex-end
+
+.a-status-block
+  display flex
+  align-items center
+  margin 10px 0
+
 .a-privat-table_bought__number
   display flex 
   align-items center
@@ -550,10 +568,9 @@ td
   justify-content space-between
   
 .a-privat-table__info_order
-  width 50%
+  width 70%
 
 .a-privat-table__user
-  width 50%
   padding-left 20px
   
 .a-privat-table_bought h5
@@ -1076,6 +1093,8 @@ span
   
 .che-items-print-controls
   padding 10px
+  display flex 
+  justify-content space-between
   
 .che-items-print-heading
   font-family HelveticaLight
@@ -1094,9 +1113,121 @@ span
   font-size 23px
   font-family HelveticaLight
   padding 0 10px
+  
+.che-users-view
+  padding-bottom 40px
+  
+.che-remove-user
+  text-align center
+  font-weight bold 
+  color reds
+  cursor pointer
+
+.a-notifier
+  width 100%
+  height 100%
+  align-items center
+  justify-content center
+  background rgba(0,0,0, .5)
+  top 0
+  left 0
+  z-index 999
+  position fixed
+  display flex
+
+.a-hide-notify
+  display none i
+
+.a-notifier-content
+  padding 60px 
+  position relative
+  background-color #fff
+  &:before
+    background-image url('../../img/sprite.png')
+    content ""
+    top 0
+    position absolute
+    width 73px
+    height 60px
+    display inline-block
+    background-position -490px -90px
+    left 0
+    z-index 0
+   &:after
+    background-image url('../../img/sprite.png')
+    content ""
+    bottom 0
+    position absolute
+    width 90px
+    height 60px
+    display inline-block
+    background-position -485px -193px
+    left 50%
+    z-index 0
+  
+.a-notifier-content p
+  font-size 19px
+  position relative
+  z-index 1
+  font-family HelveticaLight
+  
+.a-notifier-content i 
+  background-image url('../../img/sprite.png')
+  width 40px
+  height 40px
+  position absolute
+  top 6px
+  right 6px
+  display inline-block
+  background-position -362px -132px
+  cursor pointer
+  &:hover
+    background-position -358px -245px
+
+.a-csv-exports
+  font-family HelveticaLight
+  font-size 19px
+  padding 0 0 20px 0
+
+.a-remove-item-order
+  font-family HelveticaLight
+  font-size 16px
+  color reds
+  cursor pointer
+  
+.a-print-item
+  color reds i
+  cursor pointer
+  font-family HelveticaLight
+  font-size 16px
+  
+.a-wrapp-details
+  display none
+  
+.a-active-tab
+  display block
+  
+.a-send-ttn
+  margin 10px 0
+  display flex
+  justify-content flex-end
+  
+.a-textarea-field-to-send
+  width 100%
+
+.a-subject-field
+  margin 10px 0
+  display block
+
+.a-subject-field span
+  font-family HelveticaLight
+  font-size 16px
 
 @media print
   .che-items-print-controls
+    display none
+    
+  .a-print-item
     display none
     
  .pagebreak

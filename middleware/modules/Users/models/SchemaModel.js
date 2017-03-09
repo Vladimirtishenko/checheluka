@@ -4,6 +4,7 @@
 var mongoose = require('../../../../lib/mongoose');
 var schema = mongoose.Schema({
     uname: String,
+    date: {type: Date, default: Date.now},
     email: {type: String, unique: true},
     city: String,
     role: {type: String, default: 'customer'},

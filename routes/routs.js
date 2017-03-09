@@ -47,9 +47,24 @@ module.exports = function(app){
 	app.get("/index_info_delivery", CheckAuth, require("./manage/index_info_delivery").get)
 	app.post("/index_info_delivery", CheckAuth, require("./manage/index_info_delivery").post)
 	
-	app.get("/page_hidden_get_date", CheckAuth, require("./manage/page_hidden_get_date").get)
+	app.get("/index_info_delivery", CheckAuth, require("./manage/index_info_delivery").get)
+	
+	app.get("/page_user", CheckAuth, require("./manage/page_user").get)
+	app.delete("/page_user", CheckAuth, require("./manage/page_user").delete)
 
 	app.get("/print", CheckAuth, require("./manage/print").get)
 	app.get("/order/print/:id", CheckAuth, require("./manage/order_print").get)
+
+	app.get("/csv/export", CheckAuth, require("./manage/csv_export").get)
+
+	app.get("/page_print_no_sell", CheckAuth, require("./manage/page_print_no_sell").get)
+
+	app.get("/order_one_edit", CheckAuth, require("./manage/order_one_edit").get)
+	app.post("/order_one_edit", CheckAuth, require("./manage/order_one_edit").post)
+
+	app.post("/send_message", CheckAuth, require("./manage/send_message").post)	
+
+	app.get("/remove_auction_goods", CheckAuth, require("./manage/remove_auction_goods").get)	
+	app.get("/page_hidden_get_date", CheckAuth, require("./manage/page_hidden_get_date").get)	
 
 }

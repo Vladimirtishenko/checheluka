@@ -10,6 +10,8 @@ var cookie = require('cookie');
 var config = require('./config');
 var MongoStore = require('connect-mongo')(session);
 
+global.__approot = __dirname;
+
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);

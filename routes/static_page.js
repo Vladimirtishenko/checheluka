@@ -30,17 +30,21 @@ module.exports.get = function(req, res, next) {
             if (view == 'privat' && typeof result.data.orders == 'object') {
                 var paid = [],
                     unpaid = [],
-                    cancel = [];
+                    cancel = [],
+                    success = [];
 
                 for (var i = 0; i < result.data.orders.length; i++) {
                     if (result.data.orders[i].status == 0) {
                         unpaid.push(result.data.orders[i]);
                     } else if (result.data.orders[i].status == 1) {
                         paid.push(result.data.orders[i]);
+                    } else if (result.data.orders[i].status == 2) {
+                        success.push(result.data.orders[i]);
                     } else {
                         cancel.push(result.data.orders[i]);
                     }
                 }
+
             }
 
             var $; 
@@ -60,6 +64,7 @@ module.exports.get = function(req, res, next) {
                 ordersPaid: (paid && paid.length != 0) ? paid : null,
                 ordersUnpaid: (unpaid && unpaid.length != 0) ? unpaid : null,
                 ordersCancel: (cancel && cancel.length != 0) ? cancel : null,
+                ordersSuccess: (success && success.length != 0) ? success : null,
                 sessionUser: req.session.user,
                 rules: result.rules,
                 auctions_info: result.auctions_info,

@@ -10,7 +10,12 @@ header.a-head
 				li
 					a(href="/page_to_manage_goods") Все товары
 				li
-					a(href="/page_auction") Аукцион
+					p Аукцион
+					ul
+						li 
+							a(href="/page_auction") Лоты аукцион
+						li 
+							a(href="/page_print_no_sell" target="_blank") Не проданные лоты
 				li
 					a(href="/page_orders") Заказы 
 				li
@@ -26,7 +31,13 @@ header.a-head
 							a(href="/page_auction_info") Информация об аукционе
 
 				li
-					a(href="/page_config") Настройки
+					p Прочее
+					ul
+						li 
+							a(href="/page_config") Настройки
+						li 
+							a(href="/page_user") Пользователи
+						
 			.che-action-button
 				a.che-print-image(href="/print" target="_blank") 
 						img(width="50" src="/img/printer.svg", alt="")

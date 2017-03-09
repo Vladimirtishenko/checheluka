@@ -1,4 +1,5 @@
 import Helper from '../helper.js';
+import Notification from './notifier.js';
 
 class ChangeStatus extends Helper {
 	constructor(elem){
@@ -6,41 +7,75 @@ class ChangeStatus extends Helper {
 		if(!elem) return;
 
 		this.view = elem;
-		this.searchButton = document.querySelector('#a-search-admin');
+		this.Notification = new Notification();
+		this.savedVerify = ['_id', 'status', 'country', 'sity', 'delivery', 'warehouse'];
 
-		this.flyEvent('add', ['click'], [this.view], this.checkedSelect.bind(this));
+		this.flyEvent('add', ['click'], [this.view], this.removeItem.bind(this));
+		this.flyEvent('add', ['submit'], [this.view], this.submitForm.bind(this));
 
 	}
 
-	findSelected(number){
-		let status = {
-			0: "Не оплачен",
-			1: "Оплачен",
-			2: "Отменен"
+	removeItem(event){
+
+		if(event && event.target && !event.target.classList.contains('a-remove-item-order')) return;
+
+		let _id = event.target.getAttribute('data-id'),
+			_number = event.target.getAttribute('data-number');
+			parent = event.target.parentNode;
+
+		this.xhrRequest('GET', '/order_one_edit?_id='+_id+"&_number="+_number, null, null, this.responseAfterDelete.bind(this, parent));
+
+	}
+
+	submitForm(event){
+		event.preventDefault();
+
+		let form = event.target,
+			elements = form.elements,
+			data = {};
+
+			for (var i = 0; i < elements.length; i++) {
+				if(this.savedVerify.indexOf(elements[i].name) != -1){
+					data[elements[i].name] = elements[i].value;
+				}
+			}
+
+		this.xhrRequest('POST', '/order_one_edit', 'application/json', JSON.stringify(data), this.responseAfterUpdate.bind(this));
+
+	}
+
+	responseAfterDelete(parent, obj){
+		try{
+			let json = JSON.parse(obj);
+
+			if(json.status != 200){
+				throw json.errorMsg;
+			}
+
+			let commonPrice = json.priceUpdated,
+				priceCommon = document.querySelector('.a-common-price-'+json._id);
+
+			priceCommon.innerHTML = commonPrice + "руб."
+			parent.parentNode.removeChild(parent);
+
+		} catch(e){
+			this.Notification.errCode(e);
 		}
-
-		return status[number];
 	}
 
-	checkedSelect(event){
+	responseAfterUpdate(obj){
+		try{
+			let json = JSON.parse(obj);
 
-		let target = event && event.target && event.target.classList.contains('a-privat-table__submit') ? event.target : null;
+			if(json.status != 200){
+				throw json.errorMsg;
+			}
 
-		if(!target) return;
+			this.Notification.errCode(json.successMsg);
 
-		let selected = target.previousElementSibling,
-			value = selected.value,
-			fieldToReplace = selected.previousElementSibling,
-			orderNumber = target.getAttribute('data-value');
-
-			fieldToReplace.firstElementChild.innerHTML = this.findSelected(value);
-		
-		this.xhrRequest('POST', '/orderAdminLoads', 'application/x-www-form-urlencoded', 'status='+value+'&orderNumber='+orderNumber, this.responseChange.bind(this));
-
-	}
-
-	responseChange(obj){
-		console.log(obj);
+		} catch(e){
+			this.Notification.errCode(e);
+		}
 	}
 
 }

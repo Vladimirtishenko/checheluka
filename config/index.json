@@ -9,5 +9,11 @@
 		"port": "27017",
 		"url": "mongodb://localhost/checheluka"
 	},
-	"secret": "secret_key1123sdasjfasu"
+	"message": {
+		"email": "sale@chechelyka-auction.com",
+		"smtp": "mail.chechelyka-auction.com",
+		"pass": "F5BZqJn5"
+	},
+	"secret": "secret_key1123sdasjfasu",
+	"secret_keys": "qwedsazxc123"
 }

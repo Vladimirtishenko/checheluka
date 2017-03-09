@@ -6,7 +6,6 @@ module.exports.get = function(req, res, next) {
         start: req.query.start || 0,
         limit: req.query.limit || 20,
     };
-
     searchString = {};
 
     if(req.query.searhByTitle){
@@ -17,13 +16,22 @@ module.exports.get = function(req, res, next) {
                                            
     }
 
+    if(req.query.searhByStatus){
+
+        searchString = isNaN(req.query.searhByStatus) ? 0 : {'status': parseInt(req.query.searhByStatus)}
+
+    }
+
+
+    console.log(searchString)
+
     Order.find(searchString, 
 
         function(err, doc) {
 
-        /*if (err) {
+        if (err) {
             next(err);
-        }*/
+        }
 
         res.json({ goods: doc, offset: parseInt(params.start) + (parseInt(params.limit) || 20) });
 

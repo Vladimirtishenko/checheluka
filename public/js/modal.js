@@ -19,8 +19,6 @@ class Modal extends Helper {
 
     modalHandlerIn(event) {
 
-        console.log(event);
-
         let attr = event && event.attr ? event.attr : event && event.target ? event.target.getAttribute('data-attr') : null;
 
         if (!attr) return;

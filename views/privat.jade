@@ -135,6 +135,48 @@ block content
 									p Стоимость
 										span #{ob[prop].price}
 											| руб.
+			
+			- if(ordersSuccess)
+				h1.a-head-font-left-side Выполненные заказы
+				each itemC in ordersSuccess
+					.a-privat-table_bought
+						.a-privat-table_bought__number
+							- var date = itemC.date.getDate() + "/" + itemC.date.getMonth() + "/" + itemC.date.getFullYear();
+							p 
+								span Заказ 
+								| №
+								| #{itemC.orderNumber} 
+								span от 
+								| #{date} 
+							p На сумму: 
+								span #{itemC.priceCommon} 
+									| руб.
+						-var ob = itemC.goods;
+						-for(var prop in ob)
+							.a-privat-table.a-privat-table__bought
+								.a-privat-table__image_block
+									img(src=ob[prop].image, alt="")
+									.a-goods-description
+										p
+											| #{ob[prop].title}
+										p
+											span.a-hidden-block__description-link
+												i Артикул: 
+													span=ob[prop].art
+											span.a-hidden-block__description-link
+												i Размер: 
+													span=ob[prop].size
+											span.a-hidden-block__description-link
+												i Цвет: 
+													span=ob[prop].color
+								.a-privat-table__count_and_price
+									p Количество
+										span #{ob[prop].count}
+											| шт.
+									p Стоимость
+										span #{ob[prop].price}
+											| руб.
+
 
 			- if(ordersCancel)
 				h1.a-head-font-left-side Отмененные заказы

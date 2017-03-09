@@ -154,7 +154,7 @@ class Templates {
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Количество на складе</p>' +
-                '<input type="text" name="countInWarehouse" value="' + (count || 1) + '"/>' +
+                '<input type="text" name="countInWarehouse" value="' + (count || 0) + '"/>' +
                 '</div>' +
                 '<div class="container-description-form">' +
                 '<p class="container-description-form__else_params">Розничная цена</p>' +
@@ -231,56 +231,51 @@ class Templates {
 
             let constructorDate = new Date(data.date).toLocaleDateString();
 
-            let templates = '<div class="a-privat-table_bought">' +
+            let templates = '<form class="a-privat-table_bought">' +
+                                '<input name="_id" type="hidden" value="'+data._id+'" />' +
                 				'<div class="a-privat-table_bought__number">' +
-                					'<p> <span>Заказ </span>№ ' +data.orderNumber+ '<span> от </span> '+constructorDate+' <a class="che-print-image" href="/order/print/'+data._id+'">Печать</a></p>' +
-                					'<p>На сумму: <span>'+data.priceCommon+' руб.</span></p>' +
+                					'<p> <span>Заказ </span>№ ' +data.orderNumber+ '<span> от </span> '+constructorDate+' <a class="che-print-image" href="/order/print/'+data._id+'">Другие действия</a></p>' +
+                					'<p>На сумму: <span class="a-common-price-'+data._id+'">'+data.priceCommon+' руб.</span></p>' +
                 				'</div>' +
                 				'<div class="a-privat-table a-privat-table__bought a-privat-table__orders">' +
                                     '<div class="a-privat-table__info_order">' +
                                         '<h5>Заказ:</h5>' +
                     					'<table>'+
-    					                	'<tr>'+
+    					                	'<tr cols="2">'+
+                                                '<th></th>'+
     					                		'<th>Наименование</th>'+
                                                 '<th>Размер</th>'+
     					                		'<th>Цвет</th>'+
     					                		'<th>Количество</th>'+
     					                		'<th>Цена</th>'+
     					                	'</tr>'+
-    					                	ordersOne(data.goods) + 
+    					                	ordersOne(data.goods, data._id) + 
 					                   '</table>'+
-                                       '<h5 class="a-status-orders">Статус: <span>'+(data.status == 0 ? 'Не оплачен' : data.status == 1 ? 'Оплачен' : "Отменен")+'<span></h5>' +
+                                       '<div class="a-status-block">' +
+                                       '<h5 class="a-status-orders"><span>Статус:<span></h5>' +
                                        '<select class="a-privat-table__changed" name="status">'+
-                                            '<option value="0">' +
-                                                'Не оплачен' + 
-                                            '</option>' + 
-                                            '<option value="1">' +
-                                                'Оплачен' + 
-                                            '</option>' + 
-                                            '<option value="2">' +
-                                                'Отменен' + 
-                                            '</option>' + 
+                                            statusChecker(data.status) +  
                                        '</select>'+
-                                       '<button class="a-privat-table__submit" data-value="'+data.orderNumber+'">Сохранить статус</button>' +
+                                       '</div>' +
                                     '</div>' +
 	                				'<div class="a-privat-table__user">' +
 	                					'<h5>Информация о заказе:</h5>' +
                                         '<table>'+
                                             '<tr>'+
                                                 '<th>Страна</th>' +
-                                                '<td>'+decodeURIComponent(data.country)+'</td>' +
+                                                '<td><input name="country" type="text" value="'+decodeURIComponent(data.country)+'" /></td>' +
                                             '</tr>'+
                                              '<tr>'+
                                                 '<th>Город</th>' +
-                                                '<td>'+decodeURIComponent(data.sity)+'</td>' +
+                                                '<td><input name="sity" type="text" value="'+decodeURIComponent(data.sity)+'" /></td>' +
                                             '</tr>'+
                                             '<tr>'+
                                                 '<th>Служба доставки</th>' +
-                                                '<td>'+decodeURIComponent(data.delivery)+'</td>' +
+                                                '<td><input name="delivery" type="text" value="'+decodeURIComponent(data.delivery)+'" /></td>' +
                                             '</tr>'+
                                             '<tr>'+
                                                 '<th>Склад</th>' +
-                                                '<td>'+decodeURIComponent(data.warehouse)+'</td>' +
+                                                '<td><input name="warehouse" type="text" value="'+decodeURIComponent(data.warehouse)+'" /></td>' +
                                             '</tr>'+
                                         '</table>'+
 	                					'<h5>Информация о клиенте:</h5>' +
@@ -299,20 +294,31 @@ class Templates {
                                             '</tr>'+
                                         '</table>'+
 	                				'</div>' +
-                				'</div>'+
-            				'</div>';
+                                '</div>'+
+                                '<div class="a-saved-status">'+
+                                    '<button type="submit" class="a-privat-table__submit">Сохранить</button>' +
+                                '</div>'+
+            				'</form>';
 
 
 
-            function ordersOne(goods) {
-                var tmp = "";
+            function ordersOne(goods, id) {
+                var tmp = "",
+                    count = 0,
+                    price = 0,
+                    color = "";
 
                 for (var key in goods) {
 
+                    count += +goods[key].count;
+                    price += +goods[key].price,
+                    color = decodeURIComponent(goods[key].color).replace("+", " + ");
+
                     tmp += '<tr>'+
+                                '<td data-number="'+key+'" data-id="'+id+'" class="a-remove-item-order">X</td>'+
 		                		'<td>'+decodeURIComponent(goods[key].art) + ' / ' +decodeURIComponent(goods[key].title)+'</td>'+
                                 '<td>'+decodeURIComponent(goods[key].size)+'</td>'+
-		                		'<td>'+decodeURIComponent(goods[key].color)+'</td>'+
+		                		'<td>'+color+'</td>'+
 		                		'<td>'+goods[key].count+'</td>'+
 		                		'<td>'+goods[key].price+'</td>'+
 		                	'</tr>';
@@ -320,6 +326,22 @@ class Templates {
 
                 return tmp;
 
+
+            }
+
+            function statusChecker(status){
+
+                var str = '',
+                    statusText = ['Не оплачен', 'Оплачен', 'Выполнен', 'Отменен'];
+
+                for (var i = 0; i <= statusText.length; i++) {
+                    var active = (status == i) ? 'selected' : '';
+                    str +=  '<option '+active+' value="'+i+'">' +
+                                statusText[i] + 
+                            '</option>'
+                }
+
+                return str;
 
             }
 

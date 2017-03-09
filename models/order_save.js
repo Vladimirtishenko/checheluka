@@ -11,11 +11,11 @@ var schema = mongoose.Schema({
     delivery: String,
     warehouse: String,
     number: String,
-    goods: Object,
     email: String,
     color: String,
     size: String,
-    art: String
+    art: String,
+    goods: mongoose.Schema.Types.Mixed
 }, { collection: 'order_save' });
 // Model
 module.exports = mongoose.model('order_save', schema);
