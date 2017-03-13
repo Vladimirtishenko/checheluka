@@ -9169,7 +9169,7 @@
 	                    var str = '',
 	                        statusText = ['Не оплачен', 'Оплачен', 'Выполнен', 'Отменен'];
 
-	                    for (var i = 0; i <= statusText.length; i++) {
+	                    for (var i = 0; i < statusText.length; i++) {
 	                        var active = status == i ? 'selected' : '';
 	                        str += '<option ' + active + ' value="' + i + '">' + statusText[i] + '</option>';
 	                    }
@@ -11163,6 +11163,8 @@
 				    _id = target.getAttribute('data-id'),
 				    active = document.querySelector('.a-active-tab'),
 				    checked = document.querySelector('#' + _id);
+
+				if (checked.classList.contains('a-active-tab')) return;
 
 				checked.classList.add('a-active-tab');
 				active.classList.remove('a-active-tab');

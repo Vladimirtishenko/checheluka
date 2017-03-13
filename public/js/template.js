@@ -10,7 +10,7 @@ class Template {
 				  '<div class="a-general-goods__description">' +
 				    '<p class="a-general-goods__description_in-warehouse a-min-size-font">На складе: <span>'+decodeURIComponent(obj.countInWarehouse)+' ед.</span></p>' +
 				    '<h2 class="a-general-goods__description_title">'+decodeURIComponent(obj.title).replace(/'/g , '')+'</h2>' +
-				    '<p class="a-general-goods__description_description">'+decodeURIComponent(obj.description)+'</p>' +
+				    '<div class="a-general-goods__description_description">'+decodeURIComponent(obj.description)+'</div>' +
 				    '<div class="a-general-goods__description_info">' +
 				      '<div class="a-general-goods__description_info_part">' +
 				      	'<a href="" class="a-general-goods__description_info_part-link">' +

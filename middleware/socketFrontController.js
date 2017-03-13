@@ -474,6 +474,7 @@ socketFrontController.prototype.reloadAuction = function(client, data){
         var mes = this.createMessage('getCurrentAuction', curr);
         return this.sendToAll(mes);
     }.bind(this),1000*(loadProductSleepTime+2));
+    this.isTimerForLoadSet = false;
 }
 
 function sleep(milliseconds) {

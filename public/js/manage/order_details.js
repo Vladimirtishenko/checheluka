@@ -18,10 +18,13 @@ class OrdersDetails extends Helper {
 
 		if(!event || !event.target || !event.target.classList.contains('che-print-button')) return;
 
+
 		let target = event.target,
 			_id = target.getAttribute('data-id'),
 			active = document.querySelector('.a-active-tab'),
 			checked = document.querySelector('#'+_id);
+
+			if(checked.classList.contains('a-active-tab')) return;
 
 			checked.classList.add('a-active-tab');
 			active.classList.remove('a-active-tab');

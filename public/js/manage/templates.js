@@ -334,7 +334,7 @@ class Templates {
                 var str = '',
                     statusText = ['Не оплачен', 'Оплачен', 'Выполнен', 'Отменен'];
 
-                for (var i = 0; i <= statusText.length; i++) {
+                for (var i = 0; i < statusText.length; i++) {
                     var active = (status == i) ? 'selected' : '';
                     str +=  '<option '+active+' value="'+i+'">' +
                                 statusText[i] + 

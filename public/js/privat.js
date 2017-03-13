@@ -57,13 +57,19 @@ class Privat extends Helper {
 			let object = JSON.parse(obj);
 			if(object.status == 200){
 				location.reload();
-				/*form.insertAdjacentHTML('beforeend', '<p class="a-notify">Ваш заказ отправлен на обработку!</p>');
-				this.form.parentNode.removeItem(this.form);
-				this.el.closest('.a-privat-price-to-change').removeItem(this.el);*/
+			} else if(object.status == 500 && object.msg) {
+				if(typeof object.msg == 'string'){
+					form.insertAdjacentHTML('beforeend', '<p class="a-notify">'+object.msg+'</p>');
+				} else {
+					throw object.msg;
+				}
+				
 			} else {
 				form.insertAdjacentHTML('beforeend', '<p class="a-notify">Произошла ошибка, попробуйте позже!</p>');
 			}
-		} catch(e){}
+		} catch(e){
+			form.insertAdjacentHTML('beforeend', '<p class="a-notify">'+e+'</p>');
+		}
 
 	}
 
