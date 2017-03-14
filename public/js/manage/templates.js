@@ -229,15 +229,18 @@ class Templates {
 
         function templates(data) {
 
-            let constructorDate = new Date(data.date).toLocaleDateString();
+            let constructorDate = new Date(data.date).toLocaleDateString(),
+                statusText = ['Не оплачен', 'Оплачен', 'Выполнен', 'Отменен'];
 
             let templates = '<form class="a-privat-table_bought">' +
                                 '<input name="_id" type="hidden" value="'+data._id+'" />' +
                 				'<div class="a-privat-table_bought__number">' +
-                					'<p> <span>Заказ </span>№ ' +data.orderNumber+ '<span> от </span> '+constructorDate+' <a class="che-print-image" href="/order/print/'+data._id+'">Другие действия</a></p>' +
+                					'<p>'+
+                                        '<span>Заказ </span>№ ' +data.orderNumber+ '<span> от </span> '+constructorDate+' <a class="che-print-image" href="/order/print/'+data._id+'">Другие действия</a></p><span class="a-status-wrapper">Статус: <i class="a-status-'+data.status+'">'+statusText[data.status]+'</i></span>' +
                 					'<p>На сумму: <span class="a-common-price-'+data._id+'">'+data.priceCommon+' руб.</span></p>' +
                 				'</div>' +
-                				'<div class="a-privat-table a-privat-table__bought a-privat-table__orders">' +
+                                '<input type="checkbox" class="a-show-or-hide-order" value="Открыть" />' +
+                				'<div class="a-orders-description a-orders-hide-block"><div class="a-privat-table a-privat-table__bought a-privat-table__orders">' +
                                     '<div class="a-privat-table__info_order">' +
                                         '<h5>Заказ:</h5>' +
                     					'<table>'+
@@ -298,6 +301,7 @@ class Templates {
                                 '<div class="a-saved-status">'+
                                     '<button type="submit" class="a-privat-table__submit">Сохранить</button>' +
                                 '</div>'+
+                                '</div>'+
             				'</form>';
 
 
@@ -331,8 +335,7 @@ class Templates {
 
             function statusChecker(status){
 
-                var str = '',
-                    statusText = ['Не оплачен', 'Оплачен', 'Выполнен', 'Отменен'];
+                var str = '';
 
                 for (var i = 0; i < statusText.length; i++) {
                     var active = (status == i) ? 'selected' : '';

@@ -334,6 +334,30 @@ button
   text-align center
   top 30%
 
+.a-classic-button-all-lots
+  margin 0 auto 30px
+  border 2px solid green
+  display block 
+  background transparent
+  transition .5s
+  padding 20px 40px
+  font-family HelveticaThin
+  font-size 20px
+  cursor pointer
+  letter-spacing 1px
+  position relative
+  &:before
+    content ""
+    position absolute
+    width 95px
+    height 95px
+    left -53px
+    top -49px
+    background-image url('../img/sprite.png')
+    background-position -483px -293px
+  &:hover 
+    border 2px solid pink
+
 @keyframes opacity{
   0%{
     opacity 0

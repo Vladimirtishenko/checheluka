@@ -523,7 +523,14 @@ td
     height 100px
     background url('../../img/sprite.png') -483px -293px
     left -102px
- 
+
+.a-show-or-hide-order
+  position absolute
+  left -25px
+  top 10px
+  &:checked + .a-orders-description
+    display block i
+
  .a-saved-status
    display flex 
    justify-content flex-end
@@ -1222,6 +1229,30 @@ span
 .a-subject-field span
   font-family HelveticaLight
   font-size 16px
+
+.a-orders-hide-block
+  display none
+
+.a-status-wrapper
+  display inline-block
+  width 130px
+
+.a-status-0
+  color grey
+  font-size 14px
+  
+.a-status-1
+  color #FF9800
+  font-size 14px
+  
+.a-status-2
+  color #4CAF50
+  font-size 14px
+  
+.a-status-3
+  color reds
+  font-size 14px
+
 
 @media print
   .che-items-print-controls
