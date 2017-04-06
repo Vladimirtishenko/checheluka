@@ -8966,7 +8966,7 @@
 
 				var win = Object.keys(pretendents).length;
 
-				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Готовы купить <span>' + count + ' ед.</span> по<span> ' + price + ' руб/ед</span></p>' + ' <p class="a-block-with-proposal__user">' + "Участвуют " + Object.keys(pretendents).length + "чел." + '</p>' + '</div>';
+				var template = '<div class="a-block-with-proposal">' + '<p class="a-block-with-proposal__buy_now">Готовы купить <span>' + count + ' ед.</span> по<span> ' + price + ' руб/ед</span></p>' + ' <p class="a-block-with-proposal__user">' + "Участвуют: <br />" + '</p>' + '<p class="a-block-with-proposal__user">' + this.chatTemplateUsers(pretendents) + '</p>' + '</div>';
 
 				return template;
 			}
@@ -8982,12 +8982,10 @@
 					for (var user in pretendents) {
 
 						if (!pretendents[user].email && _typeof(pretendents[user]) == 'object') {
-							console.log('if');
 							for (var ins in pretendents[user]) {
 								template += '<i>' + (pretendents[user][ins].login || pretendents[user][ins].email.split('@')[0]) + ' (г.' + (pretendents[user][ins].city || "Белгород") + ')</i>';
 							}
 						} else {
-							console.log('else');
 							template += '<i>' + (pretendents[user].login || pretendents[user].email.split('@')[0]) + ' (г.' + (pretendents[user].city || "Белгород") + ')</i>';
 						}
 					}
@@ -9876,6 +9874,7 @@
 			if (!el) return _possibleConstructorReturn(_this);
 
 			_this.button = el;
+			_this.status = true;
 			_this.form = document.querySelector('.a-data-order');
 			_this.formToOrder = document.querySelector('.a-form-submit-order');
 			_this.sendButton = document.querySelector('.a-data-order-send');
@@ -9898,6 +9897,10 @@
 			value: function sendForm(event) {
 
 				event.preventDefault();
+
+				if (!this.status) return;
+
+				this.status = false;
 
 				var parentForm = event && event.target || null,
 				    data = {};
@@ -9931,6 +9934,7 @@
 						location.reload();
 					} else if (object.status == 500 && object.msg) {
 						if (typeof object.msg == 'string') {
+
 							form.insertAdjacentHTML('beforeend', '<p class="a-notify">' + object.msg + '</p>');
 						} else {
 							throw object.msg;
@@ -9941,6 +9945,8 @@
 				} catch (e) {
 					form.insertAdjacentHTML('beforeend', '<p class="a-notify">' + e + '</p>');
 				}
+
+				this.status = true;
 			}
 		}, {
 			key: 'returnsDataObjectGoods',

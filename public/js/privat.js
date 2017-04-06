@@ -6,6 +6,7 @@ class Privat extends Helper {
 		if(!el) return;
 
 		this.button = el;
+		this.status = true;
 		this.form = document.querySelector('.a-data-order');
 		this.formToOrder = document.querySelector('.a-form-submit-order');
 		this.sendButton = document.querySelector('.a-data-order-send');
@@ -25,6 +26,10 @@ class Privat extends Helper {
 	sendForm(event){
 
 		event.preventDefault();
+
+		if(!this.status) return;
+
+		this.status = false;
 
 		let parentForm = event && event.target || null,
 			data = {};
@@ -59,17 +64,19 @@ class Privat extends Helper {
 				location.reload();
 			} else if(object.status == 500 && object.msg) {
 				if(typeof object.msg == 'string'){
+
 					form.insertAdjacentHTML('beforeend', '<p class="a-notify">'+object.msg+'</p>');
 				} else {
 					throw object.msg;
-				}
-				
+				}	
 			} else {
 				form.insertAdjacentHTML('beforeend', '<p class="a-notify">Произошла ошибка, попробуйте позже!</p>');
 			}
 		} catch(e){
 			form.insertAdjacentHTML('beforeend', '<p class="a-notify">'+e+'</p>');
 		}
+
+		this.status = true;
 
 	}
 

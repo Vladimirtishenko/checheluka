@@ -13,7 +13,7 @@ block content
 		.a-wrapp-details(id="printing_page")
 			h1.che-items-print-heading 
 				span Заказ №
-				input(type="number" name="1C" value="")
+				input(type="number" name="1C" value=data.orderNumber)
 
 			.a-privat-table_bought
 				.a-privat-table_bought__number
@@ -101,7 +101,7 @@ block content
 				span Номер ТТН
 				input(type="number" name="ttn" value="")
 				span Номер заказа 1С
-				input(type="number" name="order" value="")
+				input(type="number" name="order" value=data.orderNumber)
 				input(type="hidden" name="email" value=data.email)
 			.a-privat-table_bought
 				h5 Информация о клиенте:
@@ -124,10 +124,12 @@ block content
 				label(class="a-subject-field" for="subject")
 					span Тема сообщения: 
 					input(required type="text" id="subject" name="subject" value="Реквизиты для оплаты")
+				input(type="hidden" id="status" name="status" value="4")
+				input(type="hidden" id="order" name="orderId" value=data.id)
 				input(type="hidden" name="email" value=data.email)
 				textarea(required name="html_msg" class="a-textarea-field-to-send" rows="20")
 					p Добрый день !{decodeURIComponent(data.fio)}! Сумма к оплате по Вашему заказу: !{data.priceCommon} руб.
-					p Номер Вашего заказа: 174
+					p Номер Вашего заказа: !{data.orderNumber}
 					p Реквизиты для оплаты:
 					p Карта Сбербанка
 					p 5332 0580 7542 1541

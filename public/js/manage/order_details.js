@@ -6,7 +6,7 @@ class OrdersDetails extends Helper {
 		super();
 		this.el = el;
 		this.blockForm = document.querySelector('.a-form-to-send-details');
-		this.access = ['subject', 'html_msg', 'ttn', 'order', 'email'];
+		this.access = ['subject', 'html_msg', 'ttn', 'order', 'email', 'status', 'orderId'];
 		this.Notification = new Notification();
 
 		this.flyEvent('add', ['click'], [this.el], this.tabChange.bind(this));

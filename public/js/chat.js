@@ -104,9 +104,12 @@ class Chat extends Helper {
 
 		let template = '<div class="a-block-with-proposal">' + 
 						    '<p class="a-block-with-proposal__buy_now">Готовы купить <span>'+count+' ед.</span> по<span> '+price+' руб/ед</span></p>' + 
-						   ' <p class="a-block-with-proposal__user">'+
-						   		"Участвуют " + Object.keys(pretendents).length + "чел." +
+						   ' <p class="a-block-with-proposal__user">' +
+						   		"Участвуют: <br />" +
 						   '</p>' + 
+						   '<p class="a-block-with-proposal__user">' +
+						   		this.chatTemplateUsers(pretendents) +
+						   '</p>' +
 						'</div>';
 
 		return template;
@@ -123,12 +126,10 @@ class Chat extends Helper {
 			for(var user in pretendents){
 
 				if(!pretendents[user].email && typeof pretendents[user] == 'object'){
-					console.log('if');
 					for(var ins in pretendents[user]){
 						template += '<i>'+(pretendents[user][ins].login || pretendents[user][ins].email.split('@')[0])+' (г.'+ (pretendents[user][ins].city || "Белгород") +')</i>';
 					}
 				} else {
-					console.log('else');
 					template += '<i>'+(pretendents[user].login || pretendents[user].email.split('@')[0])+' (г.'+ (pretendents[user].city || "Белгород") +')</i>';
 				}
 

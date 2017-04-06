@@ -230,13 +230,13 @@ class Templates {
         function templates(data) {
 
             let constructorDate = new Date(data.date).toLocaleDateString(),
-                statusText = ['Не оплачен', 'Оплачен', 'Выполнен', 'Отменен'];
+                statusText = ['Не оплачен', 'Оплачен', 'Выполнен', 'Отменен', 'Обработан'];
 
             let templates = '<form class="a-privat-table_bought">' +
                                 '<input name="_id" type="hidden" value="'+data._id+'" />' +
                 				'<div class="a-privat-table_bought__number">' +
                 					'<p>'+
-                                        '<span>Заказ </span>№ ' +data.orderNumber+ '<span> от </span> '+constructorDate+' <a class="che-print-image" href="/order/print/'+data._id+'">Другие действия</a></p><span class="a-status-wrapper">Статус: <i class="a-status-'+data.status+'">'+statusText[data.status]+'</i></span>' +
+                                        '<span>Заказ </span>№ ' +data.orderNumber+ '<span> от </span> '+constructorDate+' <a class="che-print-image" target="_blank" href="/order/print/'+data._id+'">Другие действия</a></p><span class="a-status-wrapper">Статус: <i class="a-status-'+data.status+'">'+statusText[data.status]+'</i></span>' +
                 					'<p>На сумму: <span class="a-common-price-'+data._id+'">'+data.priceCommon+' руб.</span></p>' +
                 				'</div>' +
                                 '<input type="checkbox" class="a-show-or-hide-order" value="Открыть" />' +
