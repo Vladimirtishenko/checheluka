@@ -16,18 +16,21 @@ module.exports.post = function(req, res, next) {
 			})
 	    }
 	}, function(err, results) {
+	    
 	    if(err){
 			res.json({
 				status: 500,
 				errorMsg: 'Сообщение не отправлено, внутренняя ошибка транспорта писем!'
 			})
-			res.end();
+			next();
+			return;
 		}
 
 		res.json({
 			status: 200,
 			successMsg: 'Сообщение отправлено!'
 		})
+
 	});
 
 }
