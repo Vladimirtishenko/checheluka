@@ -34,6 +34,9 @@ module.exports.get = function(req, res, next) {
                     success = [],
                     processed = [];
 
+
+                console.log(result.data.orders);
+
                 for (var i = 0; i < result.data.orders.length; i++) {
                     if (result.data.orders[i].status == 0) {
                         unpaid.push(result.data.orders[i]);
