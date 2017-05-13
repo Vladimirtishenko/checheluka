@@ -31,7 +31,8 @@ module.exports.get = function(req, res, next) {
                 var paid = [],
                     unpaid = [],
                     cancel = [],
-                    success = [];
+                    success = [],
+                    processed = [];
 
                 for (var i = 0; i < result.data.orders.length; i++) {
                     if (result.data.orders[i].status == 0) {
@@ -40,6 +41,8 @@ module.exports.get = function(req, res, next) {
                         paid.push(result.data.orders[i]);
                     } else if (result.data.orders[i].status == 2) {
                         success.push(result.data.orders[i]);
+                    } else if (result.data.orders[i].status == 4) {
+                        processed.push(result.data.orders[i]);
                     } else {
                         cancel.push(result.data.orders[i]);
                     }
@@ -65,6 +68,7 @@ module.exports.get = function(req, res, next) {
                 ordersUnpaid: (unpaid && unpaid.length != 0) ? unpaid : null,
                 ordersCancel: (cancel && cancel.length != 0) ? cancel : null,
                 ordersSuccess: (success && success.length != 0) ? success : null,
+                ordersProcessed: (processed && processed.length != 0) ? processed : null,
                 sessionUser: req.session.user,
                 rules: result.rules,
                 auctions_info: result.auctions_info,
