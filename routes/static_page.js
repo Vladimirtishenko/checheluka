@@ -41,10 +41,10 @@ module.exports.get = function(req, res, next) {
                         paid.push(result.data.orders[i]);
                     } else if (result.data.orders[i].status == 2) {
                         success.push(result.data.orders[i]);
-                    } else if (result.data.orders[i].status == 4) {
-                        processed.push(result.data.orders[i]);
-                    } else {
+                    } else if (result.data.orders[i].status == 3) {
                         cancel.push(result.data.orders[i]);
+                    } else if (result.data.orders[i].status == 4){
+                        processed.push(result.data.orders[i]);
                     }
                 }
 

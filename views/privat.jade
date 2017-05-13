@@ -138,7 +138,7 @@ block content
 
 			- if(ordersProcessed)
 				h1.a-head-font-left-side Обработанные заказы
-				each itemC in ordersCancel
+				each itemC in ordersProcessed
 					.a-privat-table_bought
 						.a-privat-table_bought__number
 							- var date = itemC.date.getDate() + "/" + itemC.date.getMonth() + "/" + itemC.date.getFullYear();
