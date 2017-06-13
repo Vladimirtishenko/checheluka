@@ -5,9 +5,17 @@ class Templates {
         function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice, art) {
 
             let sizeEach = (sizes) => {
-                let sizesToArray = sizes.split(',');
 
-                let sizesTmp = ""
+                let sizesToArray;
+
+                try {
+                    sizesToArray = sizes.split(',');
+                } catch (e){
+                    sizesToArray = [sizes];
+                }   
+
+                let sizesTmp = "";
+                
                 sizesToArray.forEach((item, i) => {
                     sizesTmp += '<label class="che-input-with-checkbox__wrapper" for="">'+
                             '<span class="che-input-with-checkbox__title">' + item + '</span>' +

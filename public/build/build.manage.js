@@ -9084,9 +9084,17 @@
 	            function templates(id, img, title, description, size, color, material, consistOf, count, priority, price, auctionPrice, art) {
 
 	                var sizeEach = function sizeEach(sizes) {
-	                    var sizesToArray = sizes.split(',');
+
+	                    var sizesToArray = void 0;
+
+	                    try {
+	                        sizesToArray = sizes.split(',');
+	                    } catch (e) {
+	                        sizesToArray = [sizes];
+	                    }
 
 	                    var sizesTmp = "";
+
 	                    sizesToArray.forEach(function (item, i) {
 	                        sizesTmp += '<label class="che-input-with-checkbox__wrapper" for="">' + '<span class="che-input-with-checkbox__title">' + item + '</span>' + '<input type="checkbox" name="size" value="' + item + '"/>' + '<input class="che-input-with-checkbox__item" type="number" min="1" name="countInWarehouse" data-label-count="' + item + '" value="1" />' + '</label>';
 	                    });
